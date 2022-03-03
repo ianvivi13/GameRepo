@@ -8,12 +8,20 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>LoginPageServlet</servlet-name>
-    <servlet-class>LoginPage.LoginPageServlet</servlet-class>
+    <servlet-class>Servlets.LoginPageServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HomePageServlet</servlet-name>
+    <servlet-class>Servlets.HomePageServlet</servlet-class>
   </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
     <servlet-name>LoginPageServlet</servlet-name>
     <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HomePageServlet</servlet-name>
+    <url-pattern>/home</url-pattern>
   </servlet-mapping>
   </web-app>

@@ -2,10 +2,20 @@
 
 <html>
 	<head>
-		<title>I Hate This</title>
+		<title>Login</title>
 	</head>
 	
 	<body>
-		<p> nkdlcdlhdalivbknl </p>
+		<div>
+			<input type = "text" name = "Username">
+		</div>
+		<div>
+			<input type = "password" name = "Password">
+		</div>
+		<div>
+			<form action="http://localhost:8081/gamerepo/home" method="get">
+				<input type="Submit" name="submit" value="Log In">
+			</form>
+		</div>
 	</body>
 </html>
