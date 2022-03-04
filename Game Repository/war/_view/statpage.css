@@ -1,0 +1,38 @@
+.mainMenu{
+    float: right;
+    clear: both;
+}
+
+#top{
+    border-bottom: 3px solid red;
+    font-size: 300%;
+}
+
+#rank{
+    float: left;
+    margin-top: 5%;
+    margin-left: 5%;
+    text-align: center;
+    border: 2px solid red;
+    width: 400px;
+    height: 550px;
+    font-size: 100px;
+}
+.tit{
+    text-align: center;
+    font-size: 50px;
+}
+
+#globstat{
+    margin-left: 60%;
+    margin-top: 5%;
+    text-align: left;
+    border: 10px solid blue;
+    width: 800px;
+    height: 550px;
+    font-size: 25px;
+    padding-left: 15px;
+}
+
+
+

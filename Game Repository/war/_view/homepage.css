@@ -1,0 +1,14 @@
+.homePage{
+    float: right;
+    clear: both;
+}
+
+#top{
+    border-bottom: 3px solid red;
+    font-size: 300%;
+}
+
+.buttons{
+    margin-top: 5%;
+    text-align: center;
+}

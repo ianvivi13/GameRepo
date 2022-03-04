@@ -18,6 +18,10 @@
     <servlet-name>NewAccountPageServlet</servlet-name>
     <servlet-class>Servlets.NewAccountPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>StatisticsPageServelet</servlet-name>
+    <servlet-class>Servlets.StatisticsPageServelet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -31,5 +35,9 @@
   <servlet-mapping>
     <servlet-name>NewAccountPageServlet</servlet-name>
     <url-pattern>/new</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StatisticsPageServelet</servlet-name>
+    <url-pattern>/stats</url-pattern>
   </servlet-mapping>
   </web-app>
