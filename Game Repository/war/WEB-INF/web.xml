@@ -14,6 +14,10 @@
     <servlet-name>HomePageServlet</servlet-name>
     <servlet-class>Servlets.HomePageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>MultiplayerServlet</servlet-name>
+    <servlet-class>Servlets.MultiplayerServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -23,5 +27,9 @@
   <servlet-mapping>
     <servlet-name>HomePageServlet</servlet-name>
     <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MultiplayerServlet</servlet-name>
+    <url-pattern>/multiplayer</url-pattern>
   </servlet-mapping>
   </web-app>
