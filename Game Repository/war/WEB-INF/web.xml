@@ -14,6 +14,10 @@
     <servlet-name>HomePageServlet</servlet-name>
     <servlet-class>Servlets.HomePageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>NewAccountPageServlet</servlet-name>
+    <servlet-class>Servlets.NewAccountPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -23,5 +27,9 @@
   <servlet-mapping>
     <servlet-name>HomePageServlet</servlet-name>
     <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>NewAccountPageServlet</servlet-name>
+    <url-pattern>/new</url-pattern>
   </servlet-mapping>
   </web-app>

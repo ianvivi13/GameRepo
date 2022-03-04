@@ -24,7 +24,7 @@
 						<button class="signup" type="submit">Play as Guest</button>
 					</a>
 					<div class="guest">
-						<a href="https://google.com">Create New Account</a>
+						<a href="http://localhost:8080/gamerepo/new">Create New Account</a>
 					</div>
 			</div>
 		</div>
