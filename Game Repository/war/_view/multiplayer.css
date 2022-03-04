@@ -1,0 +1,15 @@
+.subtopic {
+    font-size: 50px;
+    text-align: center;
+    margin: 30px;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    
+}
+
+#topic {
+    text-align: center;
+
+}
+

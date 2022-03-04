@@ -22,6 +22,10 @@
     <servlet-name>StatisticsPageServelet</servlet-name>
     <servlet-class>Servlets.StatisticsPageServelet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>MultiplayerServlet</servlet-name>
+    <servlet-class>Servlets.MultiplayerServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -39,5 +43,9 @@
   <servlet-mapping>
     <servlet-name>StatisticsPageServelet</servlet-name>
     <url-pattern>/stats</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MultiplayerServlet</servlet-name>
+    <url-pattern>/multiplayer</url-pattern>
   </servlet-mapping>
   </web-app>

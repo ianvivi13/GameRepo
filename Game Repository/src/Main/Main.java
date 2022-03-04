@@ -14,9 +14,6 @@ public class Main {
 		// get a server for port 8080
 		System.out.println("CREATING: web server on port 8080");
 
-		// get a server for port 8081
-		System.out.println("CREATING: web server on port 8081");
-
 		Server server = launcher.launch(true, 8080, warFile.getAbsolutePath(), "/gamerepo");
 
         // Start things up!		
