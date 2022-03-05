@@ -1,0 +1,16 @@
+.AccountCreation {
+    margin: 100px auto;
+    width: 500px;
+    height: 400px;
+    text-align: center;
+    padding: 60px;
+    border-radius: 10px;
+}
+
+.title {
+    font-weight: bolder;
+    text-align: left;
+    margin-left: 5px;
+    font-size: 30px;
+    color: white;
+}

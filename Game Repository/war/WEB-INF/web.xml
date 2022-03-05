@@ -26,6 +26,10 @@
     <servlet-name>MultiplayerServlet</servlet-name>
     <servlet-class>Servlets.MultiplayerServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>JoinPageServlet</servlet-name>
+    <servlet-class>Servlets.JoinPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -47,5 +51,9 @@
   <servlet-mapping>
     <servlet-name>MultiplayerServlet</servlet-name>
     <url-pattern>/multiplayer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JoinPageServlet</servlet-name>
+    <url-pattern>/join</url-pattern>
   </servlet-mapping>
   </web-app>
