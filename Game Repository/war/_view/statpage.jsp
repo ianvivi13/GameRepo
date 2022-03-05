@@ -3,14 +3,16 @@
 <html>
 	<head>
 		<title>Stats</title>
-        <link rel="stylesheet" href="_view/statpage.css" />
+		<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/statpage.css"/>
 	</head>
 	
 	<body>
         <div id = "top">
             <p1>Stats:&nbsp;Username</p1>
             <div class = "mainMenu">
-                <form method="get" action="http://localhost:8080/gamprepo/home">
+                <form method="get" action="http://localhost:8080/gamerepo/home">
                     <input type="Submit" name="submit" value="Main Menu">
                 </form>
             </div>

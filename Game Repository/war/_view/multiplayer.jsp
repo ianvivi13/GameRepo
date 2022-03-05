@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+    	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/multiplayer.css"/>
         <style>
-
-        body {
-            font-family: 'Ubuntu', sans-serif;
-        }
 
         .subtopic {
             font-size: 50px;
@@ -65,7 +64,7 @@
     <a href="http://localhost:8080/gamerepo/host"><button class="branch" type="submit">Host</button><br>
     </a>
     
-    <a href="http://localhost:8080/gamerepo/host"><button class="branch" type="submit">Join</button>
+    <a href="http://localhost:8080/gamerepo/join"><button class="branch" type="submit">Join</button>
     </a>
 
     </body>

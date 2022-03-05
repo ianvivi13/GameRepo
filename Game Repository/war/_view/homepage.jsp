@@ -3,7 +3,9 @@
 <html>
 	<head>
 		<title>Stats</title>
-        <link rel="stylesheet" href="_view/homepage.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/homepage.css"/>
 	</head>
 	
 	<body>
