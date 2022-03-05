@@ -21,12 +21,24 @@
 	right: 10px;
 }
 
+/* create the header ie: multiplayer style */
+.HeaderStyle {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	color: #ffffff;
+	font-weight: bolder;
+    text-align: left;
+    margin-left: 5px;
+    font-size: 30px;
+}
+
 /* create a standard for button inputs */
 button.ButtonStyle {
     width: 200px;
     padding: 12px 10px;
     font-size: 18px;
-    color: white;
+    color: #ffffff;
     border-radius: 15px;
     background-color: #3b3b3b;
     text-align: center;

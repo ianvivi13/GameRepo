@@ -18,6 +18,10 @@
     <servlet-name>NewAccountPageServlet</servlet-name>
     <servlet-class>Servlets.NewAccountPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>JoinPageServlet</servlet-name>
+    <servlet-class>Servlets.JoinPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -31,5 +35,9 @@
   <servlet-mapping>
     <servlet-name>NewAccountPageServlet</servlet-name>
     <url-pattern>/new</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JoinPageServlet</servlet-name>
+    <url-pattern>/join</url-pattern>
   </servlet-mapping>
   </web-app>
