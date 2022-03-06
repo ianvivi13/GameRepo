@@ -42,21 +42,6 @@ body {
 	width: 400px;
 }
 
-.username, .password {
-	padding: 15px;
-	display: block;
-}
-
-button.signin, button.signup {
-	width: 200px;
-	padding: 12px 10px;
-	font-size: 18px;
-	color: white;
-	border-radius: 15px;
-	background-color: #3b3b3b;
-	text-align: center;
-}
-
-.guest {
+.signup {
 	margin: 5px;
 }

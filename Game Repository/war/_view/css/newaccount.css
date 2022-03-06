@@ -42,23 +42,9 @@ body {
     width: 400px;
 }
 
-.InputStyle {
-    padding: 15px;
-    display: block;
-}
 
 .BackButton {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-}
-
-button.ButtonStyle {
-    width: 200px;
-    padding: 12px 10px;
-    font-size: 18px;
-    color: white;
-    border-radius: 15px;
-    background-color: #3b3b3b;
-    text-align: center;
 }
