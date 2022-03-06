@@ -12,23 +12,15 @@ body {
     margin: 0;
 }
 
-.login {
-	margin: 100px auto;
-	width: 500px;
-	height: 400px;
-	text-align: center;
-	padding: 60px;
-	border-radius: 10px;
+.BackButton {
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }
 
-.title {
-	font-weight: bolder;
-	text-align: left;
-	margin-left: 5px;
-	font-size: 30px;
-	color: white;
-}
-
-.guest {
-	margin: 5px;
+.PlayButton {
+	margin-left: 50%;
+	position: absolute;
+	bottom: 0;
+	margin-bottom: 50px;
 }

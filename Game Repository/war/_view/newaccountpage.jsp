@@ -5,6 +5,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
         <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
         <link rel="stylesheet" type="text/css" href="_view/css/newaccount.css"/>
+        <link rel="stylesheet" type="text/css" href="_view/css/general.css"/>
         <title>Create Account</title>
         <script>
 			function validate(){

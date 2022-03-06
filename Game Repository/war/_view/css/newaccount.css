@@ -13,4 +13,27 @@
     margin-left: 5px;
     font-size: 30px;
     color: white;
+<<<<<<< HEAD
+=======
+}
+
+.form {
+    width: 100%;
+}
+
+.form input {
+    font-size: 18px;
+    padding: 10px 20px 10px 5px;
+    background: #3b3b3b;
+    color: white;
+    border-radius: 15px;
+    width: 400px;
+}
+
+
+.BackButton {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+>>>>>>> refs/heads/Singleplayer_page
 }

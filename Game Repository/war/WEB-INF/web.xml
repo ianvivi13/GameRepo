@@ -34,6 +34,10 @@
     <servlet-name>JoinExtendedPageServlet</servlet-name>
     <servlet-class>Servlets.JoinExtendedPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>SingleplayerPageServlet</servlet-name>
+    <servlet-class>Servlets.SingleplayerPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -63,5 +67,9 @@
   <servlet-mapping>
     <servlet-name>JoinExtendedPageServlet</servlet-name>
     <url-pattern>/joinextended</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  <servlet-name>SingleplayerPageServlet</servlet-name>
+    <url-pattern>/singleplayer</url-pattern>
   </servlet-mapping>
   </web-app>
