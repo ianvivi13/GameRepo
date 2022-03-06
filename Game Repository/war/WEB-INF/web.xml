@@ -30,6 +30,14 @@
     <servlet-name>JoinPageServlet</servlet-name>
     <servlet-class>Servlets.JoinPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>HostPageServlet</servlet-name>
+    <servlet-class>Servlets.HostPageServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HostPageExtendServlet</servlet-name>
+    <servlet-class>Servlets.HostPageExtendServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -55,5 +63,13 @@
   <servlet-mapping>
     <servlet-name>JoinPageServlet</servlet-name>
     <url-pattern>/join</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HostPageServlet</servlet-name>
+    <url-pattern>/host</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HostPageExtendServlet</servlet-name>
+    <url-pattern>/hostextend</url-pattern>
   </servlet-mapping>
   </web-app>
