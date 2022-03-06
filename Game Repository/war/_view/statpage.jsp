@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="_view/css/statpage.css"/>
 	</head>
 	
-	<body>
+	<body class="StaticBackground">
         <div id = "top">
             <p1>Stats:&nbsp;Username</p1>
             <div class = "mainMenu">
