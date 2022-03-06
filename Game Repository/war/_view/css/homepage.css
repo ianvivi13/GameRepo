@@ -1,14 +1,25 @@
-.homePage{
-    float: right;
-    clear: both;
-}
-
-#top{
-    border-bottom: 3px solid red;
-    font-size: 300%;
-}
-
 .buttons{
-    margin-top: 5%;
+	margin-top: 5%;
     text-align: center;
+    border: 2px solid red;
 }
+
+.radbuttons{
+    text-align: left;
+    margin-right: 25%;
+    border: 2px solid green;
+}
+
+.buttspace{
+    margin-right: 20%;
+    border: 2px solid green;
+}
+
+#bootybutt{
+    margin-top: 5%;
+    border: 2px solid blue;
+}
+
+
+
+
