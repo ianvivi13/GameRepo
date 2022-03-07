@@ -1,26 +1,32 @@
-* {
-	font-family: 'Ubuntu', sans-serif;
+#topic {
+    text-align: center;
+    margin-top: 40px; 
 }
 
-body {
-    background-image: url(Back.png);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;    
-    background-color: #151019;
-    margin: 0;
+#right {
+    float: right;
+    clear: both;
 }
 
-.BackButton {
-	position: absolute;
-	top: 10px;
-	right: 10px;
+button.right {
+    width: 200px;
+    
+    padding: 12px 10px;
+    font-size: 18px;
+    color: white;
+    border-radius: 15px;
+    background-color: #3b3b3b;
 }
 
-.PlayButton {
-	margin-left: 50%;
-	position: absolute;
-	bottom: 0;
-	margin-bottom: 50px;
+button.branch {
+    width: 250px;
+    height: 100px;
+    padding: 12px 10px;
+    font-size: 18px;
+    color: white;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+
+    margin-top: 4%;
+    margin-left: 42%;
 }
