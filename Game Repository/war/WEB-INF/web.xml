@@ -38,6 +38,14 @@
     <servlet-name>SingleplayerPageServlet</servlet-name>
     <servlet-class>Servlets.SingleplayerPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>HostPageServlet</servlet-name>
+    <servlet-class>Servlets.HostPageServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HostPageExtendServlet</servlet-name>
+    <servlet-class>Servlets.HostPageExtendServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -71,5 +79,13 @@
     <servlet-mapping>
   <servlet-name>SingleplayerPageServlet</servlet-name>
     <url-pattern>/singleplayer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HostPageServlet</servlet-name>
+    <url-pattern>/host</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HostPageExtendServlet</servlet-name>
+    <url-pattern>/hostextend</url-pattern>
   </servlet-mapping>
   </web-app>

@@ -1,15 +1,38 @@
 .subtopic {
     font-size: 50px;
     text-align: center;
-    margin: 30px;
-    border: 2px solid black;
-    border-radius: 4px;
-    padding: 10px;
-    
+    margin: 5px;
 }
 
 #topic {
     text-align: center;
-
+    margin-top: 40px; 
 }
 
+#right {
+    float: right;
+    clear: both;
+}
+
+button.right {
+    width: 200px;
+    
+    padding: 12px 10px;
+    font-size: 18px;
+    color: white;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+}
+
+button.branch {
+    width: 250px;
+    height: 100px;
+    padding: 12px 10px;
+    font-size: 18px;
+    color: white;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+
+    margin-top: 4%;
+    margin-left: 42%;
+}
