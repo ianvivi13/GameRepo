@@ -73,5 +73,6 @@
 	<classpathentry kind="lib" path="lib/apache-jsp/org.mortbay.jasper.apache-jsp-8.5.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-impl-1.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-spec-1.2.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
