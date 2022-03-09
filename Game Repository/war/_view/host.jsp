@@ -69,7 +69,7 @@
             <label for="player5">5</label>
           </div>
 
-    <a href="http://localhost:8080/gamerepo/hostextends"><button class="ButtonStyle" type="submit">Host</button><br>
+    <a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button><br>
     </a>
 
     </body>
