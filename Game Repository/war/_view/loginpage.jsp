@@ -18,10 +18,10 @@
 			<div class="form">
 >>>>>>> refs/heads/Singleplayer_page
 				<div class="InputStyle">
-					<input type="text" placeholder="Username">
+					doGet Username: <input type="text" name="Username" placeholder="Username">
 				</div>
 				<div class="InputStyle">
-					<input type="password" placeholder="Password">
+					doGet Password: <input type="password" name="Password" placeholder="Password">
 				</div>
 					<a href="http://localhost:8080/gamerepo/home">
 						<button class="ButtonStyle" type="submit">Sign In</button>

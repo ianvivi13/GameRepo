@@ -3,6 +3,8 @@ package Servlets;
 import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import Models.User;
+import Models.UserList;
 
 public class LoginPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -14,6 +16,25 @@ public class LoginPageServlet extends HttpServlet {
 		System.out.println("Login Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/loginpage.jsp").forward(req, resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		UserList list = new UserList();
+		
+		String username = req.getParameter("Username");
+		String password = req.getParameter("Password");
+		
+		if(username.equals("admin") && password.equals("admin")) {
+			resp.sendRedirect("_view/homepage.jsp");
+			return;
+		}
+		else {
+			resp.sendRedirect("_view/newaccountpage.jsp");
+			return;
+		}
 	}
 	
 }

@@ -18,15 +18,15 @@ public class UserList {
 	
 	public boolean login(String name, String pass) {
 		if(userLogin.containsKey(name.toLowerCase())) {
-			return userLogin.get(name).checkPassword(pass);
+			return userLogin.get(name.toLowerCase()).checkPassword(pass);
 		}
 		
 		return false;
 	}
 	
 	public User getUser(String username) {
-		if(userLogin.containsKey(username)) {
-			return userLogin.get(username);
+		if(userLogin.containsKey(username.toLowerCase())) {
+			return userLogin.get(username.toLowerCase());
 		}
 		
 		return null;
@@ -34,5 +34,9 @@ public class UserList {
 	
 	public int getListSize() {
 		return userLogin.size();
+	}
+	
+	public TreeMap<String, User> getList() {
+		return userLogin;
 	}
 }
