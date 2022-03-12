@@ -19,7 +19,7 @@ public class UserListTest {
 		userList.createUser("Admin", "Password");
 		userList.createUser("User", "passWORD");
 		userList.createUser("Three", "Pass");
-		userList.createUser("AdMIn", "PASS");
+		userList.createUser("AdMIn", "PASS"); // shouldn't be created because admin username is already used
 		
 		System.out.println(userList.getUser("Admin"));
 	}

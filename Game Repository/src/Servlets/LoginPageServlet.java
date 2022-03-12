@@ -27,12 +27,16 @@ public class LoginPageServlet extends HttpServlet {
 		String username = req.getParameter("Username");
 		String password = req.getParameter("Password");
 		
+		System.out.println("Verify User");
+		System.out.println(username);
+		System.out.println(password);
+		
 		if(username.equals("admin") && password.equals("admin")) {
-			resp.sendRedirect("_view/homepage.jsp");
+			resp.sendRedirect("http://localhost:8080/gamerepo/home");
 			return;
 		}
 		else {
-			resp.sendRedirect("_view/newaccountpage.jsp");
+			resp.sendRedirect("http://localhost:8080/gamerepo/new");
 			return;
 		}
 	}
