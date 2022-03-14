@@ -8,14 +8,15 @@
             Multiplayer
         </title>
     </head>
-    <body>
+
+    <body class="StaticBackground">
         
-        <div id="right">
-            <a href="http://localhost:8080/gamerepo/home"><button class="right" type="submit">Main Menu</button>
+        <div class="HeaderStyle">Multiplayer:&nbsp;Username</div>
+        
+        <div class="BackButton">
+            <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
-
-        <div>Multiplayer: &nbsp; Username</div>
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
