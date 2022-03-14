@@ -19,8 +19,8 @@
     <servlet-class>Servlets.NewAccountPageServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>StatisticsPageServelet</servlet-name>
-    <servlet-class>Servlets.StatisticsPageServelet</servlet-class>
+    <servlet-name>StatisticsPageServlet</servlet-name>
+    <servlet-class>Servlets.StatisticsPageServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>MultiplayerServlet</servlet-name>
@@ -61,7 +61,7 @@
     <url-pattern>/new</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>StatisticsPageServelet</servlet-name>
+    <servlet-name>StatisticsPageServlet</servlet-name>
     <url-pattern>/stats</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
