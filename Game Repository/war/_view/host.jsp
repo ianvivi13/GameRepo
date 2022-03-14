@@ -12,7 +12,7 @@
     <body class="StaticBackground">
 
 
-      <div id="left"><a href="http://localhost:8080/gamerepo/hostextends"><button class="ButtonStyle" type="submit">Host</button> 
+      <div id="left"><a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button> 
       </a>
     </div>
     <div class="BackButton">
