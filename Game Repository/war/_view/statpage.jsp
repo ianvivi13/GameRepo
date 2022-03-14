@@ -10,7 +10,7 @@
 	
 	<body>
         <div id = "top">
-            <p1>Stats:&nbsp;Username</p1>
+            <p1>Stats:&nbsp;${username}</p1>
             <div class = "mainMenu">
                 <form method="get" action="http://localhost:8080/gamerepo/home">
                     <input type="Submit" name="submit" value="Main Menu">

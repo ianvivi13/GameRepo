@@ -15,7 +15,7 @@
             </a>
     </div>
 
-        <div>Multiplayer: &nbsp; Username</div>
+        <div>Multiplayer:&nbsp;${username}</div>
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     

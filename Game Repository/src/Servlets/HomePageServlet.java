@@ -22,6 +22,13 @@ public class HomePageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		//TODO: add user model so that JSP shows username
+		UserList list = new UserList();
+		
+		String username = list.getUser("admin").getUsername();
+		System.out.println("Username: " + username);
+		
+		req.setAttribute("username", username);
+		
+		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
 	}
 }

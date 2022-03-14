@@ -16,7 +16,7 @@
             </a>
     </div>
 
-        <div>Multiplayer: &nbsp; <input type = "text" placeholder = "Username"></div>
+        <div>Multiplayer:&nbsp;${username}</div>
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     <span class="types">Difficulty Level</span>

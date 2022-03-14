@@ -32,6 +32,7 @@ public class LoginPageServlet extends HttpServlet {
 		System.out.println(password);
 		
 		if(username.equals("admin") && password.equals("admin")) {
+			list.createUser(username, password);
 			resp.sendRedirect("http://localhost:8080/gamerepo/home");
 			return;
 		}
