@@ -9,17 +9,21 @@
             Hosting
         </title>
     </head>
-    <body>
-        
-        <div id="right">
-            <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
-            </a>
+    <body class="StaticBackground">
+
+
+      <div id="left"><a href="http://localhost:8080/gamerepo/hostextends"><button class="ButtonStyle" type="submit">Host</button> 
+      </a>
+    </div>
+    <div class="BackButton">
+      <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
+      </a>
     </div>
 
         <div>Multiplayer:&nbsp;Admin</div>
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
-    <span class="types">Difficulty Level</span>
+    Difficulty Level:
     <div class="difficulty-slider">
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
