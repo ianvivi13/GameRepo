@@ -20,8 +20,6 @@
       </a>
     </div>
 
-        <div>Multiplayer:&nbsp;Admin</div>
-
     <h2 id="topic"><u>Card Game Desired</u></h2>
     Difficulty Level:
     <div class="difficulty-slider">
@@ -72,9 +70,6 @@
             <input id="player5" type="radio" name="player">
             <label for="player5">5</label>
           </div>
-
-    <a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button><br>
-    </a>
 
     </body>
 </html>

@@ -18,8 +18,6 @@
             </a>
     </div>
 
-        <div>Multiplayer:&nbsp;Admin</div>
-
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
     <a href="http://localhost:8080/gamerepo/host"><button class="branch" type="submit">Host</button><br>

@@ -19,8 +19,6 @@
             </a>
     </div>
 
-        <div>Singleplayer:&nbsp;Admin</div>
-
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
     Difficulty Level:
