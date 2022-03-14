@@ -1,4 +1,3 @@
-
 .subtopic {
     font-size: 50px;
     text-align: right;
@@ -34,12 +33,21 @@
     margin-left: -200px;
 }
 
+.topics{
+  text-align: center;
+  margin-top: 68px; 
+  color:white;
+  font-size: 30px;
+}
 
+#slider {
+  font-size: 30px;
+}
 
 body{color:#444;font:100%/1.4 sans-serif;}
 
-
 .ckb{
+  margin-left: 45%;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;

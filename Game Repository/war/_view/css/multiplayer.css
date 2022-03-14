@@ -1,7 +1,6 @@
 #topic {
     text-align: center;
     margin-top: 4%;
-    
 }
 
 #right {
@@ -13,7 +12,6 @@
 
 button.right {
     width: 200px;
-    
     padding: 12px 10px;
     font-size: 18px;
     color: white;
@@ -29,7 +27,6 @@ button.branch {
     color: white;
     border-radius: 15px;
     background-color: #3b3b3b;
-
     margin-top: 4%;
     margin-left: 42%;
 }

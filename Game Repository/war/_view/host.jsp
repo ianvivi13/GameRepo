@@ -12,7 +12,7 @@
     <body class="StaticBackground">
 
 
-      <div id="left"><a href="http://localhost:8080/gamerepo/hostextends"><button class="ButtonStyle" type="submit">Host</button> 
+      <div id="left"><a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button> 
       </a>
     </div>
     <div class="BackButton">
@@ -20,10 +20,9 @@
       </a>
     </div>
 
-        <div>Multiplayer:&nbsp;Admin</div>
-
     <h2 id="topic"><u>Card Game Desired</u></h2>
-    Difficulty Level:
+    
+    <div class="topics">Difficulty Level
     <div class="difficulty-slider">
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
@@ -38,8 +37,9 @@
         <input id="difficultyHard" type="radio" name="difficulty">
         <label for="difficultyHard">&nbsp;</label>
       </div>
+      </div>
 
-      Bot Count:
+      <div class="topics">Bot Count
       <div class="bot-slider">
         <input id="bot1" type="radio" name="bot">
         <label for="bot1">1</label>
@@ -52,14 +52,15 @@
         <input id="bot5" type="radio" name="bot">
         <label for="bot5">5</label>
       </div>
+      </div>
 
-        <label class="ckb"> Doubling: &nbsp;
+        <label class="ckb" id="slider"> Doubling: &nbsp;
             <input type="checkbox" name="ckb1" value="a" unchecked>
             <i></i>
           </label>
           <br><br>
 
-          Player Count:
+          <div class="topics">Player Count
           <div class="player-slider">
             <input id="player1" type="radio" name="player">
             <label for="player1">1</label>
@@ -72,9 +73,7 @@
             <input id="player5" type="radio" name="player">
             <label for="player5">5</label>
           </div>
-
-    <a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button><br>
-    </a>
+          </div>
 
     </body>
 </html>
