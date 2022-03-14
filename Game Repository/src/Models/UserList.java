@@ -7,6 +7,8 @@ public class UserList {
 	
 	public UserList() {
 		userLogin = new TreeMap<String, User>();
+		User admin = new User("Admin", "admin");
+		userLogin.put("admin", admin);
 	}
 	
 	public void createUser(String username, String password) {

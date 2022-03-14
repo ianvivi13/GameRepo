@@ -10,7 +10,7 @@
 	
 	<body class = "StaticBackground">
 		<div class="HeaderStyle">
-    		Welcome:&nbsp;${username}
+    		Welcome:&nbsp;Admin
     	</div>
 
         <div class = "BackButton">
