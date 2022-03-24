@@ -20,8 +20,8 @@ public class Pile{
 		visibleIndex = visible;
 	}
 	
-	public void addCard(Card card) {
-		pile.add(card);
+	public void addCard(int index, Card card) {
+		pile.add(index, card);
 	}
 	
 	public int getNumCards() {
@@ -29,6 +29,14 @@ public class Pile{
 	}
 	
 	//think about how to get cards using a string
+	public Card getCard(int index) {
+		if(index>=pile.size()||index<0){
+			throw new NoSuchElementException();
+		}
+		else {
+			return pile.remove(index);
+		}
+	}
 	
 	public int getIndexOfTopCard() {
 		if(pile.isEmpty()){
@@ -75,5 +83,8 @@ public class Pile{
 		pile.addAll(cardsToAdd);
 	}
 	
+	public void swapCards(ArrayList<Card> cardsToSwap, int swappee, int swapper) {
+		Collections.swap(cardsToSwap, swappee, swapper);
+	}
 	
 }
