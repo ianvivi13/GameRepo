@@ -69,7 +69,7 @@
             <label for="player4">4</label>
             <input id="player5" type="radio" name="player">
             <label for="player5">5</label>
-          </div>
+          </div>  
 
     </body>
 </html>
