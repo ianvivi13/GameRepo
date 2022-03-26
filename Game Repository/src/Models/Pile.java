@@ -87,4 +87,15 @@ public class Pile{
 		Collections.swap(cardsToSwap, swappee, swapper);
 	}
 	
+	public void populate() {
+		Suit[] allSuits = Suit.values();
+		Rank[] allRanks = Rank.values();
+		for (int j = 0; j < allSuits.length; j++) {
+			for (int i = 0; i < allRanks.length; i++) {
+				// use allSuits[j] and allRanks[i] to create a Card
+				pile.add(new Card(allRanks[i],allSuits[j]));
+			}
+		}
+	}
+	
 }
