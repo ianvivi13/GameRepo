@@ -20,35 +20,16 @@ public class Pile{
 		visibleIndex = visible;
 	}
 	
-	public void addCard(int index, Card card) {
-		pile.add(index, card);
+	public void addCard(Card card) {
+		pile.add(card);
 	}
 	
 	public int getNumCards() {
 		return pile.size();
 	}
 	
-	//think about how to get cards using a string
-	public Card getCard(int index) {
-		if(index>=pile.size()||index<0){
-			throw new NoSuchElementException();
-		}
-		else {
-			return pile.remove(index);
-		}
-	}
-	
-	public int getIndexOfTopCard() {
-		if(pile.isEmpty()){
-			return -1;
-		}
-		else{
-			return pile.size()-1;
-		}
-	}
-	
 	public boolean isEmpty() {
-		if(pile.isEmpty()) {
+		if (pile.isEmpty()){
 			return true;
 		}
 		else {
@@ -56,15 +37,31 @@ public class Pile{
 		}
 	}
 	
-	public void shuffle() {
-		Collections.shuffle(pile);
+	public Card getCard(int index) {
+		if(index>=pile.size()||index<0){
+			throw new NoSuchElementException();
+		}
+		else {
+			return pile.get(index);
+		}
 	}
 	
-	public Card drawCard() {
+	public Card getTopCard() {
 		if(pile.isEmpty()){
-			throw new NoSuchElementException("Its Empty Hoe");
+			throw new NoSuchElementException("No such element in pile");
 		}
-		return pile.remove(pile.size()-1);
+		else{
+			return pile.get(pile.size()-1);
+		}
+	}
+
+	public int getIndexOfTopCard() {
+		if(pile.isEmpty()){
+			return -1;
+		}
+		else{
+			return pile.size()-1;
+		}
 	}
 	
 	public ArrayList<Card> removeCards(int numCards) {
@@ -83,10 +80,6 @@ public class Pile{
 		pile.addAll(cardsToAdd);
 	}
 	
-	public void swapCards(ArrayList<Card> cardsToSwap, int swappee, int swapper) {
-		Collections.swap(cardsToSwap, swappee, swapper);
-	}
-	
 	public void populate() {
 		Suit[] allSuits = Suit.values();
 		Rank[] allRanks = Rank.values();
@@ -97,5 +90,22 @@ public class Pile{
 			}
 		}
 	}
+	
+	
+	public void shuffle() {
+		Collections.shuffle(pile);
+	}
+	
+	public Card drawCard() {
+		if(pile.isEmpty()){
+			throw new NoSuchElementException("Its Empty Hoe");
+		}
+		return pile.remove(pile.size()-1);
+	}
+	
+	
+//	public void swapCards(ArrayList<Card> cardsToSwap, int swappee, int swapper) {
+//		Collections.swap(cardsToSwap, swappee, swapper);
+//	}
 	
 }
