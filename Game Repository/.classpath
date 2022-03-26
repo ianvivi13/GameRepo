@@ -74,5 +74,6 @@
 	<classpathentry kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-impl-1.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/apache-jstl/org.apache.taglibs.taglibs-standard-spec-1.2.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CS320_Derby"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
