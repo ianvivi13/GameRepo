@@ -86,8 +86,6 @@ public class DerbyDatabase implements IDatabase {
 		return conn;
 	}
 	
-	// TODO: initials and creation
-	
 	// create initial tables
 	private void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -120,7 +118,6 @@ public class DerbyDatabase implements IDatabase {
 							"   sOne INTEGER DEFAULT 0 ," +
 							"   sTwo INTEGER DEFAULT 0 ," +
 							"   sThree INTEGER DEFAULT 0 )" 
-				
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -135,6 +132,8 @@ public class DerbyDatabase implements IDatabase {
 					);
 					stmt.executeUpdate();
 					stmt.close();
+					
+					// Create 
 					
 					return true;
 				} finally {
@@ -155,9 +154,10 @@ public class DerbyDatabase implements IDatabase {
 					try {
 						db.createAllStats(db.createUser("NewUser","password still"));
 						db.createAllStats(db.createUser("User","password still"));
+						db.createBot(IDatabase.Key_Blackjack,2);
 						db.createBot(IDatabase.Key_ExplodingKittens,2);
-						db.createBot(IDatabase.Key_ExplodingKittens,2);
-						db.createBot(IDatabase.Key_ExplodingKittens,2);
+						db.createBot(IDatabase.Key_UnoFlip,2);
+						
 						return true;
 					} catch (UserExistsException e) {
 						System.out.println(e);
@@ -262,40 +262,40 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// create new user in database - checks if already exists
-		public int createBot(String gameKey, int difficulty) {
-			return executeTransaction(new Transaction<Integer>() {
-				@Override
-				public Integer execute(Connection conn) throws SQLException {
-					PreparedStatement stmt = null;
-					ResultSet resultSet = null;
+	public int createBot(String gameKey, int difficulty) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+						"INSERT INTO Bots (name, gameKey, difficulty)" +
+						"	VALUES (?, ?, ?)"
+					);
+					stmt.setString(1, "UwU");
+					stmt.setString(2, gameKey);
+					stmt.setInt(3, difficulty);
+					stmt.executeUpdate();
+					stmt.close();
 					
-					try {
-						stmt = conn.prepareStatement(
-							"INSERT INTO Bots (name, gameKey, difficulty)" +
-							"	VALUES (?, ?, ?)"
-						);
-						stmt.setString(1, "UwU");
-						stmt.setString(2, gameKey);
-						stmt.setInt(3, difficulty);
-						stmt.executeUpdate();
-						stmt.close();
-						
-						stmt = conn.prepareStatement(
-							"SELECT MAX(bot_id) AS bot_id" +
-							"	From Bots"
-						);
-						resultSet = stmt.executeQuery();
-						resultSet.next();
-						int ret = resultSet.getInt("bot_id");
-						stmt.close();
-						
-						return ret;
-					} finally {
-						DBUtil.closeQuietly(stmt);
-					}
+					stmt = conn.prepareStatement(
+						"SELECT MAX(bot_id) AS bot_id" +
+						"	From Bots"
+					);
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					int ret = resultSet.getInt("bot_id");
+					stmt.close();
+					
+					return ret;
+				} finally {
+					DBUtil.closeQuietly(stmt);
 				}
-			});
-		}
+			}
+		});
+	}
 	
 	// create stats in database
 	public void createAllStats(int UserId) {
@@ -347,4 +347,71 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+
+	// get user_id from username
+	public int getUserIDfromUsername(String username) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Users.User_id" +
+							"	FROM Users" +
+							"		WHERE Users.username = ?"
+					);
+					stmt.setString(1, username);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int res = resultSet.getInt("user_id");
+						return res;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get username from user_id
+	public String getUsernamefromUserID(int UserID) {
+		return executeTransaction(new Transaction<String>() {
+			@Override
+			public String execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Users.username" +
+							"	FROM Users" +
+							"		WHERE Users.user_id = ?"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						String res = resultSet.getString("username");
+						return res;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get object User from user_id
+	
+	// get object User from username
+	
+	// get object stats from user_id
+	
+	// get object stats from username
+
+	
+
 }
