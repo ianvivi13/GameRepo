@@ -43,8 +43,6 @@ public class StatisticsGlobalTest {
 	// Testing the global statistics
 	@Test
 	public void testCheckRatio() {
-		assertTrue(stats.GetRatio() == 0);
-		stats.UpdateRatio();
 		assertTrue(stats.GetRatio() == 5/9);
 	}
 }

@@ -11,6 +11,19 @@ public class StatisticsUnoFlip extends StatisticsParent{
 		this.PlusFives = 0;
 	}
 	
+	// Setters
+	public void SetFlips(int Flips) {
+		this.Flips = Flips;
+	}
+	
+	public void SetSkipAlls(int SkipAlls) {
+		this.SkipAlls = SkipAlls;
+	}
+	
+	public void SetPlusFives(int PlusFives) {
+		this.PlusFives = PlusFives;
+	}
+	
 	// Getters
 	public int GetFlips() {
 		return Flips;

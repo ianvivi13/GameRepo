@@ -11,6 +11,19 @@ public class StatisticsExplodingKittens extends StatisticsParent{
 		this.Futures = 0;
 	}
 	
+	// Setters
+	public void SetDefuses(int Defuses) {
+		this.Defuses = Defuses;
+	}
+	
+	public void SetFavors(int Favors) {
+		this.Favors = Favors;
+	}
+	
+	public void SetFutures(int Futures) {
+		this.Futures = Futures;
+	}
+	
 	// Getters
 	public int GetDefuses() {
 		return Defuses;

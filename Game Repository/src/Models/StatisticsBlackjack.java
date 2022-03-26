@@ -11,6 +11,19 @@ public class StatisticsBlackjack extends StatisticsParent{
 		this.FiveCardWins = 0;
 	}
 	
+	// Setters
+	public void SetBlackjacks(int Blackjacks) {
+		this.Blackjacks = Blackjacks;
+	}
+	
+	public void SetSplits(int Splits) {
+		this.Splits = Splits;
+	}
+	
+	public void SetFiveCardWins(int FiveCardWins) {
+		this.FiveCardWins = FiveCardWins;
+	}
+	
 	// Getters
 	public int GetBlackjacks() {
 		return Blackjacks;

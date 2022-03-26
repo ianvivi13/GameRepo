@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 
+import Models.BotNameGenerator;
+import Models.User;
+import Models.StatisticsBlackjack;
+import Models.StatisticsUno;
+import Models.StatisticsUnoFlip;
+import Models.StatisticsGlobal;
+import Models.StatisticsExplodingKittens;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -171,13 +178,11 @@ public class DerbyDatabase implements IDatabase {
 							"CREATE TABLE Bots (" +
 							"	bot_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +	
 							gameKeyNotGlobal +
-							"	name VARCHAR(20) NOT NULL ," +
+							"	name VARCHAR(36) NOT NULL ," +
 							"	difficulty integer NOT NULL CHECK (difficulty >= 1 AND difficulty <= 3) DEFAULT 1)" 
 					);
 					stmt.executeUpdate();
 					stmt.close();
-					
-					// Create 
 					
 					return true;
 				} finally {
@@ -189,32 +194,30 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Create and store initial data
 	public void loadInitialData() {
-			executeTransaction(new Transaction<Boolean>() {
-				@Override
-				public Boolean execute(Connection conn) throws SQLException {
-					PreparedStatement stmt = null;
-					InitDatabase.init();
-					IDatabase db = DatabaseProvider.getInstance();
-					try {
-						db.createAllStats(db.createUser("NewUser","password still"));
-						db.createAllStats(db.createUser("User","password still"));
-						db.createBot(IDatabase.Key_Blackjack,2);
-						db.createBot(IDatabase.Key_ExplodingKittens,2);
-						db.createBot(IDatabase.Key_UnoFlip,2);
-						
-						return true;
-					} catch (UserExistsException e) {
-						System.out.println(e);
-						return false;
-					} finally {
-						DBUtil.closeQuietly(stmt);
-					}
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				InitDatabase.init();
+				IDatabase db = DatabaseProvider.getInstance();
+				try {
+					db.createAllStats(db.createUser("NewUser","password still"));
+					db.createAllStats(db.createUser("User","password still"));
+					db.createBot(IDatabase.Key_Blackjack,2);
+					db.createBot(IDatabase.Key_ExplodingKittens,2);
+					db.createBot(IDatabase.Key_UnoFlip,2);
+					return true;
+				} catch (UserExistsException e) {
+					System.out.println(e);
+					return false;
+				} finally {
+					DBUtil.closeQuietly(stmt);
 				}
-			});
+			}
+		});
 	}
 	
 	// Define some methods to use to access things within the database
-	
 	/*
 	import Database.elves.DatabaseProvider;
 	import Database.elves.IDatabase;
@@ -268,13 +271,14 @@ public class DerbyDatabase implements IDatabase {
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
+				BotNameGenerator botName = new BotNameGenerator();
 				
 				try {
 					stmt = conn.prepareStatement(
 						"INSERT INTO Bots (name, gameKey, difficulty)" +
 						"	VALUES (?, ?, ?)"
 					);
-					stmt.setString(1, "UwU");
+					stmt.setString(1, botName.GenerateName());
 					stmt.setString(2, gameKey);
 					stmt.setInt(3, difficulty);
 					stmt.executeUpdate();
@@ -347,7 +351,7 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-
+	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -405,13 +409,262 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// get object User from user_id
+	public User getUser(int UserID) {
+		return executeTransaction(new Transaction<User>() {
+			@Override
+			public User execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Users.username, Users.password" +
+							"	FROM Users" +
+							"		WHERE Users.user_id = ?"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						String username = resultSet.getString("username");
+						String password = resultSet.getString("password");
+						return new User(username, password);
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
 	// get object User from username
+	public User getUser(String username) {
+		return getUser(getUserIDfromUsername(username));
+	}
 	
-	// get object stats from user_id
+	// get object UnoStats from user_id
+	public StatisticsUno getUnoStats(int UserID) {
+		return executeTransaction(new Transaction<StatisticsUno>() {
+			@Override
+			public StatisticsUno execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Stats.plays, Stats.wins, Stats.loses, Stats.sOne, Stats.sTwo, Stats.sThree" +
+						"	FROM Stats" +
+						"		WHERE Stats.user_id = ?" +
+						"		AND Stats.gameKey = 'UNO'"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int plays = resultSet.getInt("plays");
+						int wins = resultSet.getInt("wins");
+						int loses = resultSet.getInt("loses");
+						int sOne = resultSet.getInt("sOne");
+						int sTwo = resultSet.getInt("sTwo");
+						int sThree = resultSet.getInt("sThree");
+						StatisticsUno stat = new StatisticsUno();
+						stat.SetGamesPlayed(plays);
+						stat.SetGamesWon(wins);
+						stat.SetGamesLost(loses);
+						stat.SetWildCards(sOne);
+						stat.SetPlusFours(sTwo);
+						stat.SetSwaps(sThree);
+						return stat;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
-	// get object stats from username
-
+	// get object UnoStats from username
+	public StatisticsUno getUnoStats(String username) {
+		return getUnoStats(getUserIDfromUsername(username));
+	}
 	
-
+	// get object UnoFlipStats from user_id
+	public StatisticsUnoFlip getUnoFlipStats(int UserID) {
+		return executeTransaction(new Transaction<StatisticsUnoFlip>() {
+			@Override
+			public StatisticsUnoFlip execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Stats.plays, Stats.wins, Stats.loses, Stats.sOne, Stats.sTwo, Stats.sThree" +
+						"	FROM Stats" +
+						"		WHERE Stats.user_id = ?" +
+						"		AND Stats.gameKey = 'UNF'"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int plays = resultSet.getInt("plays");
+						int wins = resultSet.getInt("wins");
+						int loses = resultSet.getInt("loses");
+						int sOne = resultSet.getInt("sOne");
+						int sTwo = resultSet.getInt("sTwo");
+						int sThree = resultSet.getInt("sThree");
+						StatisticsUnoFlip stat = new StatisticsUnoFlip();
+						stat.SetGamesPlayed(plays);
+						stat.SetGamesWon(wins);
+						stat.SetGamesLost(loses);
+						stat.SetFlips(sOne);
+						stat.SetSkipAlls(sTwo);
+						stat.SetPlusFives(sThree);
+						return stat;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get object UnoFlipStats from username
+	public StatisticsUnoFlip getUnoFlipStats(String username) {
+		return getUnoFlipStats(getUserIDfromUsername(username));
+	}
+	
+	// get object BlackjackStats from user_id
+	public StatisticsBlackjack getBlackjackStats(int UserID) {
+		return executeTransaction(new Transaction<StatisticsBlackjack>() {
+			@Override
+			public StatisticsBlackjack execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Stats.plays, Stats.wins, Stats.loses, Stats.sOne, Stats.sTwo, Stats.sThree" +
+						"	FROM Stats" +
+						"		WHERE Stats.user_id = ?" +
+						"		AND Stats.gameKey = 'BLJ'"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int plays = resultSet.getInt("plays");
+						int wins = resultSet.getInt("wins");
+						int loses = resultSet.getInt("loses");
+						int sOne = resultSet.getInt("sOne");
+						int sTwo = resultSet.getInt("sTwo");
+						int sThree = resultSet.getInt("sThree");
+						StatisticsBlackjack stat = new StatisticsBlackjack();
+						stat.SetGamesPlayed(plays);
+						stat.SetGamesWon(wins);
+						stat.SetGamesLost(loses);
+						stat.SetBlackjacks(sOne);
+						stat.SetSplits(sTwo);
+						stat.SetFiveCardWins(sThree);
+						return stat;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get object BlackjackStats from username
+	public StatisticsBlackjack getBlackjackStats(String username) {
+		return getBlackjackStats(getUserIDfromUsername(username));
+	}
+	
+	// get object ExplodingKittenStats from user_id
+	public StatisticsExplodingKittens getExplodingKittenStats(int UserID) {
+		return executeTransaction(new Transaction<StatisticsExplodingKittens>() {
+			@Override
+			public StatisticsExplodingKittens execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Stats.plays, Stats.wins, Stats.loses, Stats.sOne, Stats.sTwo, Stats.sThree" +
+						"	FROM Stats" +
+						"		WHERE Stats.user_id = ?" +
+						"		AND Stats.gameKey = 'EXP'"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int plays = resultSet.getInt("plays");
+						int wins = resultSet.getInt("wins");
+						int loses = resultSet.getInt("loses");
+						int sOne = resultSet.getInt("sOne");
+						int sTwo = resultSet.getInt("sTwo");
+						int sThree = resultSet.getInt("sThree");
+						StatisticsExplodingKittens stat = new StatisticsExplodingKittens();
+						stat.SetGamesPlayed(plays);
+						stat.SetGamesWon(wins);
+						stat.SetGamesLost(loses);
+						stat.SetDefuses(sOne);
+						stat.SetFavors(sTwo);
+						stat.SetFutures(sThree);
+						return stat;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}	
+	
+	// get object ExplodingKittenStats from username
+	public StatisticsExplodingKittens getExplodingKittenStats(String username) {
+		return getExplodingKittenStats(getUserIDfromUsername(username));
+	}
+	
+	// get object GlobalStats from user_id
+	public StatisticsGlobal getGlobalStats(int UserID) {
+		return executeTransaction(new Transaction<StatisticsGlobal>() {
+			@Override
+			public StatisticsGlobal execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Stats.plays, Stats.wins, Stats.loses, Stats.sOne" +
+						"	FROM Stats" +
+						"		WHERE Stats.user_id = ?" +
+						"		AND Stats.gameKey = 'GLB'"
+					);
+					stmt.setInt(1, UserID);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						int plays = resultSet.getInt("plays");
+						int wins = resultSet.getInt("wins");
+						int loses = resultSet.getInt("loses");
+						int sOne = resultSet.getInt("sOne");
+						StatisticsGlobal stat = new StatisticsGlobal();
+						stat.SetGamesPlayed(plays);
+						stat.SetGamesWon(wins);
+						stat.SetGamesLost(loses);
+						stat.SetRank(sOne);
+						return stat;
+					}
+					throw new UserDoesNotExistException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get object GlobalStats from username
+	public StatisticsGlobal getGlobalStats(String username) {
+		return getGlobalStats(getUserIDfromUsername(username));
+	}
 }
