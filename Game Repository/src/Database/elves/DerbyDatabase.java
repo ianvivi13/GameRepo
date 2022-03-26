@@ -86,6 +86,50 @@ public class DerbyDatabase implements IDatabase {
 		return conn;
 	}
 	
+	// Recursively delete directory
+	private static void deleteDirectory(File file) {
+	    File[] list = file.listFiles();
+	    if (list != null) {
+	        for (File temp : list) {
+	            //recursive delete
+	            deleteDirectory(temp);
+	        }
+	    }
+	    file.delete();
+	}
+		
+	// method to delete Dobby.db if exists and user accepts before re-creation
+	private static Boolean DeleteDobby() {
+		// check if Dobby.db exists
+		File DobbyPath = new File("Dobby.db");
+		Boolean DobbyExists = DobbyPath.exists();
+		if (DobbyExists) {
+			Scanner keyboard = new Scanner(System.in);
+			System.out.println("Dobby the data elf already exists");
+			System.out.print("Would you like to re-create him (y/n): ");
+			String ans = keyboard.nextLine();
+			keyboard.close();
+			if (!(ans.equals("y") || ans.equals("Y"))) {
+				return false;
+			}
+			deleteDirectory(DobbyPath);
+			System.out.println("Re-creating Dobby...");
+		}
+		return true;
+	}
+	
+	// The main method creates the database tables and loads the initial data.
+	public static void main(String[] args) throws IOException {
+		if (DeleteDobby()) {
+			System.out.println("Creating tables...");
+			DerbyDatabase db = new DerbyDatabase();
+			db.createTables();
+			System.out.println("Loading initial data...");
+			db.loadInitialData();
+			System.out.println("Success!");
+		}
+	}	
+	
 	// create initial tables
 	private void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -169,50 +213,6 @@ public class DerbyDatabase implements IDatabase {
 			});
 	}
 	
-	// Recursively delete directory
-	private static void deleteDirectory(File file) {
-	    File[] list = file.listFiles();
-	    if (list != null) {
-	        for (File temp : list) {
-	            //recursive delete
-	            deleteDirectory(temp);
-	        }
-	    }
-	    file.delete();
-	}
-	
-	// method to delete Dobby.db if exists and user accepts before re-creation
-	private static Boolean DeleteDobby() {
-		// check if Dobby.db exists
-		File DobbyPath = new File("Dobby.db");
-		Boolean DobbyExists = DobbyPath.exists();
-		if (DobbyExists) {
-			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Dobby the data elf already exists");
-			System.out.print("Would you like to re-create him (y/n): ");
-			String ans = keyboard.nextLine();
-			keyboard.close();
-			if (!(ans.equals("y") || ans.equals("Y"))) {
-				return false;
-			}
-			deleteDirectory(DobbyPath);
-			System.out.println("Re-creating Dobby...");
-		}
-		return true;
-	}
-	
-	// The main method creates the database tables and loads the initial data.
-	public static void main(String[] args) throws IOException {
-		if (DeleteDobby()) {
-			System.out.println("Creating tables...");
-			DerbyDatabase db = new DerbyDatabase();
-			db.createTables();
-			System.out.println("Loading initial data...");
-			db.loadInitialData();
-			System.out.println("Success!");
-		}
-	}
-	
 	// Define some methods to use to access things within the database
 	
 	/*
@@ -261,7 +261,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	// create new user in database - checks if already exists
+	// create new bot in database
 	public int createBot(String gameKey, int difficulty) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
