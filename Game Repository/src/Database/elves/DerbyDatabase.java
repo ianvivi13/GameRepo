@@ -197,6 +197,8 @@ public class DerbyDatabase implements IDatabase {
 					stmt.executeUpdate();
 					stmt.close();
 					
+					
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -220,6 +222,12 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
 					db.createBlackJackCards();
+					
+					System.out.println(db.login("User", "password still"));
+					System.out.println(db.login("Usr", "password still"));
+					System.out.println(db.login("Usr", "password stil"));
+					System.out.println(db.login("NewUSer", "password still"));
+					
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -715,6 +723,36 @@ public class DerbyDatabase implements IDatabase {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
 	
+	// return boolean if User exists from username and password
+	public boolean login(String username, String password) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {						
+					stmt = conn.prepareStatement(
+							"SELECT Users.User_id" +
+							"	FROM Users" +
+							"		WHERE LOWER(Users.username) = LOWER(?)" +
+							"		AND Users.password = ?"
+					);
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					resultSet = stmt.executeQuery();
+					if (resultSet.next()) {
+						return true;
+					}
+					return false;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 /*
 
 	+ Create the following tables:
@@ -793,9 +831,12 @@ public class DerbyDatabase implements IDatabase {
 			~ Player
 			~ User?
 			~ Stats?
+		- Misc.
+			~ login # returns boolean if user and password in list
 		- Probably more but who knows
 	
 	+ Create the following tests:
+		- login
 		- createUser
 		- createBot
 		- createAllStats

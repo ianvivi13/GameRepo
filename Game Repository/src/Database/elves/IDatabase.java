@@ -22,6 +22,7 @@ public interface IDatabase {
 	public String getUsernamefromUserID(int UserID);
 	public User getUser(int UserID);
 	public User getUser(String username);
+	public boolean login(String username, String password);
 	
 	// Stats retrieving - overloaded to allow use of username or user_id
 	public StatisticsGlobal getGlobalStats(int UserID);
