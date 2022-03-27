@@ -19,6 +19,7 @@ import Models.StatisticsUnoFlip;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
+import Models.ExplodingKittensCardDobbyInit;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -196,6 +197,16 @@ public class DerbyDatabase implements IDatabase {
 					stmt.executeUpdate();
 					stmt.close();
 					
+					// Create Exploding Kittens Cards Table
+					stmt = conn.prepareStatement(
+							"CREATE TABLE ExplodingKittensCards ("
+							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+							+ "	imagePath VARCHAR(65) NOT NULL ,"
+							+ "	type VARCHAR(2) NOT NULL)"
+							);
+					stmt.executeUpdate();
+					stmt.close();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -219,6 +230,7 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
 					db.createBlackJackCards();
+					db.createExplodingKittensCards();
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -397,6 +409,37 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// populates the ExplodingKittensCards table with cards
+		public void createExplodingKittensCards() {
+			executeTransaction(new Transaction<Void>() {
+				@Override
+				public Void execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+
+					try {
+						for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
+							String imgPath = cardData.get(0);
+							String type = cardData.get(1);
+							stmt = conn.prepareStatement(
+									"INSERT INTO ExplodingKittensCards(imagePath, type)" +
+									" 	VALUES(?, ?)"
+							);
+							stmt.setString(1, imgPath);
+							stmt.setString(2, type);
+							stmt.executeUpdate();
+							stmt.close();
+						}
+						
+						return null;
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -720,8 +763,6 @@ public class DerbyDatabase implements IDatabase {
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- ExplodingKittens
-		- Blackjack
 		- Pile
 		- Player
 		- Turn
@@ -731,8 +772,6 @@ public class DerbyDatabase implements IDatabase {
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- ExplodingKittens
-		- Blackjack
 		- Pile
 		- Player
 		- Turn
