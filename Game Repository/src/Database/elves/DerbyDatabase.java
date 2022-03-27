@@ -20,6 +20,7 @@ import Models.StatisticsUnoFlip;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
+import Models.ExplodingKittensCardDobbyInit;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -199,6 +200,16 @@ public class DerbyDatabase implements IDatabase {
 					
 					
 					
+					// Create Exploding Kittens Cards Table
+					stmt = conn.prepareStatement(
+							"CREATE TABLE ExplodingKittensCards ("
+							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+							+ "	imagePath VARCHAR(65) NOT NULL ,"
+							+ "	type VARCHAR(2) NOT NULL)"
+							);
+					stmt.executeUpdate();
+					stmt.close();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -228,6 +239,7 @@ public class DerbyDatabase implements IDatabase {
 					System.out.println(db.login("Usr", "password stil"));
 					System.out.println(db.login("NewUSer", "password still"));
 					
+					db.createExplodingKittensCards();
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -406,6 +418,37 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// populates the ExplodingKittensCards table with cards
+		public void createExplodingKittensCards() {
+			executeTransaction(new Transaction<Void>() {
+				@Override
+				public Void execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+
+					try {
+						for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
+							String imgPath = cardData.get(0);
+							String type = cardData.get(1);
+							stmt = conn.prepareStatement(
+									"INSERT INTO ExplodingKittensCards(imagePath, type)" +
+									" 	VALUES(?, ?)"
+							);
+							stmt.setString(1, imgPath);
+							stmt.setString(2, type);
+							stmt.executeUpdate();
+							stmt.close();
+						}
+						
+						return null;
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -723,44 +766,12 @@ public class DerbyDatabase implements IDatabase {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
 	
-	// return boolean if User exists from username and password
-	public boolean login(String username, String password) {
-		return executeTransaction(new Transaction<Boolean>() {
-			@Override
-			public Boolean execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-				try {						
-					stmt = conn.prepareStatement(
-							"SELECT Users.User_id" +
-							"	FROM Users" +
-							"		WHERE LOWER(Users.username) = LOWER(?)" +
-							"		AND Users.password = ?"
-					);
-					stmt.setString(1, username);
-					stmt.setString(2, password);
-					resultSet = stmt.executeQuery();
-					if (resultSet.next()) {
-						return true;
-					}
-					return false;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});
-	}
-	
 /*
 
 	+ Create the following tables:
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- ExplodingKittens
-		- Blackjack
 		- Pile
 		- Player
 		- Turn
@@ -770,8 +781,6 @@ public class DerbyDatabase implements IDatabase {
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- ExplodingKittens
-		- Blackjack
 		- Pile
 		- Player
 		- Turn
@@ -789,8 +798,6 @@ public class DerbyDatabase implements IDatabase {
 		- User
 			~ Should include 5 objects for statistics
 			~ Should inherit from Player
-		- UserList
-			~ Delete?
 			
 	+ Change the following Dobby methods:
 		- getUser
@@ -804,8 +811,6 @@ public class DerbyDatabase implements IDatabase {
 			~ Player
 			~ Uno
 			~ UnoFlip
-			~ ExplodingKittens
-			~ Blackjack
 			~ UnoFlipSide
 		- Getters
 			~ Game
@@ -831,12 +836,9 @@ public class DerbyDatabase implements IDatabase {
 			~ Player
 			~ User?
 			~ Stats?
-		- Misc.
-			~ login # returns boolean if user and password in list
 		- Probably more but who knows
 	
 	+ Create the following tests:
-		- login
 		- createUser
 		- createBot
 		- createAllStats

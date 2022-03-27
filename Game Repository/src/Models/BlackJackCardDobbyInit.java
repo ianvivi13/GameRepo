@@ -14,19 +14,24 @@ public class BlackJackCardDobbyInit {
 		String number;
 		String fullSuit;
 		String fullImgPath;
+		List<String> backCard = new ArrayList<>();
+		backCard.add(imgPath + "back-sm.png");
+		backCard.add("Z");
+		backCard.add("Z");
+		cardData.add(backCard);
 		for(int i = 0; i < 4; i++) {
-			suit = "s";
+			suit = "S";
 			fullSuit = "spades";
 			if(i == 1) {
-				suit = "h";
+				suit = "H";
 				fullSuit = "hearts";
 			}
-			if(i == 2) {
-				suit = "c";
+			else if(i == 2) {
+				suit = "C";
 				fullSuit = "clubs";
 			}
-			if(i == 3) {
-				suit = "d";
+			else if(i == 3) {
+				suit = "D";
 				fullSuit = "diamonds";
 				
 			}
@@ -34,22 +39,22 @@ public class BlackJackCardDobbyInit {
 				rank = Integer.toString(j + 1);
 				number = Integer.toString(j + 1);
 				if(j == 0) {
-					rank = "a";
+					rank = "A";
 					number = "ace";
 				}
-				if(j == 9) {
-					rank = "t";
+				else if(j == 9) {
+					rank = "T";
 				}
-				if(j == 10) {
-					rank = "j";
+				else if(j == 10) {
+					rank = "J";
 					number = "jack";
 				}
-				if(j == 11) {
-					rank = "q";
+				else if(j == 11) {
+					rank = "Q";
 					number = "queen";
 				}
-				if(j == 12) {
-					rank = "k";
+				else if(j == 12) {
+					rank = "K";
 					number = "king";
 				}
 				fullImgPath = (imgPath + number + "_" + fullSuit + ".png");
