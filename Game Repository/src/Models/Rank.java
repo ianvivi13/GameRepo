@@ -2,7 +2,7 @@ package Models;
 
 public enum Rank {
 	/* In order, the list of rankings from least to greatest*/
-	Ace("A"),
+	ACE("A"),
 	TWO("2"),
 	THREE("3"),
 	FOUR("4"),
