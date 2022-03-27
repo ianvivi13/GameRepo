@@ -20,26 +20,21 @@
       </a>
     </div>
 
-    <h2 id="topic"><u>Card Game Desired</u></h2>
+    <h2 id="topic"><span class="underline">Card Game Desired</span></h2>
     
-    <div class="topics">Difficulty Level
+    <div class="topics"><span class="underline">Difficulty Level</span>
     <div class="difficulty-slider">
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
-        <input id="difficultyEasy" type="radio" name="difficulty">
-        <label for="difficultyEasy">&nbsp;</label>
         <input id="difficultyMedium" type="radio" name="difficulty" checked>
-        <label for="difficultyMedium">Medium</label>
-        <input id="difficultyMedium" type="radio" name="difficulty">
-        <label for="difficultyMedium">&nbsp;</label>
+        <label for="difficultyMedium">Meduim</label>
         <input id="difficultyHard" type="radio" name="difficulty">
         <label for="difficultyHard">Hard</label>
-        <input id="difficultyHard" type="radio" name="difficulty">
-        <label for="difficultyHard">&nbsp;</label>
+       
       </div>
       </div>
 
-      <div class="topics">Bot Count
+      <div class="topics"><span class="underline">Bot Count</span>
       <div class="bot-slider">
         <input id="bot1" type="radio" name="bot">
         <label for="bot1">1</label>
@@ -54,13 +49,13 @@
       </div>
       </div>
 
-        <label class="ckb" id="slider"> Doubling: &nbsp;
+        <label class="ckb" id="slider"><span class="underline"> Doubling</span>: &nbsp;
             <input type="checkbox" name="ckb1" value="a" unchecked>
             <i></i>
           </label>
           <br><br>
 
-          <div class="topics">Player Count
+          <div class="topics"><span class="underline">Player Count</span>
           <div class="player-slider">
             <input id="player1" type="radio" name="player">
             <label for="player1">1</label>
@@ -74,6 +69,5 @@
             <label for="player5">5</label>
           </div>
           </div>
-
     </body>
 </html>
