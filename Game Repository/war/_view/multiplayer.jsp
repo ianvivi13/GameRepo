@@ -11,7 +11,7 @@
 
     <body class="StaticBackground">
         
-        <div class="HeaderStyle">Multiplayer:&nbsp;Username</div>
+        <div class="HeaderStyle">Multiplayer:&nbsp;Admin</div>
         
         <div class="BackButton">
             <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>

@@ -21,7 +21,7 @@
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
-    Difficulty Level:
+    <div class="topics">Difficulty Level
     <div class="difficulty-slider">
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
@@ -36,8 +36,9 @@
         <input id="difficultyHard" type="radio" name="difficulty">
         <label for="difficultyHard">&nbsp;</label>
       </div>
+      </div>
 
-      Bot Count:
+      <div class="topics">Bot Count
       <div class="bot-slider">
         <input id="bot1" type="radio" name="bot">
         <label for="bot1">1</label>
@@ -50,8 +51,9 @@
         <input id="bot5" type="radio" name="bot">
         <label for="bot5">5</label>
       </div>
+      </div>
 
-        <label class="ckb"> Doubling: &nbsp;
+        <label class="ckb" id="slider"> Doubling: &nbsp;
             <input type="checkbox" name="ckb1" value="a" unchecked>
             <i></i>
           </label>
