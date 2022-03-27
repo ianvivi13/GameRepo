@@ -667,4 +667,106 @@ public class DerbyDatabase implements IDatabase {
 	public StatisticsGlobal getGlobalStats(String username) {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
+	
+/*
+
+	+ Create the following tables:
+		- UnoFlipSide
+		- UnoFlip
+		- Uno
+		- ExplodingKittens
+		- Blackjack
+		- Pile
+		- Player
+		- Turn
+		- Game
+	
+	+ Initialize the following tables:
+		- UnoFlipSide
+		- UnoFlip
+		- Uno
+		- ExplodingKittens
+		- Blackjack
+		- Pile
+		- Player
+		- Turn
+		- Game
+	
+	+ Create the following objects:
+		- String to int Array List (decoder)
+		- int Array List to String (encoder)
+		- Bot
+	
+	+ Change the following objects:
+		- User
+			~ Should include 5 objects for statistics
+			~ Should inherit from Player
+		- UserList
+			~ Delete?
+			
+	+ Change the following Dobby methods:
+		- getUser
+			~ Should include the new parts to User (statistics loading)
+		
+	+ Create the following Dobby methods: # these may be overloaded aswell
+		- Creators
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+		- Getters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+			~ Uno
+			~ UnoFlip
+			~ ExplodingKittens
+			~ Blackjack
+			~ UnoFlipSide
+		- Updaters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+			~ User
+			~ Stats
+		- Deleters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+			~ User?
+			~ Stats?
+		
+		- Probably more but who knows
+	
+	+ Create the following tests:
+		- createUser
+		- createBot
+		- createAllStats
+		- getUserIDfromUsername # this should be tested w/ all method that call w/ username
+		- getUsernamefromUserID
+		- getUser(user_id)
+		- getUser(username) # this should also test w/ user_id
+		- getUnoStats(user_id)
+		- getUnoStats(username) # this should also test w/ user_id
+		- getUnoFlipStats(user_id)
+		- getUnoFlipStats(username) # this should also test w/ user_id
+		- getBlackjackStats(user_id)
+		- getBlackjackStats(username) # this should also test w/ user_id
+		- getExplodingKittenStats(user_id)
+		- getExplodingKittenStats(username) # this should also test w/ user_id
+		- getGlobalStats(user_id)
+		- getGlobalStats(username) # this should also test w/ user_id
+
+	+ Fix the following:
+		- Get login to work now that we have database
+
+ */
+	
+
+	
+	
+	
 }
