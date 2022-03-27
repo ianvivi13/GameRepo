@@ -17,6 +17,7 @@ public interface IDatabase {
 	public int createUser(String username, String password);
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
+	public void createBlackJackCards();
 	public int getUserIDfromUsername(String username);
 	public String getUsernamefromUserID(int UserID);
 	public User getUser(int UserID);

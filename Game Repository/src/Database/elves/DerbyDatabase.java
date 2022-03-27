@@ -18,6 +18,7 @@ import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
+import Models.BlackJackCardDobbyInit;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -184,6 +185,17 @@ public class DerbyDatabase implements IDatabase {
 					stmt.executeUpdate();
 					stmt.close();
 					
+					// Create Standard Cards Table
+					stmt = conn.prepareStatement(
+							"CREATE TABLE BlackJackCards ("
+							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+							+ "	imagePath VARCHAR(55) NOT NULL ,"
+							+ "	suit VARCHAR(1) NOT NULL ,"
+							+ " rank VARCHAR(1) NOT NULL)"
+							);
+					stmt.executeUpdate();
+					stmt.close();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -206,6 +218,7 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_Blackjack,2);
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
+					db.createBlackJackCards();
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -339,6 +352,39 @@ public class DerbyDatabase implements IDatabase {
 						);
 						stmt.setInt(1, UserId);
 						stmt.setString(2, gameKey);
+						stmt.executeUpdate();
+						stmt.close();
+					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// populates the BlackJackCards table with cards
+	public void createBlackJackCards() {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					for (List<String> cardData : BlackJackCardDobbyInit.blackjackCardArray()) {
+						String imgPath = cardData.get(0);
+						String suit = cardData.get(1);
+						String rank = cardData.get(2);
+						stmt = conn.prepareStatement(
+								"INSERT INTO BlackJackCards(imagePath, suit, rank)" +
+								" 	VALUES(?, ?, ?)"
+						);
+						stmt.setString(1, imgPath);
+						stmt.setString(2, suit);
+						stmt.setString(3, rank);
 						stmt.executeUpdate();
 						stmt.close();
 					}
@@ -708,7 +754,7 @@ public class DerbyDatabase implements IDatabase {
 		- getUser
 			~ Should include the new parts to User (statistics loading)
 		
-	+ Create the following Dobby methods: # these may be overloaded aswell
+	+ Create the following Dobby methods: # these may be overloaded as well
 		- Creators
 			~ Game
 			~ Turn
