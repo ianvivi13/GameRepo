@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 
+import Models.sqlTranscoder;
 import Models.BotNameGenerator;
 import Models.User;
 import Models.StatisticsBlackjack;
@@ -693,9 +694,12 @@ public class DerbyDatabase implements IDatabase {
 		- Game
 	
 	+ Create the following objects:
-		- String to int Array List (decoder)
-		- int Array List to String (encoder)
 		- Bot
+		- Uno arraylist
+		- UnoFlip arraylist
+		- ExplodingKittens arraylist
+		- Blackjack arraylist
+		- UnoFlipSide arraylist
 	
 	+ Change the following objects:
 		- User
@@ -714,6 +718,11 @@ public class DerbyDatabase implements IDatabase {
 			~ Turn
 			~ Pile
 			~ Player
+			~ Uno
+			~ UnoFlip
+			~ ExplodingKittens
+			~ Blackjack
+			~ UnoFlipSide
 		- Getters
 			~ Game
 			~ Turn
@@ -738,7 +747,6 @@ public class DerbyDatabase implements IDatabase {
 			~ Player
 			~ User?
 			~ Stats?
-		
 		- Probably more but who knows
 	
 	+ Create the following tests:
@@ -764,9 +772,6 @@ public class DerbyDatabase implements IDatabase {
 		- Get login to work now that we have database
 
  */
-	
 
-	
-	
-	
+
 }
