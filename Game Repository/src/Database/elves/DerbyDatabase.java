@@ -126,6 +126,13 @@ public class DerbyDatabase implements IDatabase {
 			System.out.println("Loading initial data...");
 			db.loadInitialData();
 			System.out.println("Success!");
+			System.out.println("Some randomly generated bot names:");
+			BotNameGenerator botName = new BotNameGenerator();
+			System.out.println(botName.GenerateName());
+			System.out.println(botName.GenerateName());
+			System.out.println(botName.GenerateName());
+			System.out.println(botName.GenerateName());
+			System.out.println(botName.GenerateName());
 		}
 	}	
 	
