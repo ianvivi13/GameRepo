@@ -1003,7 +1003,6 @@ public class DerbyDatabase implements IDatabase {
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- Pile
 		- Player
 		- Turn
 		- Game
@@ -1071,16 +1070,6 @@ public class DerbyDatabase implements IDatabase {
 		- getUsernamefromUserID
 		- getUser(user_id)
 		- getUser(username) # this should also test w/ user_id
-		- getUnoStats(user_id)
-		- getUnoStats(username) # this should also test w/ user_id
-		- getUnoFlipStats(user_id)
-		- getUnoFlipStats(username) # this should also test w/ user_id
-		- getBlackjackStats(user_id)
-		- getBlackjackStats(username) # this should also test w/ user_id
-		- getExplodingKittenStats(user_id)
-		- getExplodingKittenStats(username) # this should also test w/ user_id
-		- getGlobalStats(user_id)
-		- getGlobalStats(username) # this should also test w/ user_id
 
 	+ Fix the following:
 		- Get login to work now that we have database
