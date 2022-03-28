@@ -13,7 +13,6 @@ import Models.Card;
 import Models.Pile;
 import Models.Rank;
 import Models.Suit;
-
 public class PileTest{
 	
 	private Pile pile;
@@ -40,7 +39,7 @@ public class PileTest{
 		// A TreeSet will not allow duplicate Cards to be added
 		// (assuming that the Card class properly implements the
 		// Comparable interface)
-		TreeSet<Card> cards = new TreeSet<Card>();
+		TreeSet<Object> cards = new TreeSet<Object>();
 		
 		// Add all Cards in the full pile to the TreeSet
 		for (int i = 0; i < fullPile.getNumCards(); i++) {
@@ -124,10 +123,10 @@ public class PileTest{
 	
 	@Test
 	public void testGetIndexOfTopCard() throws Exception {
-		Card sixOfSpades = new Card(Rank.SIX, Suit.SPADES);
+		Object sixOfSpades = new Card(Rank.SIX, Suit.SPADES);
 		pile.addCard(sixOfSpades);
 		assertEquals(0, pile.getIndexOfTopCard());
-		Card fourOfClubs = new Card(Rank.FOUR, Suit.CLUBS);
+		Object fourOfClubs = new Card(Rank.FOUR, Suit.CLUBS);
 		pile.addCard(fourOfClubs);
 		assertEquals(1, pile.getIndexOfTopCard());
 	}
@@ -139,7 +138,7 @@ public class PileTest{
 		// Removing the top 16 cards should give us
 		// the jack of hearts through the king of spades.
 		// Note that ACE is the low rank.
-		ArrayList<Card> removed = pile.removeCards(16);
+		ArrayList<Object> removed = pile.removeCards(16);
 		
 		int index = 0;
 		assertEquals(new Card(Rank.JACK, Suit.HEARTS), removed.get(index++));
@@ -163,7 +162,7 @@ public class PileTest{
 	@Test
 	public void testRemoveCardsAllCards() throws Exception {
 		// test removing all cards
-		ArrayList<Card> all = fullPile.removeCards(52);
+		ArrayList<Object> all = fullPile.removeCards(52);
 		assertEquals(52, all.size());
 		assertEquals(0, fullPile.getNumCards());
 	}
@@ -183,7 +182,7 @@ public class PileTest{
 	
 	@Test
 	public void testAddCards() throws Exception {
-		ArrayList<Card> cardsToAdd = new ArrayList<Card>();
+		ArrayList<Object> cardsToAdd = new ArrayList<Object>();
 		cardsToAdd.add(new Card(Rank.THREE, Suit.HEARTS));
 		cardsToAdd.add(new Card(Rank.NINE, Suit.DIAMONDS));
 		cardsToAdd.add(new Card(Rank.ACE, Suit.CLUBS));
@@ -208,9 +207,9 @@ public class PileTest{
 		pile.shuffle();
 		int numDifferent = 0;
 		for (int i = 0; i < 52; i++) {
-			Card c1 = pile.getCard(i);
-			Card c2 = unshuffled.getCard(i);
-			if (c1.getRank() != c2.getRank() || c1.getSuit() != c2.getSuit()) {
+			Object c1 = pile.getCard(i);
+			Object c2 = unshuffled.getCard(i);
+			if (((Card) c1).getRank() != ((Card) c2).getRank() || ((Card) c1).getSuit() != ((Card) c2).getSuit()) {
 				numDifferent++;
 			}
 		}
@@ -232,8 +231,8 @@ public class PileTest{
 		assertEquals(0, pile.getNumCards());
 		Util.addAllCards(pile);
 		
-		ArrayList<Card> r1 = pile.removeCards(3);
-		ArrayList<Card> r2 = pile.removeCards(5);
+		ArrayList<Object> r1 = pile.removeCards(3);
+		ArrayList<Object> r2 = pile.removeCards(5);
 		
 		assertEquals(3, r1.size());
 		assertEquals(5, r2.size());

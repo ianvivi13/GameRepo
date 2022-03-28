@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Selection{
 	
 	private Location loc;
-	private ArrayList<Card> select;
+	private ArrayList<Object> select;
 	
-	public Selection(Location ori, ArrayList<Card> selected) {
+	public Selection(Location ori, ArrayList<Object> selected) {
 		this.loc=ori;
 		this.select=selected;
 	}
@@ -16,7 +16,7 @@ public class Selection{
 		return loc;
 	}
 	
-	public ArrayList<Card> getCards(){
+	public ArrayList<Object> getCards(){
 		return select;
 	}
 	

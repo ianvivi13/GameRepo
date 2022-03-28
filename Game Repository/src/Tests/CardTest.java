@@ -45,6 +45,15 @@ public class CardTest{
 	}
 	
 	@Test
+	public void testGetValue() throws Exception {
+		assertEquals(Suit.CLUBS, jackOfDiamonds.getSuit());
+		assertEquals(Suit.DIAMONDS, twoOfClubs.getSuit());
+		assertEquals(Suit.DIAMONDS, aceOfSpades.getSuit());
+		assertEquals(Suit.HEARTS, threeOfHearts.getSuit());
+		assertEquals(Suit.SPADES, queenOfHearts.getSuit());
+	}
+	
+	@Test
 	public void testCompareTo() throws Exception {
 		assertTrue(jackOfDiamonds.compareTo(twoOfClubs) < 0);
 		assertTrue(new Card(Rank.JACK, Suit.CLUBS).compareTo(jackOfDiamonds) == 0);

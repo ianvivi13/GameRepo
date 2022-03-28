@@ -2,10 +2,11 @@ package Models;
 
 import java.util.*;
 import Database.elves.IDatabase;
+import Models.Card;
 
 public class Pile{
 	
-	private ArrayList<Card> pile;
+	private ArrayList<Object> pile;
 	private int visibleIndex;
 	
 	public Pile() {
@@ -21,7 +22,7 @@ public class Pile{
 		visibleIndex = visible;
 	}
 	
-	public void addCard(Card card) {
+	public void addCard(Object card) {
 		pile.add(card);
 	}
 	
@@ -38,7 +39,7 @@ public class Pile{
 		}
 	}
 	
-	public Card getCard(int index) {
+	public Object getCard(int index) {
 		if(index>=pile.size()||index<0){
 			throw new NoSuchElementException();
 		}
@@ -47,7 +48,7 @@ public class Pile{
 		}
 	}
 	
-	public Card getTopCard() {
+	public Object getTopCard() {
 		if(pile.isEmpty()){
 			throw new NoSuchElementException("No such element in pile");
 		}
@@ -65,11 +66,11 @@ public class Pile{
 		}
 	}
 	
-	public ArrayList<Card> removeCards(int numCards) {
+	public ArrayList<Object> removeCards(int numCards) {
 		if(pile.size()<numCards){
 			throw new IllegalArgumentException("Not Enough Cards");
 		}
-		ArrayList<Card> cardsRemoved = new ArrayList<>();
+		ArrayList<Object> cardsRemoved = new ArrayList<>();
 		int size = pile.size();
 		for(int i=0;i<numCards;i++){
 			cardsRemoved.add(pile.remove(size-numCards));
@@ -77,7 +78,7 @@ public class Pile{
 		return cardsRemoved;
 	}
 	
-	public void addCards(ArrayList<Card> cardsToAdd) {
+	public void addCards(ArrayList<Object> cardsToAdd) {
 		pile.addAll(cardsToAdd);
 	}
 	
@@ -101,7 +102,7 @@ public class Pile{
 		if(pile.isEmpty()){
 			throw new NoSuchElementException("Its Empty Hoe");
 		}
-		return pile.remove(pile.size()-1);
+		return (Card) pile.remove(pile.size()-1);
 	}
 
 	

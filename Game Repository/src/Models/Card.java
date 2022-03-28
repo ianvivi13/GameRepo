@@ -3,11 +3,41 @@ package Models;
 public class Card implements Comparable<Card>{
 	private Rank rank;
 	private Suit suit;
+	private int value;
 	
 	
 	public Card(Rank rank, Suit suit) {
 		this.rank = rank;
 		this.suit = suit;
+		
+		if(rank.getSymbol() == "2") {
+			value = 2;
+		}
+		else if(rank.getSymbol() == "3") {
+			value = 3;
+		}
+		else if(rank.getSymbol() == "4") {
+			value = 4;
+		}
+		
+		else if(rank.getSymbol() == "5") {
+			value = 5;
+		}
+		else if(rank.getSymbol() == "6") {
+			value = 6;
+		}
+		else if(rank.getSymbol() == "7") {
+			value = 7;
+		}
+		else if(rank.getSymbol() == "8") {
+			value = 8;
+		}
+		else if(rank.getSymbol() == "9") {
+			value = 9;
+		}
+		else if(rank.getSymbol() == "T" ||rank.getSymbol() == "J" ||rank.getSymbol() == "Q" ||rank.getSymbol() == "K" ) {
+			value = 10;
+		}
 	}
 	
 	public Rank getRank() {
@@ -16,6 +46,10 @@ public class Card implements Comparable<Card>{
 	
 	public Suit getSuit() {
 		return suit;
+	}
+	
+	public int getValues() {
+		return value;
 	}
 	
 	
@@ -31,7 +65,7 @@ public class Card implements Comparable<Card>{
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Card)) {
+		if (obj == null || !(obj instanceof Object)) {
 			return false;
 		}
 		Card other = (Card) obj;

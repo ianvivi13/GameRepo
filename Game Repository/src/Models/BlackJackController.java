@@ -24,8 +24,8 @@ public class BlackJackController extends Game{
 	}
 	// split needs to compare cards by rank and if they are the smae then move cards to alt hand
 	public void split(BlackJackModel model) {
-		Rank one = model.getHand().getTopCard().getRank();
-		Rank two = model.getHand().getCard(model.getHand().getIndexOfTopCard() + 1).getRank();
+		Rank one = ((Card) model.getHand().getTopCard()).getRank();
+		Rank two = ((Card) model.getHand().getCard(model.getHand().getIndexOfTopCard() + 1)).getRank();
 		if((model.getHand().getNumCards()== 2) && (one.equals(two))){
 			model.getAltHand().addCards(model.getHand().removeCards(1));
 		}
