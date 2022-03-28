@@ -208,6 +208,77 @@ public class DerbyDatabase implements IDatabase {
 					stmt.executeUpdate();
 					stmt.close();
 					
+					// Create Uno Flip Side Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoFlipSide (" +
+						"	uno_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	imagePath VARCHAR(300) ," +
+						"	color VARCHAR(1) ,"
+						+ "	type VARCHAR(1))"
+						//CHANGE VARCHAR(300) TO MATCH MAX CHAR LEN OF IMAGE PATH
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Uno Flip Cards Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoFlipCards (" +
+						"	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	uno_id INTEGER, FOREIGN KEY (uno_id) REFERENCES UnoFlipSide(uno_id) ," +
+						"	uno_id_flip INTEGER, FOREIGN KEY (uno_id_flip) REFERENCES UnoFlipSide(uno_id))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Uno Cards Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoCards (" +
+						"	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	imagePath VARCHAR(300) ," +
+						"	color VARCHAR(1) ,"
+						+ "	type VARCHAR(1))"
+						//CHANGE VARCHAR(300) TO MATCH MAX CHAR LEN OF IMAGE PATH
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Player Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Player (" +
+						"	player_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	player_bot_id INTEGER ," +
+						"	human BOOLEAN ,"
+						+ "	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Turn Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Turn (" +
+						"	turn_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	pointer INTEGER ," +
+						"	adder INTEGER ,"
+						+ "	turn_order VARCHAR(600))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Game Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Game (" +
+						"	game_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						gameKeyNotGlobal +
+						"	turn_id INTEGER, FOREIGN KEY (turn_id) REFERENCES Turn(turn_id) ,"
+						+ "	code VARCHAR(11) ," +
+						"	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	cardSideA BOOLEAN)"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
