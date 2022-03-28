@@ -11,7 +11,7 @@ public enum Rank {
 	SEVEN("7"),
 	EIGHT("8"),
 	NINE("9"),
-	TEN("10"),
+	TEN("T"),
 	JACK("J"),
 	QUEEN("Q"),
 	KING("K");
@@ -31,6 +31,8 @@ public enum Rank {
 	public String toString() {
 		return symbol; 
 	}
+	
+
 	
 	//To retrieve the name of the enumeration as a string
 	

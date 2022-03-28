@@ -1,6 +1,7 @@
 package Models;
 
 import java.util.*;
+import Database.elves.IDatabase;
 
 public class Pile{
 	
@@ -102,6 +103,7 @@ public class Pile{
 		}
 		return pile.remove(pile.size()-1);
 	}
+
 	
 	
 //	public void swapCards(ArrayList<Card> cardsToSwap, int swappee, int swapper) {
