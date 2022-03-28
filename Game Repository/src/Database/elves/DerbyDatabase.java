@@ -232,14 +232,14 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_Blackjack,2);
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
-					db.createBlackJackCards();
+					db.initBlackJackCards();
 					
 					System.out.println(db.login("User", "password still"));
 					System.out.println(db.login("Usr", "password still"));
-					System.out.println(db.login("Usr", "password stil"));
+					System.out.println(db.login("User", "password stil"));
 					System.out.println(db.login("NewUSer", "password still"));
 					
-					db.createExplodingKittensCards();
+					db.initExplodingKittensCards();
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -387,7 +387,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the BlackJackCards table with cards
-	public void createBlackJackCards() {
+	public void initBlackJackCards() {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -420,35 +420,35 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the ExplodingKittensCards table with cards
-		public void createExplodingKittensCards() {
-			executeTransaction(new Transaction<Void>() {
-				@Override
-				public Void execute(Connection conn) throws SQLException {
-					PreparedStatement stmt = null;
-					ResultSet resultSet = null;
+	public void initExplodingKittensCards() {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
 
-					try {
-						for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
-							String imgPath = cardData.get(0);
-							String type = cardData.get(1);
-							stmt = conn.prepareStatement(
-									"INSERT INTO ExplodingKittensCards(imagePath, type)" +
-									" 	VALUES(?, ?)"
-							);
-							stmt.setString(1, imgPath);
-							stmt.setString(2, type);
-							stmt.executeUpdate();
-							stmt.close();
-						}
-						
-						return null;
-					} finally {
-						DBUtil.closeQuietly(resultSet);
-						DBUtil.closeQuietly(stmt);
+				try {
+					for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
+						String imgPath = cardData.get(0);
+						String type = cardData.get(1);
+						stmt = conn.prepareStatement(
+								"INSERT INTO ExplodingKittensCards(imagePath, type)" +
+								" 	VALUES(?, ?)"
+						);
+						stmt.setString(1, imgPath);
+						stmt.setString(2, type);
+						stmt.executeUpdate();
+						stmt.close();
 					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
 				}
-			});
-		}
+			}
+		});
+	}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -764,6 +764,36 @@ public class DerbyDatabase implements IDatabase {
 	// get object GlobalStats from username
 	public StatisticsGlobal getGlobalStats(String username) {
 		return getGlobalStats(getUserIDfromUsername(username));
+	}
+	
+	// return boolean if User exists from username and password
+	public boolean login(String username, String password) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {						
+					stmt = conn.prepareStatement(
+							"SELECT Users.User_id" +
+							"	FROM Users" +
+							"		WHERE LOWER(Users.username) = LOWER(?)" +
+							"		AND Users.password = ?"
+					);
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					resultSet = stmt.executeQuery();
+					if (resultSet.next()) {
+						return true;
+					}
+					return false;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 	
 /*
