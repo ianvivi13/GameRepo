@@ -153,60 +153,69 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					// Create Users Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE Users (" +
-							"	user_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +									
-							"	username VARCHAR(20) NOT NULL UNIQUE ," +
-							"	password VARCHAR(32) NOT NULL )" 
+						"CREATE TABLE Users (" +
+						"	user_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +									
+						"	username VARCHAR(20) NOT NULL UNIQUE ," +
+						"	password VARCHAR(32) NOT NULL )" 
 					);
 					stmt.executeUpdate();
 					stmt.close();
 					
 					// Create Stats Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE Stats (" +
-							"	user_id INTEGER, FOREIGN KEY (user_id) REFERENCES Users(user_id) ," +
-							gameKey +
-							"   plays INTEGER DEFAULT 0 ," +
-							"   wins INTEGER DEFAULT 0 ," +
-							"   loses INTEGER DEFAULT 0 ," +
-							"   sOne INTEGER DEFAULT 0 ," +
-							"   sTwo INTEGER DEFAULT 0 ," +
-							"   sThree INTEGER DEFAULT 0 )" 
+						"CREATE TABLE Stats (" +
+						"	user_id INTEGER, FOREIGN KEY (user_id) REFERENCES Users(user_id) ," +
+						gameKey +
+						"   plays INTEGER DEFAULT 0 ," +
+						"   wins INTEGER DEFAULT 0 ," +
+						"   loses INTEGER DEFAULT 0 ," +
+						"   sOne INTEGER DEFAULT 0 ," +
+						"   sTwo INTEGER DEFAULT 0 ," +
+						"   sThree INTEGER DEFAULT 0 )" 
 					);
 					stmt.executeUpdate();
 					stmt.close();
 					
 					// Create Bots Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE Bots (" +
-							"	bot_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +	
-							gameKeyNotGlobal +
-							"	name VARCHAR(36) NOT NULL ," +
-							"	difficulty integer NOT NULL CHECK (difficulty >= 1 AND difficulty <= 3) DEFAULT 1)" 
+						"CREATE TABLE Bots (" +
+						"	bot_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +	
+						gameKeyNotGlobal +
+						"	name VARCHAR(36) NOT NULL ," +
+						"	difficulty integer NOT NULL CHECK (difficulty >= 1 AND difficulty <= 3) DEFAULT 1)" 
 					);
 					stmt.executeUpdate();
 					stmt.close();
 					
 					// Create Standard Cards Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE BlackJackCards ("
-							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
-							+ "	imagePath VARCHAR(55) NOT NULL ,"
-							+ "	suit VARCHAR(1) NOT NULL ,"
-							+ " rank VARCHAR(1) NOT NULL)"
-							);
+						"CREATE TABLE BlackJackCards ("
+						+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+						+ "	imagePath VARCHAR(55) NOT NULL ,"
+						+ "	suit VARCHAR(1) NOT NULL ,"
+						+ " rank VARCHAR(1) NOT NULL)"
+					);
 					stmt.executeUpdate();
 					stmt.close();
 					
-					
-					
 					// Create Exploding Kittens Cards Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE ExplodingKittensCards ("
-							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
-							+ "	imagePath VARCHAR(65) NOT NULL ,"
-							+ "	type VARCHAR(2) NOT NULL)"
-							);
+						"CREATE TABLE ExplodingKittensCards ("
+						+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+						+ "	imagePath VARCHAR(65) NOT NULL ,"
+						+ "	type VARCHAR(2) NOT NULL)"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create pile table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Pile (" +
+						"	pile_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						gameKeyNotGlobal +
+						"	exposeIndex INTEGER DEFAULT 0 ," +
+						"	cards VARCHAR(600))"
+					);
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -239,6 +248,8 @@ public class DerbyDatabase implements IDatabase {
 					System.out.println(db.login("User", "password stil"));
 					System.out.println(db.login("NewUSer", "password still"));
 					
+					System.out.println();
+					
 					db.initExplodingKittensCards();
 					return true;
 				} catch (UserExistsException e) {
@@ -259,6 +270,41 @@ public class DerbyDatabase implements IDatabase {
 	IDatabase db = DatabaseProvider.getInstance();
 	db.createUser(username, password);
 	*/
+	
+	// create pile in database - returns new pileId
+	public int createPile(String gameKey, int exposeIndex) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+						"INSERT INTO Pile (gameKey, exposeIndex)" +
+						"	VALUES (?, ?)"
+					);
+					stmt.setString(1, gameKey);
+					stmt.setInt(2, exposeIndex);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+						"SELECT MAX(pile_id) AS pile_id" +
+						"	From Pile"
+					);
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					int ret = resultSet.getInt("pile_id");
+					stmt.close();
+					
+					return ret;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
 	// create new user in database - checks if already exists
 	public int createUser(String username, String password) {
@@ -802,7 +848,6 @@ public class DerbyDatabase implements IDatabase {
 		- UnoFlipSide
 		- UnoFlip
 		- Uno
-		- Pile
 		- Player
 		- Turn
 		- Game

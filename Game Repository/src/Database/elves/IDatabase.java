@@ -25,6 +25,8 @@ public interface IDatabase {
 	public User getUser(String username);
 	public boolean login(String username, String password);
 	
+	public int createPile(String gameKey, int exposeIndex);
+	
 	// Stats retrieving - overloaded to allow use of username or user_id
 	public StatisticsGlobal getGlobalStats(int UserID);
 	public StatisticsGlobal getGlobalStats(String username);
