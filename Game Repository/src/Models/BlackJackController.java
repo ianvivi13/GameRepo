@@ -7,22 +7,25 @@ public class BlackJackController extends Game{
 		model.getDeck().shuffle();
 		model.getHand().addCards(model.getDeck().removeCards(2));
 		model.getHand().setVisibleIndex(0);
-		model.getDeck().setVisibleIndex(model.getDeck().getIndexOfTopCard());
+		model.getDeck().setVisibleIndex(1000000000);
 	}
 	
 	public void hit(BlackJackModel model) {
-		model.getHand().drawCard();
+		model.getHand().addCards(model.getDeck().removeCards(1));
 	}
 	
 	// for hold we want to basically skip a players turn
 	public void hold(BlackJackModel model) {
 		nextTurn();
+		nextTurn();
 	}
+	
 	// for stay/freeze we want to skip a players turn until the other player calls stay
 	public void freeze(BlackJackModel model) {
 		
 	}
-	// split needs to compare cards by rank and if they are the smae then move cards to alt hand
+	
+	// split needs to compare cards by rank and if they are the same then move cards to alt hand
 	public void split(BlackJackModel model) {
 		Rank one = model.getHand().getTopCard().getRank();
 		Rank two = model.getHand().getCard(model.getHand().getIndexOfTopCard() + 1).getRank();
@@ -34,4 +37,9 @@ public class BlackJackController extends Game{
 	public void checkWin(BlackJackModel model) {
 		
 	}
+	
+	public void checkBust(BlackJackModel model){
+		
+	}
+
 }
