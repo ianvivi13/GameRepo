@@ -19,11 +19,11 @@ public class CardTest{
 	
 	@Before
 	public void setUp() {
-		jackOfDiamonds = new Card(Rank.JACK, Suit.CLUBS);
-		twoOfClubs = new Card(Rank.TWO, Suit.DIAMONDS);
-		aceOfSpades = new Card(Rank.ACE, Suit.DIAMONDS);
+		jackOfDiamonds = new Card(Rank.JACK, Suit.DIAMONDS);
+		twoOfClubs = new Card(Rank.TWO, Suit.CLUBS);
+		aceOfSpades = new Card(Rank.ACE, Suit.SPADES);
 		threeOfHearts = new Card(Rank.THREE, Suit.HEARTS);
-		queenOfHearts = new Card(Rank.QUEEN, Suit.SPADES);
+		queenOfHearts = new Card(Rank.QUEEN, Suit.HEARTS);
 	}
 	
 	@Test
@@ -37,32 +37,31 @@ public class CardTest{
 	
 	@Test
 	public void testGetSuit() throws Exception {
-		assertEquals(Suit.CLUBS, jackOfDiamonds.getSuit());
-		assertEquals(Suit.DIAMONDS, twoOfClubs.getSuit());
-		assertEquals(Suit.DIAMONDS, aceOfSpades.getSuit());
+		assertEquals(Suit.DIAMONDS, jackOfDiamonds.getSuit());
+		assertEquals(Suit.CLUBS, twoOfClubs.getSuit());
+		assertEquals(Suit.SPADES, aceOfSpades.getSuit());
 		assertEquals(Suit.HEARTS, threeOfHearts.getSuit());
-		assertEquals(Suit.SPADES, queenOfHearts.getSuit());
+		assertEquals(Suit.HEARTS, queenOfHearts.getSuit());
 	}
 	
 	@Test
 	public void testGetValue() throws Exception {
-		assertEquals(Suit.CLUBS, jackOfDiamonds.getSuit());
-		assertEquals(Suit.DIAMONDS, twoOfClubs.getSuit());
-		assertEquals(Suit.DIAMONDS, aceOfSpades.getSuit());
-		assertEquals(Suit.HEARTS, threeOfHearts.getSuit());
-		assertEquals(Suit.SPADES, queenOfHearts.getSuit());
+		assertEquals(10, jackOfDiamonds.getValues());
+		assertEquals(2, twoOfClubs.getValues());
+		assertEquals(3, threeOfHearts.getValues());
+		assertEquals(10, queenOfHearts.getValues());
 	}
 	
 	@Test
 	public void testCompareTo() throws Exception {
-		assertTrue(jackOfDiamonds.compareTo(twoOfClubs) < 0);
-		assertTrue(new Card(Rank.JACK, Suit.CLUBS).compareTo(jackOfDiamonds) == 0);
-		assertTrue(twoOfClubs.compareTo(jackOfDiamonds) > 0);
+		assertTrue(jackOfDiamonds.compareTo(twoOfClubs) > 0);
+		assertTrue(new Card(Rank.JACK, Suit.DIAMONDS).compareTo(jackOfDiamonds) == 0);
+		assertTrue(twoOfClubs.compareTo(jackOfDiamonds) < 0);
 		assertTrue(queenOfHearts.compareTo(jackOfDiamonds) > 0);
-		assertTrue(threeOfHearts.compareTo(aceOfSpades) > 0);
-		assertTrue(aceOfSpades.compareTo(threeOfHearts) < 0);
+		assertTrue(threeOfHearts.compareTo(aceOfSpades) < 0);
+		assertTrue(aceOfSpades.compareTo(threeOfHearts) > 0);
 		
 		// ACE is the low rank
-		assertTrue(aceOfSpades.compareTo(twoOfClubs) < 0);
+		assertTrue(aceOfSpades.compareTo(twoOfClubs) > 0);
 	}
 }
