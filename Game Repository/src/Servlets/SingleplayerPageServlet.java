@@ -4,8 +4,6 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import Models.UserList;
-
 public class SingleplayerPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -21,13 +19,6 @@ public class SingleplayerPageServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		UserList list = new UserList();
-		
-		String username = list.getUser("admin").getUsername();
-		System.out.println("Username: " + username);
-		
-		req.setAttribute("username", username);
 		
 		req.getRequestDispatcher("_view/singleplayerpage.jsp").forward(req, resp);
 	}

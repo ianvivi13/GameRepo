@@ -17,8 +17,8 @@ public interface IDatabase {
 	public int createUser(String username, String password);
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
-	public void createBlackJackCards();
-	public void createExplodingKittensCards();
+	public void initializeBlackJackCards();
+	public void initializeExplodingKittensCards();
 	public int getUserIDfromUsername(String username);
 	public String getUsernamefromUserID(int UserID);
 	public User getUser(int UserID);
@@ -35,4 +35,16 @@ public interface IDatabase {
 	public StatisticsBlackjack getBlackjackStats(String username);
 	public StatisticsExplodingKittens getExplodingKittenStats(int UserID);
 	public StatisticsExplodingKittens getExplodingKittenStats(String username);
+	
+	// Stats updating - overloaded to allow use of username or user_id
+	public void updateGlobalStats(StatisticsGlobal stat, int user_id);
+	public void updateGlobalStats(StatisticsGlobal stat, String username);
+	public void updateUnoStats(StatisticsUno stat, int user_id);
+	public void updateUnoStats(StatisticsUno stat, String username);
+	public void updateUnoFlipStats(StatisticsUnoFlip stat, int user_id);
+	public void updateUnoFlipStats(StatisticsUnoFlip stat, String username);
+	public void updateBlackjackStats(StatisticsBlackjack stat, int user_id);
+	public void updateBlackjackStats(StatisticsBlackjack stat, String username);
+	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, int user_id);
+	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, String username);
 }
