@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import Models.Card;
+import Models.StandardCard;
 import Models.Pile;
 import Models.Rank;
 import Models.Suit;
@@ -67,16 +67,16 @@ public class PileTest{
 		assertTrue(pile.isEmpty());
 		assertFalse(fullPile.isEmpty());
 		
-		pile.addCard(new Card(Rank.QUEEN, Suit.HEARTS));
+		pile.addCard(new StandardCard(Rank.QUEEN, Suit.HEARTS));
 		assertFalse(pile.isEmpty());
 	}
 		
 	@Test
 	public void testGetTopCard() throws Exception {
-		Card sixOfSpades = new Card(Rank.SIX, Suit.SPADES);
+		StandardCard sixOfSpades = new StandardCard(Rank.SIX, Suit.SPADES);
 		pile.addCard(sixOfSpades);
 		assertEquals(sixOfSpades, pile.getTopCard());
-		Card fourOfClubs = new Card(Rank.FOUR, Suit.CLUBS);
+		StandardCard fourOfClubs = new StandardCard(Rank.FOUR, Suit.CLUBS);
 		pile.addCard(fourOfClubs);
 		assertEquals(fourOfClubs, pile.getTopCard());
 	}
@@ -123,10 +123,10 @@ public class PileTest{
 	
 	@Test
 	public void testGetIndexOfTopCard() throws Exception {
-		Object sixOfSpades = new Card(Rank.SIX, Suit.SPADES);
+		Object sixOfSpades = new StandardCard(Rank.SIX, Suit.SPADES);
 		pile.addCard(sixOfSpades);
 		assertEquals(0, pile.getIndexOfTopCard());
-		Object fourOfClubs = new Card(Rank.FOUR, Suit.CLUBS);
+		Object fourOfClubs = new StandardCard(Rank.FOUR, Suit.CLUBS);
 		pile.addCard(fourOfClubs);
 		assertEquals(1, pile.getIndexOfTopCard());
 	}
@@ -141,22 +141,22 @@ public class PileTest{
 		ArrayList<Object> removed = pile.removeCards(16);
 		
 		int index = 0;
-		assertEquals(new Card(Rank.JACK, Suit.HEARTS), removed.get(index++));
-		assertEquals(new Card(Rank.QUEEN, Suit.HEARTS), removed.get(index++));
-		assertEquals(new Card(Rank.KING, Suit.HEARTS), removed.get(index++));
-		assertEquals(new Card(Rank.ACE, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.TWO, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.THREE, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.FOUR, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.FIVE, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.SIX, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.SEVEN, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.EIGHT, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.NINE, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.TEN, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.JACK, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.QUEEN, Suit.SPADES), removed.get(index++));
-		assertEquals(new Card(Rank.KING, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.JACK, Suit.HEARTS), removed.get(index++));
+		assertEquals(new StandardCard(Rank.QUEEN, Suit.HEARTS), removed.get(index++));
+		assertEquals(new StandardCard(Rank.KING, Suit.HEARTS), removed.get(index++));
+		assertEquals(new StandardCard(Rank.ACE, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.TWO, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.THREE, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.FOUR, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.FIVE, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.SIX, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.SEVEN, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.EIGHT, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.NINE, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.TEN, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.JACK, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.QUEEN, Suit.SPADES), removed.get(index++));
+		assertEquals(new StandardCard(Rank.KING, Suit.SPADES), removed.get(index++));
 	}
 	
 	@Test
@@ -183,19 +183,19 @@ public class PileTest{
 	@Test
 	public void testAddCards() throws Exception {
 		ArrayList<Object> cardsToAdd = new ArrayList<Object>();
-		cardsToAdd.add(new Card(Rank.THREE, Suit.HEARTS));
-		cardsToAdd.add(new Card(Rank.NINE, Suit.DIAMONDS));
-		cardsToAdd.add(new Card(Rank.ACE, Suit.CLUBS));
-		cardsToAdd.add(new Card(Rank.SEVEN, Suit.SPADES));
+		cardsToAdd.add(new StandardCard(Rank.THREE, Suit.HEARTS));
+		cardsToAdd.add(new StandardCard(Rank.NINE, Suit.DIAMONDS));
+		cardsToAdd.add(new StandardCard(Rank.ACE, Suit.CLUBS));
+		cardsToAdd.add(new StandardCard(Rank.SEVEN, Suit.SPADES));
 		
 		assertEquals(0, pile.getNumCards());
 		pile.addCards(cardsToAdd);
 		assertEquals(4, pile.getNumCards());
 		int index = 0;
-		assertEquals(new Card(Rank.THREE, Suit.HEARTS), pile.getCard(index++));
-		assertEquals(new Card(Rank.NINE, Suit.DIAMONDS), pile.getCard(index++));
-		assertEquals(new Card(Rank.ACE, Suit.CLUBS), pile.getCard(index++));
-		assertEquals(new Card(Rank.SEVEN, Suit.SPADES), pile.getCard(index++));
+		assertEquals(new StandardCard(Rank.THREE, Suit.HEARTS), pile.getCard(index++));
+		assertEquals(new StandardCard(Rank.NINE, Suit.DIAMONDS), pile.getCard(index++));
+		assertEquals(new StandardCard(Rank.ACE, Suit.CLUBS), pile.getCard(index++));
+		assertEquals(new StandardCard(Rank.SEVEN, Suit.SPADES), pile.getCard(index++));
 	}
 	
 	@Test
@@ -209,7 +209,7 @@ public class PileTest{
 		for (int i = 0; i < 52; i++) {
 			Object c1 = pile.getCard(i);
 			Object c2 = unshuffled.getCard(i);
-			if (((Card) c1).getRank() != ((Card) c2).getRank() || ((Card) c1).getSuit() != ((Card) c2).getSuit()) {
+			if (((StandardCard) c1).getRank() != ((StandardCard) c2).getRank() || ((StandardCard) c1).getSuit() != ((StandardCard) c2).getSuit()) {
 				numDifferent++;
 			}
 		}
@@ -219,9 +219,9 @@ public class PileTest{
 	@Test
 	public void testDrawCard() throws Exception {
 		Util.addAllCards(pile);
-		assertEquals(new Card(Rank.KING, Suit.SPADES), pile.drawCard());
+		assertEquals(new StandardCard(Rank.KING, Suit.SPADES), pile.drawCard());
 		assertEquals(51, pile.getNumCards());
-		assertEquals(new Card(Rank.QUEEN, Suit.SPADES), pile.drawCard());
+		assertEquals(new StandardCard(Rank.QUEEN, Suit.SPADES), pile.drawCard());
 		assertEquals(50, pile.getNumCards());
 	}
 	
@@ -237,14 +237,14 @@ public class PileTest{
 		assertEquals(3, r1.size());
 		assertEquals(5, r2.size());
 		
-		assertEquals(new Card(Rank.JACK, Suit.SPADES), r1.get(0));
-		assertEquals(new Card(Rank.QUEEN, Suit.SPADES), r1.get(1));
-		assertEquals(new Card(Rank.KING, Suit.SPADES), r1.get(2));
+		assertEquals(new StandardCard(Rank.JACK, Suit.SPADES), r1.get(0));
+		assertEquals(new StandardCard(Rank.QUEEN, Suit.SPADES), r1.get(1));
+		assertEquals(new StandardCard(Rank.KING, Suit.SPADES), r1.get(2));
 		
-		assertEquals(new Card(Rank.SIX, Suit.SPADES), r2.get(0));
-		assertEquals(new Card(Rank.SEVEN, Suit.SPADES), r2.get(1));
-		assertEquals(new Card(Rank.EIGHT, Suit.SPADES), r2.get(2));
-		assertEquals(new Card(Rank.NINE, Suit.SPADES), r2.get(3));
-		assertEquals(new Card(Rank.TEN, Suit.SPADES), r2.get(4));
+		assertEquals(new StandardCard(Rank.SIX, Suit.SPADES), r2.get(0));
+		assertEquals(new StandardCard(Rank.SEVEN, Suit.SPADES), r2.get(1));
+		assertEquals(new StandardCard(Rank.EIGHT, Suit.SPADES), r2.get(2));
+		assertEquals(new StandardCard(Rank.NINE, Suit.SPADES), r2.get(3));
+		assertEquals(new StandardCard(Rank.TEN, Suit.SPADES), r2.get(4));
 	}
 }

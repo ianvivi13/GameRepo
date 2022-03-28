@@ -2,7 +2,7 @@ package Models;
 
 import java.util.*;
 import Database.elves.IDatabase;
-import Models.Card;
+import Models.StandardCard;
 
 public class Pile{
 	
@@ -88,7 +88,7 @@ public class Pile{
 		for (int j = 0; j < allSuits.length; j++) {
 			for (int i = 0; i < allRanks.length; i++) {
 				// use allSuits[j] and allRanks[i] to create a Card
-				pile.add(new Card(allRanks[i],allSuits[j]));
+				pile.add(new StandardCard(allRanks[i],allSuits[j]));
 			}
 		}
 	}
@@ -98,11 +98,11 @@ public class Pile{
 		Collections.shuffle(pile);
 	}
 	
-	public Card drawCard() {
+	public StandardCard drawCard() {
 		if(pile.isEmpty()){
 			throw new NoSuchElementException("Its Empty Hoe");
 		}
-		return (Card) pile.remove(pile.size()-1);
+		return (StandardCard) pile.remove(pile.size()-1);
 	}
 
 	

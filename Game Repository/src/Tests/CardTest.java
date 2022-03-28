@@ -5,25 +5,25 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import Models.Card;
+import Models.StandardCard;
 import Models.Rank;
 import Models.Suit;
 
 public class CardTest{
 	
-	private Card jackOfDiamonds;
-	private Card twoOfClubs;
-	private Card aceOfSpades;
-	private Card threeOfHearts;
-	private Card queenOfHearts;
+	private StandardCard jackOfDiamonds;
+	private StandardCard twoOfClubs;
+	private StandardCard aceOfSpades;
+	private StandardCard threeOfHearts;
+	private StandardCard queenOfHearts;
 	
 	@Before
 	public void setUp() {
-		jackOfDiamonds = new Card(Rank.JACK, Suit.DIAMONDS);
-		twoOfClubs = new Card(Rank.TWO, Suit.CLUBS);
-		aceOfSpades = new Card(Rank.ACE, Suit.SPADES);
-		threeOfHearts = new Card(Rank.THREE, Suit.HEARTS);
-		queenOfHearts = new Card(Rank.QUEEN, Suit.HEARTS);
+		jackOfDiamonds = new StandardCard(Rank.JACK, Suit.DIAMONDS);
+		twoOfClubs = new StandardCard(Rank.TWO, Suit.CLUBS);
+		aceOfSpades = new StandardCard(Rank.ACE, Suit.SPADES);
+		threeOfHearts = new StandardCard(Rank.THREE, Suit.HEARTS);
+		queenOfHearts = new StandardCard(Rank.QUEEN, Suit.HEARTS);
 	}
 	
 	@Test
@@ -55,7 +55,7 @@ public class CardTest{
 	@Test
 	public void testCompareTo() throws Exception {
 		assertTrue(jackOfDiamonds.compareTo(twoOfClubs) > 0);
-		assertTrue(new Card(Rank.JACK, Suit.DIAMONDS).compareTo(jackOfDiamonds) == 0);
+		assertTrue(new StandardCard(Rank.JACK, Suit.DIAMONDS).compareTo(jackOfDiamonds) == 0);
 		assertTrue(twoOfClubs.compareTo(jackOfDiamonds) < 0);
 		assertTrue(queenOfHearts.compareTo(jackOfDiamonds) > 0);
 		assertTrue(threeOfHearts.compareTo(aceOfSpades) < 0);

@@ -1,12 +1,12 @@
 package Models;
 
-public class Card implements Comparable<Card>{
+public class StandardCard implements Comparable<StandardCard>{
 	private Rank rank;
 	private Suit suit;
 	private int value;
 	
 	
-	public Card(Rank rank, Suit suit) {
+	public StandardCard(Rank rank, Suit suit) {
 		this.rank = rank;
 		this.suit = suit;
 		
@@ -68,13 +68,13 @@ public class Card implements Comparable<Card>{
 		if (obj == null || !(obj instanceof Object)) {
 			return false;
 		}
-		Card other = (Card) obj;
+		StandardCard other = (StandardCard) obj;
 		
 		return this.compareTo(other) == 0;
 	}
 	
 	@Override 
-	public int compareTo(Card o) {
+	public int compareTo(StandardCard o) {
 		int cmp = this.suit.compareTo(o.suit);
 		if (cmp != 0) {
 			return cmp;

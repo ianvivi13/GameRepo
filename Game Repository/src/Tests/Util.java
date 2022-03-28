@@ -1,7 +1,7 @@
 package Tests;
 
 
-import Models.Card;
+import Models.StandardCard;
 import Models.Pile;
 import Models.Rank;
 import Models.Suit;
@@ -16,7 +16,7 @@ public class Util {
 		Rank[] ranks = Rank.values();
 		for (Suit s : suits) {
 			for (Rank r : ranks) {
-				pile.addCard(new Card(r, s));
+				pile.addCard(new StandardCard(r, s));
 			}
 		}
 	}
