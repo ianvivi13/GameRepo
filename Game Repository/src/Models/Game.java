@@ -1,8 +1,10 @@
 package Models;
 
+import java.util.ArrayList;
+
 public class Game {
 	
-	private ArrayList<int> players;
+	private ArrayList<Integer> players;
 	private String gameID;
 	
 	public Game(){

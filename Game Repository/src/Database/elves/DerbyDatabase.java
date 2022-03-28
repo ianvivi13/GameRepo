@@ -189,11 +189,22 @@ public class DerbyDatabase implements IDatabase {
 					
 					// Create Exploding Kittens Cards Table
 					stmt = conn.prepareStatement(
-							"CREATE TABLE ExplodingKittensCards ("
-							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
-							+ "	imagePath VARCHAR(65) NOT NULL ,"
-							+ "	type VARCHAR(2) NOT NULL)"
-							);
+						"CREATE TABLE ExplodingKittensCards ("
+						+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+						+ "	imagePath VARCHAR(65) NOT NULL ,"
+						+ "	type VARCHAR(2) NOT NULL)"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create pile table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Pile (" +
+						"	pile_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						gameKeyNotGlobal +
+						"	exposeIndex INTEGER DEFAULT 0 ," +
+						"	cards VARCHAR(600))"
+					);
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -387,6 +398,41 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// create pile in database - returns new pileId
+    public int createPile(String gameKey, int exposeIndex) {
+        return executeTransaction(new Transaction<Integer>() {
+            @Override
+            public Integer execute(Connection conn) throws SQLException {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                
+                try {
+                    stmt = conn.prepareStatement(
+                        "INSERT INTO Pile (gameKey, exposeIndex)" +
+                        "    VALUES (?, ?)"
+                    );
+                    stmt.setString(1, gameKey);
+                    stmt.setInt(2, exposeIndex);
+                    stmt.executeUpdate();
+                    stmt.close();
+                    
+                    stmt = conn.prepareStatement(
+                        "SELECT MAX(pile_id) AS pile_id" +
+                        "    From Pile"
+                    );
+                    resultSet = stmt.executeQuery();
+                    resultSet.next();
+                    int ret = resultSet.getInt("pile_id");
+                    stmt.close();
+                    
+                    return ret;
+                } finally {
+                    DBUtil.closeQuietly(stmt);
+                }
+            }
+        });
+    }
 	
 	// populates the BlackJackCards table with cards
 	public void initializeBlackJackCards() {
@@ -996,6 +1042,36 @@ public class DerbyDatabase implements IDatabase {
 	public void updateGlobalStats(StatisticsGlobal stat, String username) {
 		updateGlobalStats(stat, getUserIDfromUsername(username));
 	}
+	
+	// return boolean if User exists from username and password
+    public boolean login(String username, String password) {
+        return executeTransaction(new Transaction<Boolean>() {
+            @Override
+            public Boolean execute(Connection conn) throws SQLException {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                
+                try {                        
+                    stmt = conn.prepareStatement(
+                            "SELECT Users.User_id" +
+                            "    FROM Users" +
+                            "        WHERE LOWER(Users.username) = LOWER(?)" +
+                            "        AND Users.password = ?"
+                    );
+                    stmt.setString(1, username);
+                    stmt.setString(2, password);
+                    resultSet = stmt.executeQuery();
+                    if (resultSet.next()) {
+                        return true;
+                    }
+                    return false;
+                } finally {
+                    DBUtil.closeQuietly(resultSet);
+                    DBUtil.closeQuietly(stmt);
+                }
+            }
+        });
+    }
 	
 /*
 
