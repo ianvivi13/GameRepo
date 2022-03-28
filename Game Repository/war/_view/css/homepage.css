@@ -1,23 +1,23 @@
 .buttons{
 	margin-top: 5%;
     text-align: center;
-    border: 2px solid red;
+    /*border: 0px solid blue;*/
 }
 
 .radbuttons{
     text-align: left;
     margin-right: 25%;
-    border: 2px solid green;
+   /* border: 2px solid green;*/
 }
 
 .buttspace{
     margin-right: 20%;
-    border: 2px solid green;
+    /*border: 2px solid green;*/
 }
 
 #bootybutt{
     margin-top: 5%;
-    border: 2px solid blue;
+    /*border: 2px solid blue;*/
 }
 
 

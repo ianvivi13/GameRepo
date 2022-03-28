@@ -1,6 +1,7 @@
 #topic {
     text-align: center;
     margin-top: 4%;
+    text-decoration: underline;
 }
 
 #right {
@@ -30,3 +31,14 @@ button.branch {
     margin-top: 4%;
     margin-left: 42%;
 }
+
+#unordered {
+    display: table;
+    margin: 0 auto;
+    border: 3px solid blue;
+  }
+
+  li {
+      font-size:larger;
+      margin: 3%;
+  }

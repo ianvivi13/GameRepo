@@ -21,24 +21,18 @@
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
-    <div class="topics">Difficulty Level
+    <div class="topics"><span class="underline">Difficulty Level</span>
     <div class="difficulty-slider">
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
-        <input id="difficultyEasy" type="radio" name="difficulty">
-        <label for="difficultyEasy">&nbsp;</label>
         <input id="difficultyMedium" type="radio" name="difficulty" checked>
         <label for="difficultyMedium">Medium</label>
-        <input id="difficultyMedium" type="radio" name="difficulty">
-        <label for="difficultyMedium">&nbsp;</label>
         <input id="difficultyHard" type="radio" name="difficulty">
         <label for="difficultyHard">Hard</label>
-        <input id="difficultyHard" type="radio" name="difficulty">
-        <label for="difficultyHard">&nbsp;</label>
       </div>
       </div>
 
-      <div class="topics">Bot Count
+      <div class="topics"><span class="underline">Bot Count</span>
       <div class="bot-slider">
         <input id="bot1" type="radio" name="bot">
         <label for="bot1">1</label>
@@ -53,7 +47,7 @@
       </div>
       </div>
 
-        <label class="ckb" id="slider"> Doubling: &nbsp;
+      <label class="ckb" id="slider"><span class="underline"> Doubling</span>: &nbsp;
             <input type="checkbox" name="ckb1" value="a" unchecked>
             <i></i>
           </label>
