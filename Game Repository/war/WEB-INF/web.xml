@@ -46,6 +46,10 @@
     <servlet-name>HostPageExtendServlet</servlet-name>
     <servlet-class>Servlets.HostPageExtendServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>InstructionPageServlet</servlet-name>
+    <servlet-class>Servlets.InstructionPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -87,5 +91,9 @@
   <servlet-mapping>
     <servlet-name>HostPageExtendServlet</servlet-name>
     <url-pattern>/hostextend</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InstructionPageServlet</servlet-name>
+    <url-pattern>/instructions</url-pattern>
   </servlet-mapping>
   </web-app>
