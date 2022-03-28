@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 
+import Models.sqlTranscoder;
 import Models.BotNameGenerator;
 import Models.User;
 import Models.StatisticsBlackjack;
@@ -18,6 +19,8 @@ import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
+import Models.BlackJackCardDobbyInit;
+import Models.ExplodingKittensCardDobbyInit;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -110,18 +113,7 @@ public class DerbyDatabase implements IDatabase {
 		// check if Dobby.db exists
 		File DobbyPath = new File("Dobby.db");
 		Boolean DobbyExists = DobbyPath.exists();
-		if (DobbyExists) {
-			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Dobby the data elf already exists");
-			System.out.print("Would you like to re-create him (y/n): ");
-			String ans = keyboard.nextLine();
-			keyboard.close();
-			if (!(ans.equals("y") || ans.equals("Y"))) {
-				return false;
-			}
-			deleteDirectory(DobbyPath);
-			System.out.println("Re-creating Dobby...");
-		}
+		deleteDirectory(DobbyPath);
 		return true;
 	}
 	
@@ -184,6 +176,109 @@ public class DerbyDatabase implements IDatabase {
 					stmt.executeUpdate();
 					stmt.close();
 					
+					// Create Standard Cards Table
+					stmt = conn.prepareStatement(
+							"CREATE TABLE BlackJackCards ("
+							+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+							+ "	imagePath VARCHAR(55) NOT NULL ,"
+							+ "	suit VARCHAR(1) NOT NULL ,"
+							+ " rank VARCHAR(1) NOT NULL)"
+							);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Exploding Kittens Cards Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE ExplodingKittensCards ("
+						+ "	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ,"
+						+ "	imagePath VARCHAR(65) NOT NULL ,"
+						+ "	type VARCHAR(2) NOT NULL)"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create pile table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Pile (" +
+						"	pile_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						gameKeyNotGlobal +
+						"	exposeIndex INTEGER DEFAULT 0 ," +
+						"	cards VARCHAR(600))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Uno Flip Side Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoFlipSide (" +
+						"	uno_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	imagePath VARCHAR(300) ," +
+						"	color VARCHAR(1) ,"
+						+ "	type VARCHAR(1))"
+						//CHANGE VARCHAR(300) TO MATCH MAX CHAR LEN OF IMAGE PATH
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Uno Flip Cards Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoFlipCards (" +
+						"	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	uno_id INTEGER, FOREIGN KEY (uno_id) REFERENCES UnoFlipSide(uno_id) ," +
+						"	uno_id_flip INTEGER, FOREIGN KEY (uno_id_flip) REFERENCES UnoFlipSide(uno_id))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Uno Cards Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE UnoCards (" +
+						"	card_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	imagePath VARCHAR(300) ," +
+						"	color VARCHAR(1) ,"
+						+ "	type VARCHAR(1))"
+						//CHANGE VARCHAR(300) TO MATCH MAX CHAR LEN OF IMAGE PATH
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Player Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Player (" +
+						"	player_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	player_bot_id INTEGER ," +
+						"	human BOOLEAN ,"
+						+ "	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Turn Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Turn (" +
+						"	turn_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						"	pointer INTEGER ," +
+						"	adder INTEGER ,"
+						+ "	turn_order VARCHAR(600))"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					// Create Game Table
+					stmt = conn.prepareStatement(
+						"CREATE TABLE Game (" +
+						"	game_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
+						gameKeyNotGlobal +
+						"	turn_id INTEGER, FOREIGN KEY (turn_id) REFERENCES Turn(turn_id) ,"
+						+ "	code VARCHAR(11) ," +
+						"	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
+						+ "	cardSideA BOOLEAN)"
+					);
+					stmt.executeUpdate();
+					stmt.close();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -200,12 +295,34 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				InitDatabase.init();
 				IDatabase db = DatabaseProvider.getInstance();
+				StatisticsBlackjack statOne = new StatisticsBlackjack();
+				StatisticsUno statTwo = new StatisticsUno();
+				StatisticsUnoFlip statThree = new StatisticsUnoFlip();
+				StatisticsExplodingKittens statFour = new StatisticsExplodingKittens();
+				StatisticsGlobal statFive = new StatisticsGlobal();
 				try {
 					db.createAllStats(db.createUser("NewUser","password still"));
 					db.createAllStats(db.createUser("User","password still"));
 					db.createBot(IDatabase.Key_Blackjack,2);
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
+					db.initializeBlackJackCards();
+					db.initializeExplodingKittensCards();
+					statOne.SetBlackjacks(2);
+					statOne.SetGamesWon(1);
+					statTwo.SetSwaps(3);
+					statTwo.SetGamesLost(1);
+					statThree.SetFlips(4);
+					statThree.SetGamesPlayed(5);
+					statFour.SetDefuses(1);
+					statFour.SetGamesLost(3);
+					statFive.SetRank(1029);
+					statFive.SetGamesPlayed(1928);
+					db.updateUnoStats(statTwo, "NewUser");
+					db.updateUnoFlipStats(statThree, "NewUser");
+					db.updateExplodingKittensStats(statFour, "NewUser");
+					db.updateGlobalStats(statFive, "NewUser");
+					
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -218,6 +335,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// Define some methods to use to access things within the database
+	
 	/*
 	import Database.elves.DatabaseProvider;
 	import Database.elves.IDatabase;
@@ -351,6 +469,105 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// create pile in database - returns new pileId
+    public int createPile(String gameKey, int exposeIndex) {
+        return executeTransaction(new Transaction<Integer>() {
+            @Override
+            public Integer execute(Connection conn) throws SQLException {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                
+                try {
+                    stmt = conn.prepareStatement(
+                        "INSERT INTO Pile (gameKey, exposeIndex)" +
+                        "    VALUES (?, ?)"
+                    );
+                    stmt.setString(1, gameKey);
+                    stmt.setInt(2, exposeIndex);
+                    stmt.executeUpdate();
+                    stmt.close();
+                    
+                    stmt = conn.prepareStatement(
+                        "SELECT MAX(pile_id) AS pile_id" +
+                        "    From Pile"
+                    );
+                    resultSet = stmt.executeQuery();
+                    resultSet.next();
+                    int ret = resultSet.getInt("pile_id");
+                    stmt.close();
+                    
+                    return ret;
+                } finally {
+                    DBUtil.closeQuietly(stmt);
+                }
+            }
+        });
+    }
+	
+	// populates the BlackJackCards table with cards
+	public void initializeBlackJackCards() {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					for (List<String> cardData : BlackJackCardDobbyInit.blackjackCardArray()) {
+						String imgPath = cardData.get(0);
+						String suit = cardData.get(1);
+						String rank = cardData.get(2);
+						stmt = conn.prepareStatement(
+								"INSERT INTO BlackJackCards(imagePath, suit, rank)" +
+								" 	VALUES(?, ?, ?)"
+						);
+						stmt.setString(1, imgPath);
+						stmt.setString(2, suit);
+						stmt.setString(3, rank);
+						stmt.executeUpdate();
+						stmt.close();
+					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// populates the ExplodingKittensCards table with cards
+		public void initializeExplodingKittensCards() {
+			executeTransaction(new Transaction<Void>() {
+				@Override
+				public Void execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+
+					try {
+						for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
+							String imgPath = cardData.get(0);
+							String type = cardData.get(1);
+							stmt = conn.prepareStatement(
+									"INSERT INTO ExplodingKittensCards(imagePath, type)" +
+									" 	VALUES(?, ?)"
+							);
+							stmt.setString(1, imgPath);
+							stmt.setString(2, type);
+							stmt.executeUpdate();
+							stmt.close();
+						}
+						
+						return null;
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -667,4 +884,344 @@ public class DerbyDatabase implements IDatabase {
 	public StatisticsGlobal getGlobalStats(String username) {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
+	
+	// updates user's stats from an Uno statistics object and a user id
+	public void updateUnoStats(StatisticsUno stat, int user_id) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					int plays = stat.GetGamesPlayed();
+					int wins = stat.GetGamesWon();
+					int losses = stat.GetGamesLost();
+					int sOne = stat.GetWildCards();
+					int sTwo = stat.GetPlusFours();
+					int sThree = stat.GetSwaps();
+				
+					stmt = conn.prepareStatement(
+							"UPDATE Stats" +
+							" 	SET plays = ?, wins = ?, loses = ?, sOne = ?, sTwo = ?, sThree = ?"
+							+ "	WHERE user_id = ? and"
+							+ "	gameKey = 'UNO'"
+					);
+					
+					stmt.setInt(1, plays);
+					stmt.setInt(2, wins);
+					stmt.setInt(3, losses);
+					stmt.setInt(4, sOne);
+					stmt.setInt(5, sTwo);
+					stmt.setInt(6, sThree);
+					stmt.setInt(7, user_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a username
+	public void updateUnoStats(StatisticsUno stat, String username) {
+		updateUnoStats(stat, getUserIDfromUsername(username));
+	}
+	
+	// updates user's stats from an Uno statistics object and a user id
+	public void updateUnoFlipStats(StatisticsUnoFlip stat, int user_id) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					int plays = stat.GetGamesPlayed();
+					int wins = stat.GetGamesWon();
+					int losses = stat.GetGamesLost();
+					int sOne = stat.GetFlips();
+					int sTwo = stat.GetSkipAlls();
+					int sThree = stat.GetPlusFives();
+				
+					stmt = conn.prepareStatement(
+							"UPDATE Stats" +
+							" 	SET plays = ?, wins = ?, loses = ?, sOne = ?, sTwo = ?, sThree = ?"
+							+ "	WHERE user_id = ? and"
+							+ "	gameKey = 'UNF'"
+					);
+					
+					stmt.setInt(1, plays);
+					stmt.setInt(2, wins);
+					stmt.setInt(3, losses);
+					stmt.setInt(4, sOne);
+					stmt.setInt(5, sTwo);
+					stmt.setInt(6, sThree);
+					stmt.setInt(7, user_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a username
+	public void updateUnoFlipStats(StatisticsUnoFlip stat, String username) {
+		updateUnoFlipStats(stat, getUserIDfromUsername(username));
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a user id
+	public void updateBlackjackStats(StatisticsBlackjack stat, int user_id) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					int plays = stat.GetGamesPlayed();
+					int wins = stat.GetGamesWon();
+					int losses = stat.GetGamesLost();
+					int sOne = stat.GetBlackjacks();
+					int sTwo = stat.GetSplits();
+					int sThree = stat.GetFiveCardWins();
+				
+					stmt = conn.prepareStatement(
+							"UPDATE Stats" +
+							" 	SET plays = ?, wins = ?, loses = ?, sOne = ?, sTwo = ?, sThree = ?"
+							+ "	WHERE user_id = ? and"
+							+ "	gameKey = 'BLJ'"
+					);
+					
+					stmt.setInt(1, plays);
+					stmt.setInt(2, wins);
+					stmt.setInt(3, losses);
+					stmt.setInt(4, sOne);
+					stmt.setInt(5, sTwo);
+					stmt.setInt(6, sThree);
+					stmt.setInt(7, user_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a username
+	public void updateBlackjackStats(StatisticsBlackjack stat, String username) {
+		updateBlackjackStats(stat, getUserIDfromUsername(username));
+	}
+	
+	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, int user_id) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					int plays = stat.GetGamesPlayed();
+					int wins = stat.GetGamesWon();
+					int losses = stat.GetGamesLost();
+					int sOne = stat.GetDefuses();
+					int sTwo = stat.GetFavors();
+					int sThree = stat.GetFutures();
+				
+					stmt = conn.prepareStatement(
+							"UPDATE Stats" +
+							" 	SET plays = ?, wins = ?, loses = ?, sOne = ?, sTwo = ?, sThree = ?"
+							+ "	WHERE user_id = ? and"
+							+ "	gameKey = 'EXP'"
+					);
+					
+					stmt.setInt(1, plays);
+					stmt.setInt(2, wins);
+					stmt.setInt(3, losses);
+					stmt.setInt(4, sOne);
+					stmt.setInt(5, sTwo);
+					stmt.setInt(6, sThree);
+					stmt.setInt(7, user_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a username
+	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, String username) {
+		updateExplodingKittensStats(stat, getUserIDfromUsername(username));
+	}
+	
+	public void updateGlobalStats(StatisticsGlobal stat, int user_id) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					int plays = stat.GetGamesPlayed();
+					int wins = stat.GetGamesWon();
+					int losses = stat.GetGamesLost();
+					int sOne = stat.GetRank();
+				
+					stmt = conn.prepareStatement(
+							"UPDATE Stats" +
+							" 	SET plays = ?, wins = ?, loses = ?, sOne = ?"
+							+ "	WHERE user_id = ? and"
+							+ "	gameKey = 'GLB'"
+					);
+					
+					stmt.setInt(1, plays);
+					stmt.setInt(2, wins);
+					stmt.setInt(3, losses);
+					stmt.setInt(4, sOne);
+					stmt.setInt(5, user_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// updates user's stats from a Blackjack statistics object and a username
+	public void updateGlobalStats(StatisticsGlobal stat, String username) {
+		updateGlobalStats(stat, getUserIDfromUsername(username));
+	}
+	
+	// return boolean if User exists from username and password
+    public boolean login(String username, String password) {
+        return executeTransaction(new Transaction<Boolean>() {
+            @Override
+            public Boolean execute(Connection conn) throws SQLException {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                
+                try {                        
+                    stmt = conn.prepareStatement(
+                            "SELECT Users.User_id" +
+                            "    FROM Users" +
+                            "        WHERE LOWER(Users.username) = LOWER(?)" +
+                            "        AND Users.password = ?"
+                    );
+                    stmt.setString(1, username);
+                    stmt.setString(2, password);
+                    resultSet = stmt.executeQuery();
+                    if (resultSet.next()) {
+                        return true;
+                    }
+                    return false;
+                } finally {
+                    DBUtil.closeQuietly(resultSet);
+                    DBUtil.closeQuietly(stmt);
+                }
+            }
+        });
+    }
+	
+/*
+
+	+ Create the following tables:
+		- UnoFlipSide
+		- UnoFlip
+		- Uno
+		- Player
+		- Turn
+		- Game
+	
+	+ Initialize the following tables:
+		- UnoFlipSide
+		- UnoFlip
+		- Uno
+		- Pile
+		- Player
+		- Turn
+		- Game
+	
+	+ Create the following objects:
+		- Bot
+		- Uno arraylist
+		- UnoFlip arraylist
+		- UnoFlipSide arraylist
+	
+	+ Change the following objects:
+		- User
+			~ Should include 5 objects for statistics
+			~ Should inherit from Player
+			
+	+ Change the following Dobby methods:
+		- getUser
+			~ Should include the new parts to User (statistics loading)
+		
+	+ Create the following Dobby methods: # these may be overloaded as well
+		- Creators
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+			~ Uno
+			~ UnoFlip
+			~ UnoFlipSide
+		- Getters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+			~ Uno
+			~ UnoFlip
+			~ ExplodingKittens
+			~ Blackjack
+			~ UnoFlipSide
+		- Updaters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+		- Deleters
+			~ Game
+			~ Turn
+			~ Pile
+			~ Player
+		- Probably more but who knows
+	
+	+ Create the following tests:
+		- createUser
+		- createBot
+		- createAllStats
+		- getUserIDfromUsername # this should be tested w/ all method that call w/ username
+		- getUsernamefromUserID
+		- getUser(user_id)
+		- getUser(username) # this should also test w/ user_id
+
+	+ Fix the following:
+		- Get login to work now that we have database
+
+ */
+
+
 }

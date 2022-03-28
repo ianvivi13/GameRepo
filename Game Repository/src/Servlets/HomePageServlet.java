@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import Models.User;
-import Models.UserList;
 
 public class HomePageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -21,13 +20,6 @@ public class HomePageServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		UserList list = new UserList();
-		
-		String username = list.getUser("admin").getUsername();
-		System.out.println("Username: " + username);
-		
-		req.setAttribute("username", username);
 		
 		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
 	}

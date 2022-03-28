@@ -49,4 +49,5 @@ public class StatisticsBlackjack extends StatisticsParent{
 	public void FiveCardWin() {
 		FiveCardWins ++;
 	}
+	
 }

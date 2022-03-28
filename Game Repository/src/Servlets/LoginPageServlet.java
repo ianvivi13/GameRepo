@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import Models.User;
-import Models.UserList;
 
 public class LoginPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -22,8 +21,6 @@ public class LoginPageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		UserList list = new UserList();
-		
 		String username = req.getParameter("Username");
 		String password = req.getParameter("Password");
 		
@@ -32,7 +29,6 @@ public class LoginPageServlet extends HttpServlet {
 		System.out.println(password);
 		
 		if(username.equals("admin") && password.equals("admin")) {
-			list.createUser(username, password);
 			resp.sendRedirect("http://localhost:8080/gamerepo/home");
 			return;
 		}
