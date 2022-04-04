@@ -14,18 +14,20 @@ public interface IDatabase {
 	public static final String Key_UnoFlip = "UNF";
 	public static final String Key_Blackjack = "BLJ";
 	
+	// Creators
 	public int createUser(String username, String password);
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
+	public int createPile(String gameKey, int exposeIndex);
+	
+	// Card Initializers
 	public void initializeBlackJackCards();
 	public void initializeExplodingKittensCards();
+	public void initializeUnoCards();
 	public int getUserIDfromUsername(String username);
-	public String getUsernamefromUserID(int UserID);
-	public User getUser(int UserID);
-	public User getUser(String username);
 
+	// Login
 	public boolean login(String username, String password);
-	public int createPile(String gameKey, int exposeIndex);
 	
 	// Stats retrieving - overloaded to allow use of username or user_id
 	public StatisticsGlobal getGlobalStats(int UserID);
@@ -38,6 +40,11 @@ public interface IDatabase {
 	public StatisticsBlackjack getBlackjackStats(String username);
 	public StatisticsExplodingKittens getExplodingKittenStats(int UserID);
 	public StatisticsExplodingKittens getExplodingKittenStats(String username);
+	
+	// User data retrieval
+	public String getUsernamefromUserID(int UserID);
+	public User getUser(int UserID);
+	public User getUser(String username);
 	
 	// Stats updating - overloaded to allow use of username or user_id
 	public void updateGlobalStats(StatisticsGlobal stat, int user_id);

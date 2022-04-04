@@ -28,15 +28,15 @@ public class UnoCardDobbyInit {
 			else if(i == 3) {
 				color = "Y";
 			}
-			for(int j = 0; j < 12; j++) {
-				number = Integer.toString(j + 1);
-				if(j == 9) {
+			for(int j = 0; j < 13; j++) {
+				number = Integer.toString(j);
+				if(j == 10) {
 					number = "R";
 				}
-				else if(j == 10) {
+				else if(j == 11) {
 					number = "S";
 				}
-				else if(j == 11) {
+				else if(j == 12) {
 					number = "T";
 				}
 				fullImgPath = (imgPath + color.toLowerCase() + "_" + number.toLowerCase() + ".png");

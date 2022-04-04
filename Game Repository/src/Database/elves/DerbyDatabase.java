@@ -21,6 +21,7 @@ import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
 import Models.ExplodingKittensCardDobbyInit;
+import Models.UnoCardDobbyInit;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -315,6 +316,7 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_UnoFlip,2);
 					db.initializeBlackJackCards();
 					db.initializeExplodingKittensCards();
+					db.initializeUnoCards();
 					statOne.SetBlackjacks(2);
 					statOne.SetGamesWon(1);
 					statTwo.SetSwaps(3);
@@ -575,6 +577,39 @@ public class DerbyDatabase implements IDatabase {
 				}
 			});
 		}
+		
+		// populates the UnoCards table with cards
+			public void initializeUnoCards() {
+				executeTransaction(new Transaction<Void>() {
+					@Override
+					public Void execute(Connection conn) throws SQLException {
+						PreparedStatement stmt = null;
+						ResultSet resultSet = null;
+
+						try {
+							for (List<String> cardData : UnoCardDobbyInit.unoCardArray()) {
+								String imgPath = cardData.get(0);
+								String color = cardData.get(1);
+								String type = cardData.get(2);
+								stmt = conn.prepareStatement(
+										"INSERT INTO UnoCards(imagePath, color, type)" +
+										" 	VALUES(?, ?, ?)"
+								);
+								stmt.setString(1, imgPath);
+								stmt.setString(2, color);
+								stmt.setString(3, type);
+								stmt.executeUpdate();
+								stmt.close();
+							}
+							
+							return null;
+						} finally {
+							DBUtil.closeQuietly(resultSet);
+							DBUtil.closeQuietly(stmt);
+						}
+					}
+				});
+			}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -1164,7 +1199,6 @@ public class DerbyDatabase implements IDatabase {
 	+ Initialize the following tables:
 		- UnoFlipSide
 		- UnoFlip
-		- Uno
 		- Pile
 		- Player
 		- Turn
@@ -1172,7 +1206,6 @@ public class DerbyDatabase implements IDatabase {
 	
 	+ Create the following objects:
 		- Bot
-		- Uno arraylist
 		- UnoFlip arraylist
 		- UnoFlipSide arraylist
 	
