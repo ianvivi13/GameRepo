@@ -17,21 +17,31 @@ public class PileTest{
 	
 	private Pile pile;
 	private Pile fullPile;
+	private Pile unoPile;
+	private Pile fullUnoPile;
 	
 	@Before
 	public void setUp() {
 		// pile which starts out empty
 		pile = new Pile();
+		unoPile = new Pile();
 		
 		// pile which starts out full
 		fullPile = new Pile();
+		fullUnoPile = new Pile();
+		
 		fullPile.populate();
+		fullUnoPile.populateUno();
 	}
 	
 	@Test
 	public void testGetNumCards() throws Exception {
 		assertEquals(0, pile.getNumCards());
 		assertEquals(52, fullPile.getNumCards());
+		
+		assertEquals(0, unoPile.getNumCards());
+		assertEquals(108, fullUnoPile.getNumCards());
+		
 	}
 	
 	@Test

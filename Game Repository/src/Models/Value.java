@@ -13,6 +13,7 @@ public enum Value {
 	DrawTwo("DT"),
 	Skip("S"),
 	Reverse("R"),
+	Zero("0"),
 	Wild("W"),
 	Wild_Four("W4");
 	
