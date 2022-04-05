@@ -1,5 +1,8 @@
 package Database.elves;
 
+import java.util.List;
+
+import Models.Pile;
 import Models.StatisticsBlackjack;
 import Models.StatisticsExplodingKittens;
 import Models.StatisticsGlobal;
@@ -19,6 +22,8 @@ public interface IDatabase {
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
 	public int createPile(String gameKey, int exposeIndex);
+	public int createPile(List<Object> cards, int exposeIndex);
+	public int createPlayer(int id, boolean user, Pile hand, Pile altHand);
 	
 	// Card Initializers
 	public void initializeBlackJackCards();
@@ -45,6 +50,7 @@ public interface IDatabase {
 	public String getUsernamefromUserID(int UserID);
 	public User getUser(int UserID);
 	public User getUser(String username);
+	public boolean isHuman(int PlayerId);
 	
 	// Stats updating - overloaded to allow use of username or user_id
 	public void updateGlobalStats(StatisticsGlobal stat, int user_id);
@@ -57,4 +63,13 @@ public interface IDatabase {
 	public void updateBlackjackStats(StatisticsBlackjack stat, String username);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, int user_id);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, String username);
+	
+	// Other updaters
+	public void updatePile(int pile_id, int exposeIndex, List<Object> cards);
+	public void updatePlayer(int player_id, int newPileId, int newAltPileId);
+	
+	// Quality of Life
+	public String encodeCardIds(List<Object> cards);
+	public int getPileFromCardList(List<Object> cards);
+	public String encodeCardIds(Pile pile);
 }

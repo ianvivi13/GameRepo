@@ -66,6 +66,17 @@ public class Pile{
 		}
 	}
 	
+	public ArrayList<Object> getPile() {
+		return pile;
+	}
+	
+	public String getType() {
+		if(!pile.isEmpty()) {
+			return String.valueOf(this.getCard(0).getClass());
+		}
+		return null;
+	}
+	
 	public ArrayList<Object> removeCards(int numCards) {
 		if(pile.size()<numCards){
 			throw new IllegalArgumentException("Not Enough Cards");
