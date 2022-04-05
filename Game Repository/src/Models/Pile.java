@@ -130,6 +130,18 @@ public class Pile{
 		}
 		return (StandardCard) pile.remove(pile.size()-1);
 	}
+	
+	public ArrayList<Object> getPile() {
+        return pile;
+    }
+    
+    public String getType() {
+        if(!pile.isEmpty()) {
+            return String.valueOf(this.getCard(0).getClass());
+        }
+        return null;
+    }
+	
 
 	
 	
