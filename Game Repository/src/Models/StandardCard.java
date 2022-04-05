@@ -19,7 +19,6 @@ public class StandardCard implements Comparable<StandardCard>{
 		else if(rank.getSymbol() == "4") {
 			value = 4;
 		}
-		
 		else if(rank.getSymbol() == "5") {
 			value = 5;
 		}
@@ -38,6 +37,14 @@ public class StandardCard implements Comparable<StandardCard>{
 		else if(rank.getSymbol() == "T" ||rank.getSymbol() == "J" ||rank.getSymbol() == "Q" ||rank.getSymbol() == "K" ) {
 			value = 10;
 		}
+		
+		/*
+		try {
+			value = Integer.parseInt(rank.getSymbol());
+		} catch (Exception e) {
+			value = 10;
+		}
+		*/
 	}
 	
 	public Rank getRank() {

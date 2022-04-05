@@ -134,7 +134,7 @@ public class DerbyDatabase implements IDatabase {
 			System.out.println(botName.GenerateName());
 			System.out.println(botName.GenerateName());
 		}
-	}	
+	}
 	
 	// create initial tables
 	private void createTables() {
