@@ -66,17 +66,6 @@ public class Pile{
 		}
 	}
 	
-	public ArrayList<Object> getPile() {
-		return pile;
-	}
-	
-	public String getType() {
-		if(!pile.isEmpty()) {
-			return String.valueOf(this.getCard(0).getClass());
-		}
-		return null;
-	}
-	
 	public ArrayList<Object> removeCards(int numCards) {
 		if(pile.size()<numCards){
 			throw new IllegalArgumentException("Not Enough Cards");
@@ -104,6 +93,32 @@ public class Pile{
 		}
 	}
 	
+	public void populateUno() {
+		Color[] allColors = Color.values();
+		Value[] allValues = Value.values();
+		
+		//populates zeros
+		for(int j = 0; j < allColors.length-1; j++) {
+			pile.add(new UnoCard(allColors[j], Value.Zero));
+		}
+		
+		//populates all number cards, skips, reverses, and draw 2s
+		for(int x = 0; x < 2; x++) {
+			for (int j = 0; j < allColors.length-1; j++) {
+				for (int i = 0; i < allValues.length-3; i++) {
+					// use allSuits[j] and allRanks[i] to create a Card
+					pile.add(new UnoCard(allColors[j],allValues[i]));
+				}
+			}
+		}
+		
+		//populates draw 4s and wild cards
+		for(int k = 0; k < 4; k++) {
+			pile.add(new UnoCard(Color.BLACK, Value.Wild));
+			pile.add(new UnoCard(Color.BLACK, Value.Wild_Four));
+		}
+	}
+	
 	
 	public void shuffle() {
 		Collections.shuffle(pile);
@@ -115,6 +130,18 @@ public class Pile{
 		}
 		return (StandardCard) pile.remove(pile.size()-1);
 	}
+	
+	public ArrayList<Object> getPile() {
+        return pile;
+    }
+    
+    public String getType() {
+        if(!pile.isEmpty()) {
+            return String.valueOf(this.getCard(0).getClass());
+        }
+        return null;
+    }
+	
 
 	
 	

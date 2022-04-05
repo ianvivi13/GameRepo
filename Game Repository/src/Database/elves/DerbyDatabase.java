@@ -13,10 +13,12 @@ import java.io.File;
 
 import Models.sqlTranscoder;
 import Models.BotNameGenerator;
+import Models.ExplodingKittensCard;
 import Models.User;
 import Models.StatisticsBlackjack;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
+import Models.UnoCard;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
@@ -505,14 +507,13 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// Creates a new pile in the database and populates it with cards
-	public int createPile(List<Object> cards, int exposeIndex) {
+	public int createPile(String gameKey, int exposeIndex, List<Object> cards) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				String encodedIds = encodeCardIds(cards);
-				String gameKey = null;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -1402,7 +1403,6 @@ public class DerbyDatabase implements IDatabase {
 				Pile pile = new Pile();
 				pile.addCards((ArrayList<Object>)cards);
 				
-				// Copy everything in this if statement for other card types
 				if(pile.getType() == "StandardCard") {
 					for(Object card : cards) {
 						try {
@@ -1424,6 +1424,51 @@ public class DerbyDatabase implements IDatabase {
 						}
 					}
 				}
+				
+				else if(pile.getType() == "ExplodingKittensCard") {
+					for(Object card : cards) {
+						try {
+							stmt = conn.prepareStatement(
+									"SELECT E.card_id"
+									+ "FROM ExplodingKittensCards as E"
+									+ "	WHERE E.type = ?"
+									);
+							stmt.setString(1, String.valueOf(((ExplodingKittensCard)card).getColor()));
+							
+							resultSet = stmt.executeQuery();
+							resultSet.next();
+							int cardId = resultSet.getInt("card_id");
+							cardIds.add(cardId);
+						} finally {
+							DBUtil.closeQuietly(resultSet);
+							DBUtil.closeQuietly(stmt);
+						}
+					}
+				}
+				
+				else if(pile.getType() == "UnoCard") {
+					for(Object card : cards) {
+						try {
+							stmt = conn.prepareStatement(
+									"SELECT U.card_id"
+									+ "FROM UnoCards as U"
+									+ "	WHERE U.color = ? and U.type = ?"
+									);
+							stmt.setString(1, String.valueOf(((UnoCard)card).getColor()));
+							stmt.setString(1, String.valueOf(((UnoCard)card).getValues()));
+							
+							resultSet = stmt.executeQuery();
+							resultSet.next();
+							int cardId = resultSet.getInt("card_id");
+							cardIds.add(cardId);
+						} finally {
+							DBUtil.closeQuietly(resultSet);
+							DBUtil.closeQuietly(stmt);
+						}
+					}
+				}
+				
+				// ADD UNO FLIP CARDS
 				
 				return sqlTranscoder.encode(cardIds);
            }

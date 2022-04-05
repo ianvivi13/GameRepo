@@ -22,7 +22,7 @@ public interface IDatabase {
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
 	public int createPile(String gameKey, int exposeIndex);
-	public int createPile(List<Object> cards, int exposeIndex);
+	public int createPile(String gameKey, int exposeIndex, List<Object> cards);
 	public int createPlayer(int id, boolean user, Pile hand, Pile altHand);
 	
 	// Card Initializers
