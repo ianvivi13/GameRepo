@@ -4,10 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import Models.StandardCard;
 import Models.Rank;
 import Models.Suit;
+import Models.Value;
 
 public class CardTest{
 	
@@ -63,5 +65,10 @@ public class CardTest{
 		
 		// ACE is the low rank
 		assertTrue(aceOfSpades.compareTo(twoOfClubs) > 0);
+	}
+	
+	@Test
+	public void testFromString() throws Exception {
+		assertEquals(Value.Wild, Value.fromString("W"));
 	}
 }

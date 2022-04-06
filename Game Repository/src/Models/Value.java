@@ -33,6 +33,15 @@ private final String symbol;
 		return symbol; 
 	}
 	
+	public static Value fromString(String symbol) {
+        for (Value v : Value.values()) {
+            if (v.toString().equalsIgnoreCase(symbol)) {
+                return v;
+            }
+        }
+       return null;
+    }
+	
 	public String getMemberName() {
 		return super.toString();
 	}

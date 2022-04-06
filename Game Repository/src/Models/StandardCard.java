@@ -40,6 +40,11 @@ public class StandardCard implements Comparable<StandardCard>{
 		}
 	}
 	
+	public StandardCard(String rank, String suit) {
+		this.rank = Rank.fromString(rank);
+		this.suit = Suit.fromString(suit);
+	}
+	
 	public Rank getRank() {
 		return rank;
 	}

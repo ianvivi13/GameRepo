@@ -9,6 +9,11 @@ public class UnoCard implements Comparable<UnoCard>{
 		this.color = color;	
 	}
 	
+	public UnoCard(String color, String values) {
+		this.values = Value.fromString(values);
+		this.color =  Color.fromString(color);	
+	}
+	
 	public Color getColor() {
 		return color;
 	}

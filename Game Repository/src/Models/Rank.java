@@ -32,7 +32,14 @@ public enum Rank {
 		return symbol; 
 	}
 	
-
+	public static Rank fromString(String t) {
+        for (Rank r : Rank.values()) {
+            if (r.toString().equalsIgnoreCase(t)) {
+                return r;
+            }
+        }
+       return null;
+    }
 	
 	//To retrieve the name of the enumeration as a string
 	
