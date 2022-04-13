@@ -11,18 +11,25 @@ public class UnoParentController extends Game {
 	
 	//If no cards in your hand does not equal the color or symbol of the top index card in the waste pile, draw one card
 	public void draw(UnoModel model) {
-		if (model.getHand() != model.getWastePile().getTopCard() || model.getHand().getCard(index) == Color.BLACK) {
-		model.getHand().drawCard();
-		nextTurn();
+		for (int i = 0; i < model.getHand().getNumCards(); i++) {
+			if (model.getHand().isEmpty() || model.getHand() != model.getWastePile().getTopCard() || model.getHand().getCard(i) == Color.BLACK) {
+				model.getDeck().drawCard(model.getDeck().getTopCard());
+			}
 		}
+		
+		nextTurn();
+		
 	}
 
 	//If the current card attempting to be 
-	public void wild(UnoModel model, Color color) {
-		if (model.getHand().getCard(index) == Color.BLACK) {
-			
+	public void wildFour(UnoModel model, Color color) {
+		if (model.getHand().getCard() == Value.Wild_Four) {
+			//change color
+			nextTurn();
+			for(int x = 0; x < 4; x++ ) {
+				model.getDeck().drawCard(model.getHand());
+			}
 		}
-		nextTurn();
 	}
 	
 	public void skip(UnoModel model) {
