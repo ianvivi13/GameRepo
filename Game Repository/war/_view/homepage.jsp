@@ -46,22 +46,22 @@
 		<div id = "bootybutt">
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="blackjack">
-				<img src="_view/css/Standard Card/back-sm.png">
+				<img src="_view/images/StandardCards/back-sm.png">
 			</label>
 
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="uno">
-				<img src="_view/css/Standard Card/back-sm.png">
+				<img src="_view/images/UnoCards/back.png">
 			</label>
 
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="unoflip">
-				<img src="_view/css/Standard Card/back-sm.png">
+				<img src="_view/images/ExplodingKittens/back.jpg">
 			</label>
 
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="expoldingkittens">
-				<img src="_view/css/Standard Card/back-sm.png">
+				<img src="_view/images/ExplodingKittens/back.jpg">
 			</label>
 		</div>
 	</body>
