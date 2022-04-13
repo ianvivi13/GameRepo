@@ -2,24 +2,24 @@ package Models;
 
 public class ExplodingKittensCard implements Comparable<ExplodingKittensCard>{
 	private Type type;
-	private Value values;
+	private String imagePath;
 	
-	public ExplodingKittensCard(Type type, Value values) {
-		this.values = values;
+	public ExplodingKittensCard(Type type, String imagePath) {
+		this.imagePath = imagePath;
 		this.type = type;	
 	}
 	
-	public Type getColor() {
+	public Type getType() {
 		return type;
 	}
 	
-	public Value getValues() {
-		return values;
+	public String getImagePath() {
+		return imagePath;
 	}
 	
 	@Override
 	public String toString() {
-		return values.toString() + type.toString(); 
+		return imagePath.toString() + type.toString(); 
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class ExplodingKittensCard implements Comparable<ExplodingKittensCard>{
 		if (cmp != 0) {
 			return cmp;
 		}
-		return this.values.compareTo(o.values);
+		return this.type.compareTo(o.type);
 	}
 	
 }

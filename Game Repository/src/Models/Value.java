@@ -10,12 +10,13 @@ public enum Value {
 	Seven("7"),
 	Eight("8"),
 	Nine("9"),
-	DrawTwo("DT"),
+	DrawTwo("T"),
 	Skip("S"),
 	Reverse("R"),
 	Zero("0"),
 	Wild("W"),
-	Wild_Four("W4");
+	Wild_Four("F"),
+	SwapHands("H");
 	
 private final String symbol;
 	

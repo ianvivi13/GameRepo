@@ -40,7 +40,7 @@ public class PileTest{
 		assertEquals(52, fullPile.getNumCards());
 		
 		assertEquals(0, unoPile.getNumCards());
-		assertEquals(108, fullUnoPile.getNumCards());
+		assertEquals(109, fullUnoPile.getNumCards());
 		
 	}
 	
@@ -256,5 +256,30 @@ public class PileTest{
 		assertEquals(new StandardCard(Rank.EIGHT, Suit.SPADES), r2.get(2));
 		assertEquals(new StandardCard(Rank.NINE, Suit.SPADES), r2.get(3));
 		assertEquals(new StandardCard(Rank.TEN, Suit.SPADES), r2.get(4));
+	}
+	
+	@Test
+	public void testSetValues() throws Exception {
+		pile.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
+		pile.addCard(new StandardCard(Rank.ACE, Suit.HEARTS));
+		assertEquals(12, pile.getValueStandard());
+		
+		Pile pile2 = new Pile();
+		
+		pile2.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
+		pile2.addCard(new StandardCard(Rank.TWO, Suit.SPADES));
+		assertEquals(13, pile2.getValueStandard());
+		
+		Pile pile3 = new Pile();
+		pile3.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
+		pile3.addCard(new StandardCard(Rank.TEN, Suit.SPADES));
+		pile3.addCard(new StandardCard(Rank.KING, Suit.HEARTS));
+		assertEquals(21, pile3.getValueStandard());
+		
+		Pile pile4 = new Pile();
+		pile4.addCard(new StandardCard(Rank.SIX, Suit.SPADES));
+		pile4.addCard(new StandardCard(Rank.QUEEN, Suit.SPADES));
+		pile4.addCard(new StandardCard(Rank.SEVEN, Suit.HEARTS));
+		assertEquals(23, pile4.getValueStandard());
 	}
 }

@@ -26,6 +26,8 @@ public class Game {
 		tko.RemovePlayer(player);
 	}
 	
+	
+	
 	public void updateStats() {
 		
 	}

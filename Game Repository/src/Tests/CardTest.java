@@ -46,13 +46,6 @@ public class CardTest{
 		assertEquals(Suit.HEARTS, queenOfHearts.getSuit());
 	}
 	
-	@Test
-	public void testGetValue() throws Exception {
-		assertEquals(10, jackOfDiamonds.getValues());
-		assertEquals(2, twoOfClubs.getValues());
-		assertEquals(3, threeOfHearts.getValues());
-		assertEquals(10, queenOfHearts.getValues());
-	}
 	
 	@Test
 	public void testCompareTo() throws Exception {

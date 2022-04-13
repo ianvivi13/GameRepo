@@ -1,16 +1,17 @@
 package Models;
 
-public enum Color {
-	RED("R"), 
-	BLUE("B"), 
-	GREEN("G"), 
-	YELLOW("Y"), 
-	BLACK("W");
+public enum AltColor {
+	
+	ORANGE("O"), 
+	CYAN("C"), 
+	PINK("P"), 
+	PURPLE("V"), 
+	WHITE("I");
 	
 private final String symbol;
 	
 	//Constructor
-	private Color(String symbol) {
+	private AltColor(String symbol) {
 		this.symbol = symbol;
 	}
 	
@@ -23,10 +24,10 @@ private final String symbol;
 		return symbol; 
 	}
 	
-	public static Color fromString(String symbol) {
-        for (Color c : Color.values()) {
-            if (c.toString().equalsIgnoreCase(symbol)) {
-                return c;
+	public static AltColor fromString(String symbol) {
+        for (AltColor alt : AltColor.values()) {
+            if (alt.toString().equalsIgnoreCase(symbol)) {
+                return alt;
             }
         }
        return null;
