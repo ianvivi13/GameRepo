@@ -1,6 +1,8 @@
 package Servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -41,7 +43,12 @@ public class LoginPageServlet extends HttpServlet {
 			return;
 		}
 		else {
-			resp.sendRedirect("http://localhost:8080/gamerepo/new");
+			 
+			PrintWriter out = resp.getWriter(); 
+			out.println("<script type=\"text/javascript\">"); 
+			out.println("alert('There is an invalid entry for password or username');"); 
+			out.println("location='http://localhost:8080/gamerepo/login';"); 
+			out.println("</script>");
 			return;
 		}
 	}

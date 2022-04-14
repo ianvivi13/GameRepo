@@ -2,6 +2,7 @@
 
 <html>
 	<head>
+
 		<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
 		<link rel="stylesheet" type="text/css" href="_view/css/login.css"/>
@@ -15,12 +16,12 @@
 			<div class="FormStyle">
 				<form class="form" action="${pageContext.servletContext.contextPath}/login" method="post">
 					<div class="InputStyle">
-						<input type="text" name="Username" placeholder="Username">
+						<input id="uword" type="text" name="Username" placeholder="Username" required>
 					</div>
 					<div class="InputStyle">
-						<input type="password" name="Password" placeholder="Password">
+						<input id="pword" type="password" name="Password" placeholder="Password" required>
 					</div>
-					
+		
 						<button class="ButtonStyle" type="submit">Sign In</button>
 					
 					<a href="http://localhost:8080/gamerepo/home">

@@ -1,6 +1,8 @@
 package Servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -39,9 +41,13 @@ public class NewAccountPageServlet extends HttpServlet {
 			resp.sendRedirect("http://localhost:8080/gamerepo/login");
 		} catch (UserExistsException e) {
 			System.out.println("Woops you're a dumb");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+			
+			PrintWriter out = resp.getWriter(); 
+			out.println("<script type=\"text/javascript\">"); 
+			out.println("alert('Username already exist');"); 
+			out.println("location='http://localhost:8080/gamerepo/new';"); 
+			out.println("</script>");
+		} 
 	}
 	
 }
