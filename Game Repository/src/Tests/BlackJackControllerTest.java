@@ -22,8 +22,8 @@ public class BlackJackControllerTest{
 		controller = new BlackJackController();
 		model = new BlackJackModel();
 		turns = new TurnOrder();
-		turns.AddPlayer("1");
-		turns.AddPlayer("2");
+		turns.AddPlayer(1);
+		turns.AddPlayer(2);
 	}
 	
 	@Test

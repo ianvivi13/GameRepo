@@ -1,10 +1,10 @@
 package Models;
 
 public enum Suit {
-	CLUBS("♣", Color.BLACK),
-	DIAMONDS("♦", Color.RED),
-	HEARTS("♥", Color.RED),
-	SPADES("♠", Color.BLACK);
+	CLUBS("C", Color.BLACK),
+	DIAMONDS("D", Color.RED),
+	HEARTS("H", Color.RED),
+	SPADES("S", Color.BLACK);
 	
 	private final String symbol;
 	private final Color color;
@@ -23,6 +23,15 @@ public enum Suit {
 	public String toString() {
 		return symbol;
 	}
+	
+	public static Suit fromString(String t) {
+        for (Suit s : Suit.values()) {
+            if (s.toString().equalsIgnoreCase(t)) {
+                return s;
+            }
+        }
+       return null;
+    }
 	
 	//To retrieve the name of the enumeration as a string
 	

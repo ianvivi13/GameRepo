@@ -12,7 +12,31 @@ public class Pile{
 	public Pile() {
 		pile = new ArrayList<>();
 		visibleIndex = 0;
+		
 	}
+	
+  public int getValueStandard() {
+	   boolean isAce = false;
+	   int val = 0;
+	  
+	for(Object card : pile) {
+		Rank r = ((StandardCard) card).getRank();
+		if(r == Rank.ACE) {
+			isAce = true;
+			val++;
+		} else {
+				try {
+					val+= Integer.valueOf(r.toString());
+			} catch (Exception e){
+				val+=10;
+			}
+		}
+	} 
+	if(val <= 11 && isAce) {
+		val+= 10;
+	}
+	return val;
+}
 	
 	public int getVisibleIndex() {
 		return visibleIndex;
@@ -105,7 +129,7 @@ public class Pile{
 		//populates all number cards, skips, reverses, and draw 2s
 		for(int x = 0; x < 2; x++) {
 			for (int j = 0; j < allColors.length-1; j++) {
-				for (int i = 0; i < allValues.length-3; i++) {
+				for (int i = 0; i < allValues.length-4; i++) {
 					// use allSuits[j] and allRanks[i] to create a Card
 					pile.add(new UnoCard(allColors[j],allValues[i]));
 				}
@@ -117,6 +141,8 @@ public class Pile{
 			pile.add(new UnoCard(Color.BLACK, Value.Wild));
 			pile.add(new UnoCard(Color.BLACK, Value.Wild_Four));
 		}
+		
+		pile.add(new UnoCard(Color.BLACK, Value.SwapHands));
 	}
 	
 	

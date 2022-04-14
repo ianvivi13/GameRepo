@@ -1,15 +1,15 @@
 package Models;
 
-public class UnoCard implements Comparable<UnoCard>{
+public class UnoFlipCard implements Comparable<UnoFlipCard>{
 	private Color color;
 	private Value values;
 	
-	public UnoCard(Color color, Value values) {
+	public UnoFlipCard(Color color, Value values) {
 		this.values = values;
 		this.color = color;	
 	}
 	
-	public UnoCard(String color, String values) {
+	public UnoFlipCard(String color, String values) {
 		this.values = Value.fromString(values);
 		this.color =  Color.fromString(color);	
 	}
@@ -32,13 +32,13 @@ public class UnoCard implements Comparable<UnoCard>{
 		if (obj == null || !(obj instanceof Object)) {
 			return false;
 		}
-		UnoCard other = (UnoCard) obj;
+		UnoFlipCard other = (UnoFlipCard) obj;
 		
 		return this.compareTo(other) == 0;
 	}
 	
 	@Override 
-	public int compareTo(UnoCard o) {
+	public int compareTo(UnoFlipCard o) {
 		int cmp = this.color.compareTo(o.color);
 		if (cmp != 0) {
 			return cmp;

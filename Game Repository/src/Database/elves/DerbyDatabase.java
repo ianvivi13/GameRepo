@@ -8,17 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.io.File;
 
 import Models.sqlTranscoder;
 import Models.BotNameGenerator;
+import Models.Color;
+import Models.Value;
 import Models.ExplodingKittensCard;
 import Models.User;
 import Models.StatisticsBlackjack;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
 import Models.Suit;
+import Models.Type;
 import Models.UnoCard;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
@@ -28,6 +30,7 @@ import Models.Pile;
 import Models.Player;
 import Models.Rank;
 import Models.UnoCardDobbyInit;
+import Models.UnoFlipCard;
 import Models.StandardCard;
 
 public class DerbyDatabase implements IDatabase {
@@ -1031,7 +1034,7 @@ public class DerbyDatabase implements IDatabase {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
 	
-	/*// gets a pile id from a pile id
+	// gets a pile id from a pile id
 	public Pile getPileFromPileId(int pileID) {
 		return executeTransaction(new Transaction<Pile>() {
 			@Override
@@ -1057,13 +1060,29 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt);
 					DBUtil.closeQuietly(resultSet);
 					
+					ArrayList<Object> cards = new ArrayList<Object>();
+					
 					for(int cardID : cardIDs) {
-						try {
-
-						} finally {
-							//eat my ass
+						if(gameKey == IDatabase.Key_Blackjack) {
+							cards.add(getStandardCardFromCardId(cardID));
+						}
+						
+						else if(gameKey == IDatabase.Key_ExplodingKittens) {
+							cards.add(getExplodingKittensCardFromCardId(cardID));
+						}
+						
+						else if(gameKey == IDatabase.Key_Uno) {
+							cards.add(getUnoCardFromCardId(cardID));
+						}
+						
+						else {
+							cards.add(getUnoFlipCardFromCardId(cardID));
 						}
 					}
+					
+					Pile pile = new Pile();
+					pile.addCards(cards);
+					return pile;
 					
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -1072,11 +1091,12 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-		
-	public Object getStandardCardFromCardId(int cardID) {
-		return executeTransaction(new Transaction<Object>() {
+	
+	// Returns a standard card given a card id
+	public StandardCard getStandardCardFromCardId(int cardID) {
+		return executeTransaction(new Transaction<StandardCard>() {
 			@Override
-			public Object execute(Connection conn) throws SQLException {
+			public StandardCard execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				try {
@@ -1091,15 +1111,87 @@ public class DerbyDatabase implements IDatabase {
 					resultSet = stmt.executeQuery();
 					
 					if(resultSet.next()) {
-						StandardCard card = new StandardCard(new Rank(resultSet.getString("rank")), new Suit(resultSet.getString("suit")));
+						return new StandardCard(Rank.fromString(resultSet.getString("rank")), Suit.fromString(resultSet.getString("suit")));
 					}
 					
-				} finally {
+					return null;
 					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
 				}
 			}
 		});
-	} */
+	}
+	
+	// Returns an exploding kitten card given a card id
+		public ExplodingKittensCard getExplodingKittensCardFromCardId(int cardID) {
+			return executeTransaction(new Transaction<ExplodingKittensCard>() {
+				@Override
+				public ExplodingKittensCard execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+					try {
+						stmt = conn.prepareStatement(
+								"SELECT e.type "
+								+ "	FROM ExplodingKittensCards AS e "
+								+ "	WHERE e.card_id = ?"
+								);
+						
+						stmt.setInt(1, cardID);
+						
+						resultSet = stmt.executeQuery();
+						
+						if(resultSet.next()) {
+							return new ExplodingKittensCard(Type.fromString(resultSet.getString("type")));
+						}
+						
+						return null;
+						
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
+	
+	// Returns an uno card given a card id
+	public UnoCard getUnoCardFromCardId(int cardID) {
+		return executeTransaction(new Transaction<UnoCard>() {
+			@Override
+			public UnoCard execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT u.color, u.type "
+							+ "	FROM UnoCards AS u "
+							+ "	WHERE u.card_id = ?"
+							);
+					
+					stmt.setInt(1, cardID);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return new UnoCard(Color.fromString(resultSet.getString("color")), Value.fromString(resultSet.getString("type")));
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns an uno flip card given a card id
+	public UnoFlipCard getUnoFlipCardFromCardId(int cardID) {
+		throw new UnsupportedOperationException("FIX LATER");
+	}
 	
 	// updates user's stats from an Uno statistics object and a user id
 	public void updateUnoStats(StatisticsUno stat, int user_id) {
@@ -1387,7 +1479,7 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
-	} */ 
+	}*/
 	
 	// Deletes the stats of a user given a user id
 	public void deleteStats(int userId) {
@@ -1574,7 +1666,7 @@ public class DerbyDatabase implements IDatabase {
 									+ "FROM ExplodingKittensCards as E"
 									+ "	WHERE E.type = ?"
 									);
-							stmt.setString(1, String.valueOf(((ExplodingKittensCard)card).getColor()));
+							stmt.setString(1, String.valueOf(((ExplodingKittensCard)card).getType()));
 							
 							resultSet = stmt.executeQuery();
 							resultSet.next();

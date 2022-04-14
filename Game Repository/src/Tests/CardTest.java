@@ -4,10 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import Models.StandardCard;
 import Models.Rank;
 import Models.Suit;
+import Models.Value;
 
 public class CardTest{
 	
@@ -44,13 +46,6 @@ public class CardTest{
 		assertEquals(Suit.HEARTS, queenOfHearts.getSuit());
 	}
 	
-	@Test
-	public void testGetValue() throws Exception {
-		assertEquals(10, jackOfDiamonds.getValues());
-		assertEquals(2, twoOfClubs.getValues());
-		assertEquals(3, threeOfHearts.getValues());
-		assertEquals(10, queenOfHearts.getValues());
-	}
 	
 	@Test
 	public void testCompareTo() throws Exception {
@@ -63,5 +58,10 @@ public class CardTest{
 		
 		// ACE is the low rank
 		assertTrue(aceOfSpades.compareTo(twoOfClubs) > 0);
+	}
+	
+	@Test
+	public void testFromString() throws Exception {
+		assertEquals(Value.Wild, Value.fromString("W"));
 	}
 }

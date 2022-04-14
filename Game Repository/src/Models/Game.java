@@ -18,13 +18,15 @@ public class Game {
 		tko.NextTurn();
 	}
 	
-	public void addPlayer(String player) {
+	public void addPlayer(int player) {
 		tko.AddPlayer(player);
 	}
 	
-	public void removePlayer(String player) {
+	public void removePlayer(int player) {
 		tko.RemovePlayer(player);
 	}
+	
+	
 	
 	public void updateStats() {
 		
