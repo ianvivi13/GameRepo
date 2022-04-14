@@ -14,10 +14,11 @@ public class BlackJackController extends Game{
 	
 	
 	public void initialize(BlackJackModel model) {
+		
 //		InitDatabase.init();
 //		IDatabase db = DatabaseProvider.getInstance();
 //		
-//		List<StandardCard> authorList = db.initializeBlackJackCards();
+//		List<StandardCard> authorList = db
 		
 		
 		model.getDeck().populate();

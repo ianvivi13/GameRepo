@@ -3,6 +3,11 @@ package Servlets;
 import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
+import Database.elves.InitDatabase;
+import Models.Pair;
 import Models.User;
 
 public class LoginPageServlet extends HttpServlet {
@@ -28,7 +33,10 @@ public class LoginPageServlet extends HttpServlet {
 		System.out.println(username);
 		System.out.println(password);
 		
-		if(username.equals("admin") && password.equals("admin")) {
+		InitDatabase.init();
+		IDatabase db = DatabaseProvider.getInstance();
+		
+		if(db.login(username, password)) {
 			resp.sendRedirect("http://localhost:8080/gamerepo/home");
 			return;
 		}

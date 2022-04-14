@@ -30,7 +30,7 @@
     	</div>
         <div class="AccountCreation">
             <div class="title">Create Account</div>
-            <form class="FormStyle">
+            <form class="FormStyle" action="${pageContext.servletContext.contextPath}/new" method="post">
                 <div class="InputStyle">
                   <input type="text" name="Username" placeholder="Username" maxlength=20 pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" title="USERNAME: Alpanumeric characters & symbols: -._ (not first or last character) & 5-20 characters" required>
                 </div>
