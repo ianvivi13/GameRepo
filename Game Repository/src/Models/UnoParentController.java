@@ -33,14 +33,12 @@ public class UnoParentController extends Game {
 	}
 	
 	public void skip(UnoModel model) {
-		
-		
+		nextTurn();
 		nextTurn();
 	}
 	
 	public void reverse(UnoModel model) {
-		
-		
+		reverseOrder();
 		nextTurn();
 	}
 	

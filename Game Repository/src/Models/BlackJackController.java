@@ -32,6 +32,4 @@ public class BlackJackController extends Game{
 	}
 	
 	public void checkWin(BlackJackModel model) {
-		
-	}
 }
