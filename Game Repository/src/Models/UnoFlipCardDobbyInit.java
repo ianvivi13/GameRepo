@@ -35,7 +35,7 @@ private static List<String[]> cardData;
 		String color;
 		String number;
 		String imgPath = "../war/_view/images/UnoFlipCards/";
-		cardData.add(new String[imgPath + "B_R", "B", "R"]);
+		//cardData.add(new String[imgPath + "B_R", "B", "R"]);
 		return cardData;
 	}
 	
