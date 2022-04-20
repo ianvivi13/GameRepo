@@ -4,12 +4,12 @@ import java.util.*;
 
 
 public class TurnOrder {
-	private ArrayList<String> TurnList;
+	private ArrayList<Integer> TurnList;
 	private int pointer;
 	private int adder;
 	
 	public TurnOrder() {
-		TurnList = new ArrayList<String>();
+		TurnList = new ArrayList<Integer>();
 		pointer = 0;
 		adder = 1;
 	}
@@ -27,7 +27,7 @@ public class TurnOrder {
 		return TurnList.size();
 	}
 	
-	public void AddPlayer(String player) {
+	public void AddPlayer(Integer player) {
 		TurnList.add(player);
 	}
 	
@@ -46,12 +46,12 @@ public class TurnOrder {
 		}
 	}
 
-	public String CurrentPlayer() {
-		String i = TurnList.isEmpty() ? null : TurnList.get(pointer);
+	public int CurrentPlayer() {
+		int i = TurnList.isEmpty() ? null : TurnList.get(pointer);
 		return i;
 	}
 	
-	public void RemovePlayer(String player) {
+	public void RemovePlayer(Integer player) {
 		int q = GetTurns(player);
 		for (int i = 0 ; i < q ; i++) {
 			int pos = TurnList.indexOf(player);
@@ -68,7 +68,7 @@ public class TurnOrder {
 		}
 	}
 	
-	public int GetTurns(String player) {
+	public int GetTurns(Integer player) {
 		int q = 0;
 		for (int i = 0 ; i < TurnList.size() ; i ++) {
 			if (TurnList.get(i) == player) {
@@ -78,7 +78,7 @@ public class TurnOrder {
 		return q;
 	}
 	
-	public void AddTurn(String player, int quantity) {
+	public void AddTurn(Integer player, int quantity) {
 		int pos = TurnList.indexOf(player);
 		for (int i = 0; i < quantity ; i++) {
 			TurnList.add(pos, player);
@@ -92,11 +92,11 @@ public class TurnOrder {
 		}
 	}
 	
-	public void SetTurn(String player) {
+	public void SetTurn(Integer player) {
 		pointer = adder > 0 ? TurnList.indexOf(player) : TurnList.lastIndexOf(player);
 	}
 	
-	public void RemoveTurns(String player, int quantity) {
+	public void RemoveTurns(Integer player, int quantity) {
 		for (int i = 0 ; i < quantity ; i++) {
 			int pos = TurnList.indexOf(player);
 			TurnList.remove(pos);
@@ -112,7 +112,7 @@ public class TurnOrder {
 		}
 	}
 	
-	public int RemoveAllTurns(String player) {
+	public int RemoveAllTurns(Integer player) {
 		int q = GetTurns(player) - 1;
 		for (int i = 0 ; i < q ; i++) {
 			int pos = TurnList.indexOf(player);
