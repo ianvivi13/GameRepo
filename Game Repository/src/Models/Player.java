@@ -37,4 +37,24 @@ public class Player {
 		this.altPile = altPile;
 	}
 	
+	public boolean equals(Player player) {
+		if (this.isHuman != player.isHuman) {
+			return false;
+		}
+		
+		if (this.userBotID != player.userBotID) {
+			return false;
+		}
+		
+		if (!this.pile.equals(player.pile)) {
+			return false;
+		}
+		
+		if (!this.altPile.equals(player.altPile)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

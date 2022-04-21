@@ -33,6 +33,8 @@ import Models.Rank;
 import Models.Suit;
 import Models.Type;
 
+import Models.TurnOrder;
+
 public class DatabaseTest{
 	private static IDatabase db;
 	private static String[] dumb;
@@ -64,6 +66,8 @@ public class DatabaseTest{
 	private static StatisticsExplodingKittens explodingStat = new StatisticsExplodingKittens();
 	private static StatisticsGlobal globalStat = new StatisticsGlobal();
 	
+	private static TurnOrder turnOrder = new TurnOrder();
+	
 	@BeforeClass
 	public static void setUp() {
 		InitDatabase.init();
@@ -74,6 +78,14 @@ public class DatabaseTest{
 		}
 		
 		db.createAllStats(db.createUser("FunnyUser69", "Pass"));
+		
+		// turn order creation
+		turnOrder.AddPlayer(1);
+		turnOrder.AddPlayer(3);
+		turnOrder.AddPlayer(7);
+		turnOrder.AddTurn(3, 2);
+		turnOrder.NextTurn();
+		turnOrder.Reverse();
 		
 		// Card Creation
 
@@ -259,9 +271,51 @@ public class DatabaseTest{
 	}
 	
 	@Test
-	public void testPlayer() {
+	public void testPlayerOne() {
 		int playerId = db.createPlayer(playerOne);
-		System.out.println(playerId);
-		//assertEquals(db.getPlayerFromPlayerId(playerId), playerOne);
+		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerOne));
+		Pile p = new Pile();
+		p.populate();
+		playerOne.setPile(p);
+		db.updatePlayer(playerId, playerOne);
+		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerOne));
+	}
+	
+	@Test
+	public void testPlayerTwo() {
+		Pile p = new Pile();
+		Pile aP = new Pile();
+		p.populateUno();
+		aP.populateUno();
+		
+		playerTwo.setPile(p);
+		playerTwo.setAltPile(aP);
+		int playerId = db.createPlayer(playerTwo);
+		
+		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerTwo));
+		
+		p.shuffle();
+		aP.shuffle();
+		
+		playerTwo.setPile(p);
+		playerTwo.setAltPile(aP);
+		
+		db.updatePlayer(playerId, playerTwo);
+		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerTwo));
+	}
+	
+	@Test
+	public void testTurnOrder() {
+		int turnId = db.createTurnOrder(turnOrder);
+		assertTrue(db.getTurnOrderFromTurnOrderId(turnId).equals(turnOrder));
+		turnOrder = db.getTurnOrderFromTurnOrderId(turnId);
+		turnOrder.AddPlayer(8);
+		turnOrder.Reverse();
+		turnOrder.NextTurn();
+		turnOrder.NextTurn();
+		turnOrder.NextTurn();
+		turnOrder.NextTurn();
+		db.updateTurnOrder(turnId, turnOrder);
+		assertTrue(db.getTurnOrderFromTurnOrderId(turnId).equals(turnOrder));
 	}
 }

@@ -20,6 +20,7 @@ import Models.StatisticsBlackjack;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
 import Models.Suit;
+import Models.TurnOrder;
 import Models.Type;
 import Models.UnoCard;
 import Models.StatisticsGlobal;
@@ -1784,7 +1785,8 @@ public class DerbyDatabase implements IDatabase {
             }
         });
     }
-    
+   
+   // encodes a list of cards using SqlTranscoder
    private String encodeCardIds(List<Object> cards) {
 	   return executeTransaction(new Transaction<String>() {
            @Override
@@ -1819,66 +1821,117 @@ public class DerbyDatabase implements IDatabase {
            }
 	   });
    }
+   
+   // Creates TurnOrder and adds it to the Turn table
+	public int createTurnOrder(TurnOrder turn) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+						"INSERT INTO Turn (pointer, adder, turn_order)" +
+						"	VALUES (?, ?, ?)"
+					);
+					stmt.setInt(1, turn.getPointer());
+					stmt.setInt(2, turn.getAdder());
+					stmt.setString(3, sqlTranscoder.encode(turn.getTurnList()));
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+						"SELECT MAX(turn_id) AS turn_id" +
+						"	FROM Turn"
+					);
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					int ret = resultSet.getInt("turn_id");
+					stmt.close();
+					
+					return ret;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
-/*
-	+ Initialize the following tables:
-		- UnoFlipSide
-		- UnoFlip
-		- Pile
-		- Player
-		- Turn
-		- Game
-	
-	+ Create the following objects:
-		- Bot
-		- UnoFlip arraylist
-		- UnoFlipSide arraylist
-		
-	+ Create the following Dobby methods: # these may be overloaded as well
-		- Creators
-			~ Game
-			~ Turn
-			~ Pile - IN PROGRESS - TEST
-			~ Player - ALSO IN PROGRESS - TEST
-			~ Uno
-			~ UnoFlip
-			~ UnoFlipSide
-		- Getters
-			~ Game
-			~ Turn
-			~ Pile
-			~ Player
-			~ Uno
-			~ UnoFlip
-			~ ExplodingKittens
-			~ Blackjack
-			~ UnoFlipSide
-		- Updaters
-			~ Game
-			~ Turn
-			~ Pile - ALSO ALSO IN PROGRESS - TEST
-		- Deleters
-			~ Game
-			~ Turn
-			~ Pile
-	
-	+ Create the following tests:
-		- createUser
-		- createBot
-		- createAllStats
-		- getUserIDfromUsername # this should be tested w/ all method that call w/ username
-		- getUsernamefromUserID
-		- getUser(user_id)
-		- getUser(username) # this should also test w/ user_id
-
-	+ Fix the following:
-		- Get login to work now that we have database
-		
-		
-		- TEST getPileFromCardList METHOD
-		- TEST encodeCardIds METHOD
-
- */
-
-
+	// Returns a TurnOrder given a turn id
+	public TurnOrder getTurnOrderFromTurnOrderId(int turnId) {
+		return executeTransaction(new Transaction<TurnOrder>() {
+			@Override
+			public TurnOrder execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				TurnOrder turn = new TurnOrder();
+				int pointer;
+				int adder;
+				ArrayList<Integer> TurnList;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT t.pointer, t.adder, t.turn_order "
+							+ "	FROM Turn AS t "
+							+ "	WHERE t.turn_id = ?"
+							);
+					
+					stmt.setInt(1, turnId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						pointer = resultSet.getInt("pointer");
+						turn.setPointer(pointer);
+						adder = resultSet.getInt("adder");
+						turn.setAdder(adder);
+						TurnList = sqlTranscoder.decode(resultSet.getString("turn_order"));
+						turn.setTurnList(TurnList);
+						return turn;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+   
+	// Updates an existing TurnOrder
+	public void updateTurnOrder(int turn_id, TurnOrder turn) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"UPDATE Turn"
+							+ " SET pointer = ?, adder = ?, turn_order = ?"
+							+ "	WHERE turn_id = ?"
+							);
+					
+					stmt.setInt(1, turn.getPointer());
+					stmt.setInt(2, turn.getAdder());
+					stmt.setString(3, sqlTranscoder.encode(turn.getTurnList()));
+					stmt.setInt(4, turn_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
+			}
+		});
+	}
 }

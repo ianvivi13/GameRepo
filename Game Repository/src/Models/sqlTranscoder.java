@@ -20,13 +20,13 @@ public class sqlTranscoder {
 		}
 		
 		else {
-			return "";
+			return "/";
 		}
 	}
 	
 	public static ArrayList<Integer> decode(String encode) {
 		ArrayList<Integer> decode = new ArrayList<Integer>();
-		if(encode != "") {
+		if(encode != "/") {
 			String[] encodeArray = encode.split("/");
 			for (String encodedInt : encodeArray) {
 				decode.add(Integer.valueOf(encodedInt));
