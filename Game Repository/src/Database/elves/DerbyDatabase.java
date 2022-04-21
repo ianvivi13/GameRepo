@@ -1343,6 +1343,42 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns a player id given a player
+	public int getPlayerIdFromPlayer(Player player) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int playerBotId = player.getUserBotID();
+				boolean isHuman = player.getIsHuman();
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT p.player_id "
+							+ "	FROM Player AS p "
+							+ "	WHERE p.player_bot_id = ? AND p.human = ?"
+							);
+					
+					stmt.setInt(1, playerBotId);
+					stmt.setBoolean(2, isHuman);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("player_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// updates user's stats from an Uno statistics object and a user id
 	public void updateUnoStats(StatisticsUno stat, int user_id) {
 		executeTransaction(new Transaction<Void>() {
@@ -1654,6 +1690,7 @@ public class DerbyDatabase implements IDatabase {
 							"	WHERE Stats.user_id = ?"
 							);
 					stmt.setInt(1, userId);
+					stmt.executeUpdate();
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -1680,6 +1717,7 @@ public class DerbyDatabase implements IDatabase {
 							"	WHERE Users.user_id = ?"
 							);
 					stmt.setInt(1, userId);
+					stmt.executeUpdate();
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -1706,6 +1744,7 @@ public class DerbyDatabase implements IDatabase {
 							"	WHERE Bots.bot_id = ?"
 							);
 					stmt.setInt(1, botId);
+					stmt.executeUpdate();
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -1727,6 +1766,7 @@ public class DerbyDatabase implements IDatabase {
 							"	WHERE Player.player_id = ?"
 							);
 					stmt.setInt(1, playerId);
+					stmt.executeUpdate();
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -1735,7 +1775,12 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	// Deletes a player given a player id
+	// Deletes a player given a player
+	public void deletePlayer(Player player) {
+		deletePlayer(getPlayerIdFromPlayer(player));
+	}
+	
+	// Deletes a pile given a pile id
 	public void deletePile(int pileId) {
 		executeTransaction(new Transaction<Void>() {
 			@Override
@@ -1748,6 +1793,7 @@ public class DerbyDatabase implements IDatabase {
 							"	WHERE Pile.pile_id = ?"
 							);
 					stmt.setInt(1, pileId);
+					stmt.executeUpdate();
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);

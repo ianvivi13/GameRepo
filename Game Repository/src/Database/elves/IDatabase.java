@@ -26,8 +26,10 @@ public interface IDatabase {
 	// Player
 	public int createPlayer(Player player);
 	public Player getPlayerFromPlayerId(int playerId);
+	public int getPlayerIdFromPlayer(Player player); //Test
 	public void updatePlayer(int player_id, Player player);
 	public void deletePlayer(int playerId); //Test
+	public void deletePlayer(Player player); //Test
 	public boolean isHuman(int PlayerId); //Test
 	
 	// User

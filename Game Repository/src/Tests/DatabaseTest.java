@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.DerbyDatabase;
@@ -54,11 +55,9 @@ public class DatabaseTest{
 	private static Pile pileOne;
 	private static Pile pileTwo;
 	private static Pile pileThree;
-	private static Pile pileFour;
 	
 	private static Player playerOne;
 	private static Player playerTwo;
-	private static Player playerThree;
 	
 	private static StatisticsBlackjack blackjackStat = new StatisticsBlackjack();
 	private static StatisticsUno unoStat = new StatisticsUno();
@@ -126,10 +125,6 @@ public class DatabaseTest{
 		playerTwo = new Player(false, 20);
 		playerTwo.setPile(pileOne);
 		playerTwo.setPile(new Pile());
-		
-		playerThree = new Player(true, 69);
-		playerThree.setPile(pileTwo);
-		playerThree.setAltPile(pileThree);
 		
 		// Setting Statistics
 		
@@ -317,5 +312,15 @@ public class DatabaseTest{
 		turnOrder.NextTurn();
 		db.updateTurnOrder(turnId, turnOrder);
 		assertTrue(db.getTurnOrderFromTurnOrderId(turnId).equals(turnOrder));
+	}
+	
+	@Test
+	public void testDeleters() {
+		int playerId = db.getPlayerIdFromPlayer(playerOne);
+		db.deletePlayer(playerOne);
+		assertFalse(db.getPlayerFromPlayerId(playerId).equals(playerOne));
+		
+		playerId = db.getPlayerIdFromPlayer(playerTwo);
+		db.deletePlayer(playerTwo);
 	}
 }
