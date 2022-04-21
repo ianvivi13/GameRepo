@@ -2,13 +2,17 @@ package Database.elves;
 
 import java.util.List;
 
+import Models.ExplodingKittensCard;
 import Models.Pile;
 import Models.Player;
+import Models.StandardCard;
 import Models.StatisticsBlackjack;
 import Models.StatisticsExplodingKittens;
 import Models.StatisticsGlobal;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
+import Models.UnoCard;
+import Models.UnoFlipCard;
 import Models.User;
 
 public interface IDatabase {
@@ -23,22 +27,16 @@ public interface IDatabase {
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
 	public int createPile(Pile pile);
-	public int createPlayer(Player player);
+	public int createPlayer(Player player); //Test
 	
 	// Deleters
-	public void deleteStats(int userId);
-	public void deleteStats(String username);
-	public void deleteUser(int userId);
-	public void deleteUser(String username);
-	public void deleteBot(int botId);
-	public void deletePlayer(int playerId);
-	public void deletePile(int pileId);
-	
-	// Card Initializers
-	public void initializeBlackJackCards();
-	public void initializeExplodingKittensCards();
-	public void initializeUnoCards();
-	public int getUserIDfromUsername(String username);
+	public void deleteStats(int userId); //Test
+	public void deleteStats(String username); //Test
+	public void deleteUser(int userId); //Test
+	public void deleteUser(String username); //Test
+	public void deleteBot(int botId); //Test
+	public void deletePlayer(int playerId); //Test
+	public void deletePile(int pileId); //Test
 
 	// Login
 	public boolean login(String username, String password);
@@ -55,12 +53,24 @@ public interface IDatabase {
 	public StatisticsExplodingKittens getExplodingKittenStats(int UserID);
 	public StatisticsExplodingKittens getExplodingKittenStats(String username);
 	
-	// User data retrieval
+	// Card retrieval
+	public StandardCard getStandardCardFromCardId(int cardID);
+	public ExplodingKittensCard getExplodingKittensCardFromCardId(int cardID);
+	public UnoCard getUnoCardFromCardId(int cardID);
+	public UnoFlipCard getUnoFlipCardFromCardId(int cardID);
+	public int getCardIdFromStandardCard(StandardCard card);
+	public int getCardIdFromExplodingKittensCard(ExplodingKittensCard card);
+	public int getCardIdFromUnoCard(UnoCard card);
+	public int getCardIdFromUnoFlipCard(UnoFlipCard card);
+	
+	// User and Player data retrieval
 	public String getUsernamefromUserID(int UserID);
-	//public Pile getPileFromPileId(int pileID);
+	public Pile getPileFromPileId(int pileID);
 	public User getUser(int UserID);
 	public User getUser(String username);
-	public boolean isHuman(int PlayerId);
+	public int getUserIDfromUsername(String username);
+	public boolean isHuman(int PlayerId); //Test
+	public Player getPlayerFromPlayerId(int playerId);
 	
 	// Stats updating - overloaded to allow use of username or user_id
 	public void updateGlobalStats(StatisticsGlobal stat, int user_id);
@@ -79,6 +89,5 @@ public interface IDatabase {
 	//public void updatePlayer(int player_id, Player player);
 	
 	// Quality of Life
-	public String encodeCardIds(List<Object> cards);
 	//public int getPileFromCardList(List<Object> cards);
 }

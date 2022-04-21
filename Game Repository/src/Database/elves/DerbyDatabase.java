@@ -326,9 +326,9 @@ public class DerbyDatabase implements IDatabase {
 					db.createBot(IDatabase.Key_Blackjack,2);
 					db.createBot(IDatabase.Key_ExplodingKittens,2);
 					db.createBot(IDatabase.Key_UnoFlip,2);
-					db.initializeBlackJackCards();
-					db.initializeExplodingKittensCards();
-					db.initializeUnoCards();
+					initializeBlackJackCards();
+					initializeExplodingKittensCards();
+					initializeUnoCards();
 					statOne.SetBlackjacks(2);
 					statOne.SetGamesWon(1);
 					statTwo.SetSwaps(3);
@@ -622,7 +622,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the BlackJackCards table with cards
-	public void initializeBlackJackCards() {
+	private void initializeBlackJackCards() {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -655,7 +655,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the ExplodingKittensCards table with cards
-	public void initializeExplodingKittensCards() {
+	private void initializeExplodingKittensCards() {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -686,7 +686,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the UnoCards table with cards
-	public void initializeUnoCards() {
+	private void initializeUnoCards() {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -1044,9 +1044,10 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement(
 							"SELECT Pile.cards, Pile.gameKey"
-							+ "FROM Pile "
+							+ " FROM Pile"
 							+ "	WHERE Pile.pile_id = ?"
 							);
+					
 					stmt.setInt(1, pileID);
 					
 					resultSet = stmt.executeQuery();
@@ -1063,15 +1064,15 @@ public class DerbyDatabase implements IDatabase {
 					ArrayList<Object> cards = new ArrayList<Object>();
 					
 					for(int cardID : cardIDs) {
-						if(gameKey == IDatabase.Key_Blackjack) {
+						if(gameKey.equals(IDatabase.Key_Blackjack)) {
 							cards.add(getStandardCardFromCardId(cardID));
 						}
 						
-						else if(gameKey == IDatabase.Key_ExplodingKittens) {
+						else if(gameKey.equals(IDatabase.Key_ExplodingKittens)) {
 							cards.add(getExplodingKittensCardFromCardId(cardID));
 						}
 						
-						else if(gameKey == IDatabase.Key_Uno) {
+						else if(gameKey.equals(IDatabase.Key_Uno)) {
 							cards.add(getUnoCardFromCardId(cardID));
 						}
 						
@@ -1124,6 +1125,39 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns the card id of a given standard card
+	public int getCardIdFromStandardCard(StandardCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT b.card_id "
+							+ "	FROM BlackJackCards AS b "
+							+ "	WHERE b.rank = ? AND b.suit = ?"
+							);
+					
+					stmt.setString(1, card.getRank().getSymbol());
+					stmt.setString(2, card.getSuit().toString());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// Returns an exploding kitten card given a card id
 		public ExplodingKittensCard getExplodingKittensCardFromCardId(int cardID) {
 			return executeTransaction(new Transaction<ExplodingKittensCard>() {
@@ -1155,6 +1189,38 @@ public class DerbyDatabase implements IDatabase {
 				}
 			});
 		}
+		
+	// Returns the card id of a given exploding kittens card
+	public int getCardIdFromExplodingKittensCard(ExplodingKittensCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT e.card_id "
+							+ "	FROM ExplodingKittensCards AS e "
+							+ "	WHERE e.type = ?"
+							);
+					
+					stmt.setString(1, card.getType().getSymbol());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
 	// Returns an uno card given a card id
 	public UnoCard getUnoCardFromCardId(int cardID) {
@@ -1188,9 +1254,92 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns the card id of a given uno card
+	public int getCardIdFromUnoCard(UnoCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT u.card_id "
+							+ "	FROM UnoCards AS u "
+							+ "	WHERE u.type = ? AND u.color = ?"
+							);
+					
+					stmt.setString(1, card.getValues().getSymbol());
+					stmt.setString(2, card.getColor().getSymbol());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// Returns an uno flip card given a card id
 	public UnoFlipCard getUnoFlipCardFromCardId(int cardID) {
 		throw new UnsupportedOperationException("FIX LATER");
+	}
+	
+	// Returns the card id of a given uno flip card
+	public int getCardIdFromUnoFlipCard(UnoFlipCard card) {
+		throw new UnsupportedOperationException("FIX LATER");
+	}
+	
+	// Returns a player given a player id
+	public Player getPlayerFromPlayerId(int playerId) {
+		return executeTransaction(new Transaction<Player>() {
+			@Override
+			public Player execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				Player player;
+				int playerBotId;
+				boolean isHuman;
+				int pileId;
+				int altPileId;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT p.player_bot_id, p.human, p.pile_id, p.alt_pile_id "
+							+ "	FROM Player AS p "
+							+ "	WHERE p.player_id = ?"
+							);
+					
+					stmt.setInt(1, playerId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						playerBotId = resultSet.getInt("player_bot_id");
+						isHuman = resultSet.getBoolean("human");
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						player = new Player(isHuman, playerBotId);
+						player.setPile(getPileFromPileId(pileId));
+						player.setAltPile(getPileFromPileId(altPileId));
+						return player;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 	
 	// updates user's stats from an Uno statistics object and a user id
@@ -1455,22 +1604,32 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	/*public void updatePlayer(int player_id, Player player) {
+	public void updatePlayer(int player_id, Player player) {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int pileId;
+				int altPileId;
 				
 				try {
 					stmt = conn.prepareStatement(
-							"UPDATE Player"
-							+ "SET pile_id = ?, alt_pile_id = ?"
-							+ "WHERE player_id = ?"
+							"SELECT Player.pile_id, Player.alt_pile_id"
+							+ " FROM Player "
+							+ "WHERE Player.player_id = ?"
 							);
-					stmt.setInt(1, newPileId);
-					stmt.setInt(2, newAltPileId);
-					stmt.setInt(3,  player_id);
-					stmt.executeUpdate();
+					
+					stmt.setInt(1, player_id);
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						updatePile(pileId, player.getPile());
+						updatePile(altPileId, player.getAltPile());
+					}
+					
 					stmt.close();
 					
 					return null;
@@ -1479,7 +1638,7 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
-	}*/
+	}
 	
 	// Deletes the stats of a user given a user id
 	public void deleteStats(int userId) {
@@ -1626,78 +1785,31 @@ public class DerbyDatabase implements IDatabase {
         });
     }
     
-   public String encodeCardIds(List<Object> cards) {
+   private String encodeCardIds(List<Object> cards) {
 	   return executeTransaction(new Transaction<String>() {
            @Override
            public String execute(Connection conn) throws SQLException {
-        	   PreparedStatement stmt = null;
-				ResultSet resultSet = null;
 				ArrayList<Integer> cardIds = new ArrayList<>();
 				Pile pile = new Pile();
 				pile.addCards((ArrayList<Object>)cards);
-				
 				if(pile.getType() == "StandardCard") {
 					for(Object card : cards) {
-						try {
-							stmt = conn.prepareStatement(
-									"SELECT B.card_id"
-									+ "FROM BlackJackCards as B"
-									+ "	WHERE B.rank = ? and B.suit = ?"
-									);
-							stmt.setString(1, String.valueOf(((StandardCard)card).getRank()));
-							stmt.setString(2, String.valueOf(((StandardCard)card).getSuit()));
-							
-							resultSet = stmt.executeQuery();
-							resultSet.next();
-							int cardId = resultSet.getInt("card_id");
+							int cardId = getCardIdFromStandardCard((StandardCard)card);
 							cardIds.add(cardId);
-						} finally {
-							DBUtil.closeQuietly(resultSet);
-							DBUtil.closeQuietly(stmt);
-						}
 					}
 				}
 				
 				else if(pile.getType() == "ExplodingKittensCard") {
 					for(Object card : cards) {
-						try {
-							stmt = conn.prepareStatement(
-									"SELECT E.card_id"
-									+ "FROM ExplodingKittensCards as E"
-									+ "	WHERE E.type = ?"
-									);
-							stmt.setString(1, String.valueOf(((ExplodingKittensCard)card).getType()));
-							
-							resultSet = stmt.executeQuery();
-							resultSet.next();
-							int cardId = resultSet.getInt("card_id");
-							cardIds.add(cardId);
-						} finally {
-							DBUtil.closeQuietly(resultSet);
-							DBUtil.closeQuietly(stmt);
-						}
+						int cardId = getCardIdFromExplodingKittensCard((ExplodingKittensCard)card);
+						cardIds.add(cardId);
 					}
 				}
 				
 				else if(pile.getType() == "UnoCard") {
 					for(Object card : cards) {
-						try {
-							stmt = conn.prepareStatement(
-									"SELECT U.card_id"
-									+ "FROM UnoCards as U"
-									+ "	WHERE U.color = ? and U.type = ?"
-									);
-							stmt.setString(1, String.valueOf(((UnoCard)card).getColor()));
-							stmt.setString(1, String.valueOf(((UnoCard)card).getValues()));
-							
-							resultSet = stmt.executeQuery();
-							resultSet.next();
-							int cardId = resultSet.getInt("card_id");
-							cardIds.add(cardId);
-						} finally {
-							DBUtil.closeQuietly(resultSet);
-							DBUtil.closeQuietly(stmt);
-						}
+						int cardId = getCardIdFromUnoCard((UnoCard)card);
+						cardIds.add(cardId);
 					}
 				}
 				

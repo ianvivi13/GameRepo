@@ -10,6 +10,7 @@ import Models.sqlTranscoder;
 public class TranscoderTest {
 	ArrayList<Integer> decoded1 = new ArrayList<Integer>();
 	ArrayList<Integer> decoded2 = new ArrayList<Integer>();
+	ArrayList<Integer> decoded3 = new ArrayList<Integer>();
 	
 	@Before
 	public void setUp() {
@@ -42,6 +43,13 @@ public class TranscoderTest {
 		String encoded2 = sqlTranscoder.encode(decoded2);
 		ArrayList<Integer> decoded2again = sqlTranscoder.decode(encoded2);
 		assertEquals(decoded2again,decoded2);
+	}
+	
+	@Test
+	public void TestTranscode3() {
+		String encoded3 = sqlTranscoder.encode(decoded3);
+		ArrayList<Integer> decoded3again = sqlTranscoder.decode(encoded3);
+		assertEquals(decoded3again,decoded3);
 	}
 	
 }
