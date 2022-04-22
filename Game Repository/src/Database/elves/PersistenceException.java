@@ -1,6 +1,6 @@
 package Database.elves;
 
-public class PersistenceException extends RuntimeException {
+public class PersistenceException extends DobbyException {
 	private static final long serialVersionUID = 1L;
 
 	public PersistenceException(String msg) {

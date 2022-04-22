@@ -19,6 +19,7 @@ public class PileTest{
 	private Pile fullPile;
 	private Pile unoPile;
 	private Pile fullUnoPile;
+	private Pile duplicatePile;
 	
 	@Before
 	public void setUp() {
@@ -32,6 +33,9 @@ public class PileTest{
 		
 		fullPile.populate();
 		fullUnoPile.populateUno();
+		
+		duplicatePile = new Pile();
+		duplicatePile.populate();
 	}
 	
 	@Test
@@ -281,5 +285,10 @@ public class PileTest{
 		pile4.addCard(new StandardCard(Rank.QUEEN, Suit.SPADES));
 		pile4.addCard(new StandardCard(Rank.SEVEN, Suit.HEARTS));
 		assertEquals(23, pile4.getValueStandard());
+	}
+	
+	@Test
+	public void testEquals() {
+		assertTrue(fullPile.equals(duplicatePile));
 	}
 }

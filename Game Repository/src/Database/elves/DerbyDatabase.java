@@ -8,20 +8,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+
 import java.io.File;
 
 import Models.sqlTranscoder;
-import Models.BotNameGenerator;
+import Models.Color;
+import Models.Value;
+import Models.ExplodingKittensCard;
 import Models.User;
 import Models.StatisticsBlackjack;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
+import Models.Suit;
+import Models.TurnOrder;
+import Models.Type;
+import Models.UnoCard;
 import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
 import Models.ExplodingKittensCardDobbyInit;
+import Models.Game;
+import Models.Pile;
+import Models.Player;
+import Models.Rank;
 import Models.UnoCardDobbyInit;
+import Models.UnoFlipCard;
+import Models.StandardCard;
+import Models.Bot;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -127,13 +142,6 @@ public class DerbyDatabase implements IDatabase {
 			System.out.println("Loading initial data...");
 			db.loadInitialData();
 			System.out.println("Success!");
-			System.out.println("Some randomly generated bot names:");
-			BotNameGenerator botName = new BotNameGenerator();
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
 		}
 	}	
 	
@@ -279,10 +287,12 @@ public class DerbyDatabase implements IDatabase {
 						"	game_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) ," +
 						gameKeyNotGlobal +
 						"	turn_id INTEGER, FOREIGN KEY (turn_id) REFERENCES Turn(turn_id) ,"
+						+ "	players VARCHAR(600) ,"
 						+ "	code VARCHAR(11) ," +
 						"	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
 						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
-						+ "	cardSideA BOOLEAN)"
+						+ "	cardSideA BOOLEAN ,"
+						+ "	wildColor VARCHAR(1))"
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -311,26 +321,9 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					db.createAllStats(db.createUser("NewUser","password still"));
 					db.createAllStats(db.createUser("User","password still"));
-					db.createBot(IDatabase.Key_Blackjack,2);
-					db.createBot(IDatabase.Key_ExplodingKittens,2);
-					db.createBot(IDatabase.Key_UnoFlip,2);
-					db.initializeBlackJackCards();
-					db.initializeExplodingKittensCards();
-					db.initializeUnoCards();
-					statOne.SetBlackjacks(2);
-					statOne.SetGamesWon(1);
-					statTwo.SetSwaps(3);
-					statTwo.SetGamesLost(1);
-					statThree.SetFlips(4);
-					statThree.SetGamesPlayed(5);
-					statFour.SetDefuses(1);
-					statFour.SetGamesLost(3);
-					statFive.SetRank(1029);
-					statFive.SetGamesPlayed(1928);
-					db.updateUnoStats(statTwo, "NewUser");
-					db.updateUnoFlipStats(statThree, "NewUser");
-					db.updateExplodingKittensStats(statFour, "NewUser");
-					db.updateGlobalStats(statFive, "NewUser");
+					initializeBlackJackCards();
+					initializeExplodingKittensCards();
+					initializeUnoCards();
 					
 					return true;
 				} catch (UserExistsException e) {
@@ -355,65 +348,72 @@ public class DerbyDatabase implements IDatabase {
 	
 	// create new user in database - checks if already exists
 	public int createUser(String username, String password) {
-		return executeTransaction(new Transaction<Integer>() {
+		return  executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
-				
 				try {
-					stmt = conn.prepareStatement(
-							"INSERT INTO Users (username, password)" +
-							"	VALUES (?, ?)"
-						);
-					stmt.setString(1, username);
-					stmt.setString(2, password);
-					stmt.executeUpdate();
-					stmt.close();
+					int i = getUserIDfromUsername(username);
+					return null;
+				} catch (Exception e) {
+					try {
+						stmt = conn.prepareStatement(
+								"INSERT INTO Users (username, password)" +
+								"	VALUES (?, ?)"
+							);
+						stmt.setString(1, username);
+						stmt.setString(2, password);
+						stmt.executeUpdate();
+						stmt.close();
 						
-					stmt = conn.prepareStatement(
-							"SELECT Users.User_id" +
-							"	FROM Users" +
-							"		WHERE Users.username = ?"
-					);
-					stmt.setString(1, username);
-					resultSet = stmt.executeQuery();
-					resultSet.next();
-					int res = resultSet.getInt("user_id");
-					return res;
-				} catch (Exception SQLIntegrityConstraintViolationException) {
-					throw new UserExistsException("User already exists in database");
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
+						stmt = conn.prepareStatement(
+								"SELECT Users.User_id" +
+								"	FROM Users" +
+								"		WHERE Users.username = ?"
+						);
+						stmt.setString(1, username);
+						resultSet = stmt.executeQuery();
+						resultSet.next();
+						int res = resultSet.getInt("user_id");
+						return res;
+					} catch (Exception SQLIntegrityConstraintViolationException) {
+						throw new UserExistsException("User already exists in database");
+						
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
 				}
+				
 			}
 		});
+		
 	}
 	
 	// create new bot in database
-	public int createBot(String gameKey, int difficulty) {
+	public int createBot(Bot bot) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
-				BotNameGenerator botName = new BotNameGenerator();
 				
 				try {
 					stmt = conn.prepareStatement(
 						"INSERT INTO Bots (name, gameKey, difficulty)" +
 						"	VALUES (?, ?, ?)"
 					);
-					stmt.setString(1, botName.GenerateName());
-					stmt.setString(2, gameKey);
-					stmt.setInt(3, difficulty);
+				
+					stmt.setString(1, bot.getName());
+					stmt.setString(2, bot.getGameKey());
+					stmt.setInt(3, bot.getDifficulty());
 					stmt.executeUpdate();
 					stmt.close();
 					
 					stmt = conn.prepareStatement(
 						"SELECT MAX(bot_id) AS bot_id" +
-						"	From Bots"
+						"	FROM Bots"
 					);
 					resultSet = stmt.executeQuery();
 					resultSet.next();
@@ -424,6 +424,183 @@ public class DerbyDatabase implements IDatabase {
 				} finally {
 					DBUtil.closeQuietly(stmt);
 				}
+			}
+		});
+	}
+	
+	// Creates a player and adds it to the Player table
+	public int createPlayer(Player player) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int pileId = createPile(player.getPile());
+				int altPileId = createPile(player.getAltPile());
+				
+				try {
+					stmt = conn.prepareStatement(
+						"INSERT INTO Player (player_bot_id, human, pile_id, alt_pile_id)" +
+						"	VALUES (?, ?, ?, ?)"
+					);
+					stmt.setInt(1, player.getUserBotID());
+					stmt.setBoolean(2, player.getIsHuman());
+					stmt.setInt(3, pileId);
+					stmt.setInt(4, altPileId);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+						"SELECT MAX(player_id) AS player_id" +
+						"	FROM Player"
+					);
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					int ret = resultSet.getInt("player_id");
+					stmt.close();
+					
+					return ret;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Determines if a given player is human
+	public boolean isHuman(int PlayerId) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Player.human" +
+							"	FROM Player"
+							+ "		WHERE Player.player_id = ?" 
+							);
+					stmt.setInt(1, PlayerId);
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						
+						return resultSet.getBoolean("human");
+					}
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Creates a new pile in the database and populates it with cards
+	private int createPile(String gameKey, int exposeIndex, List<Object> cards) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				String encodedIds = encodeCardIds(cards);
+				
+				try {
+					stmt = conn.prepareStatement(
+							"INSERT INTO Pile(gameKey, exposeIndex, cards)"
+							+ " VALUES(?, ?, ?)"
+						);
+					
+					stmt.setString(1, gameKey);
+					stmt.setInt(2, exposeIndex);
+					stmt.setString(3, encodedIds);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+							"SELECT MAX(pile_id) AS pile_id" +
+							"	FROM Pile"
+						);
+						resultSet = stmt.executeQuery();
+						resultSet.next();
+						int ret = resultSet.getInt("pile_id");
+						stmt.close();
+						
+						return ret;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
+			}
+		});
+	}
+	
+	// Creates a new, empty pile in the database
+	public int createPile(Pile pile) {
+		String gameKey = IDatabase.Key_Blackjack;
+		if(pile.getType() == "UnoCard") {
+			gameKey = IDatabase.Key_Uno;
+		}
+		else if(pile.getType() == "ExplodingKittensCard") {
+			gameKey = IDatabase.Key_ExplodingKittens;
+		}
+		else if(pile.getType() == "UnoFlipCard") {
+			gameKey = IDatabase.Key_UnoFlip;
+		}
+		return createPile(gameKey, pile.getVisibleIndex(), pile.getPile());
+	}
+	
+	// Creates a game object and populates it
+	public int createGame(Game game) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int turnId = createTurnOrder(game.getTurnOrder());
+				int pileId = createPile(game.getMainPile());
+				int altPileId = createPile(game.getAltPile());
+				for(Player player : game.getPlayers()) {
+					createPlayer(player);
+				}
+				
+				try {
+					stmt = conn.prepareStatement(
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+						);
+					
+					stmt.setString(1, game.getGameKey());
+					stmt.setInt(2, turnId);
+					stmt.setString(3, sqlTranscoder.encode(game.getPlayerIds()));
+					stmt.setString(4, game.getGameCode());
+					stmt.setInt(5, pileId);
+					stmt.setInt(6, altPileId);
+					stmt.setBoolean(7, game.getCardSideA());
+					stmt.setString(8, game.getWildColor());
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+							"SELECT MAX(game_id) AS game_id" +
+							"	FROM Game"
+						);
+						resultSet = stmt.executeQuery();
+						resultSet.next();
+						int ret = resultSet.getInt("game_id");
+						stmt.close();
+						
+						return ret;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
 			}
 		});
 	}
@@ -479,43 +656,41 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	// create pile in database - returns new pileId
-    public int createPile(String gameKey, int exposeIndex) {
-        return executeTransaction(new Transaction<Integer>() {
-            @Override
-            public Integer execute(Connection conn) throws SQLException {
-                PreparedStatement stmt = null;
-                ResultSet resultSet = null;
-                
-                try {
-                    stmt = conn.prepareStatement(
-                        "INSERT INTO Pile (gameKey, exposeIndex)" +
-                        "    VALUES (?, ?)"
-                    );
-                    stmt.setString(1, gameKey);
-                    stmt.setInt(2, exposeIndex);
-                    stmt.executeUpdate();
-                    stmt.close();
-                    
-                    stmt = conn.prepareStatement(
-                        "SELECT MAX(pile_id) AS pile_id" +
-                        "    From Pile"
-                    );
-                    resultSet = stmt.executeQuery();
-                    resultSet.next();
-                    int ret = resultSet.getInt("pile_id");
-                    stmt.close();
-                    
-                    return ret;
-                } finally {
-                    DBUtil.closeQuietly(stmt);
-                }
-            }
-        });
-    }
+	// Checks if the gamecode is already in the database
+	public int gameCodeValid(String gameCode) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Game.game_id" +
+						" FROM Game"
+						+ " WHERE Game.code = ?"
+					);
+					
+					stmt.setString(1, gameCode);
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("game_id");
+					}
+					
+					stmt.close();
+					
+					return -1;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
 	// populates the BlackJackCards table with cards
-	public void initializeBlackJackCards() {
+	private void initializeBlackJackCards() {
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -548,68 +723,68 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// populates the ExplodingKittensCards table with cards
-		public void initializeExplodingKittensCards() {
-			executeTransaction(new Transaction<Void>() {
-				@Override
-				public Void execute(Connection conn) throws SQLException {
-					PreparedStatement stmt = null;
-					ResultSet resultSet = null;
+	private void initializeExplodingKittensCards() {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
 
-					try {
-						for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
-							String imgPath = cardData.get(0);
-							String type = cardData.get(1);
-							stmt = conn.prepareStatement(
-									"INSERT INTO ExplodingKittensCards(imagePath, type)" +
-									" 	VALUES(?, ?)"
-							);
-							stmt.setString(1, imgPath);
-							stmt.setString(2, type);
-							stmt.executeUpdate();
-							stmt.close();
-						}
-						
-						return null;
-					} finally {
-						DBUtil.closeQuietly(resultSet);
-						DBUtil.closeQuietly(stmt);
+				try {
+					for (List<String> cardData : ExplodingKittensCardDobbyInit.explodingKittensCardArray()) {
+						String imgPath = cardData.get(0);
+						String type = cardData.get(1);
+						stmt = conn.prepareStatement(
+								"INSERT INTO ExplodingKittensCards(imagePath, type)" +
+								" 	VALUES(?, ?)"
+						);
+						stmt.setString(1, imgPath);
+						stmt.setString(2, type);
+						stmt.executeUpdate();
+						stmt.close();
 					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
 				}
-			});
-		}
-		
-		// populates the UnoCards table with cards
-			public void initializeUnoCards() {
-				executeTransaction(new Transaction<Void>() {
-					@Override
-					public Void execute(Connection conn) throws SQLException {
-						PreparedStatement stmt = null;
-						ResultSet resultSet = null;
-
-						try {
-							for (List<String> cardData : UnoCardDobbyInit.unoCardArray()) {
-								String imgPath = cardData.get(0);
-								String color = cardData.get(1);
-								String type = cardData.get(2);
-								stmt = conn.prepareStatement(
-										"INSERT INTO UnoCards(imagePath, color, type)" +
-										" 	VALUES(?, ?, ?)"
-								);
-								stmt.setString(1, imgPath);
-								stmt.setString(2, color);
-								stmt.setString(3, type);
-								stmt.executeUpdate();
-								stmt.close();
-							}
-							
-							return null;
-						} finally {
-							DBUtil.closeQuietly(resultSet);
-							DBUtil.closeQuietly(stmt);
-						}
-					}
-				});
 			}
+		});
+	}
+	
+	// populates the UnoCards table with cards
+	private void initializeUnoCards() {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					for (List<String> cardData : UnoCardDobbyInit.unoCardArray()) {
+						String imgPath = cardData.get(0);
+						String color = cardData.get(1);
+						String type = cardData.get(2);
+						stmt = conn.prepareStatement(
+								"INSERT INTO UnoCards(imagePath, color, type)" +
+								" 	VALUES(?, ?, ?)"
+						);
+						stmt.setString(1, imgPath);
+						stmt.setString(2, color);
+						stmt.setString(3, type);
+						stmt.executeUpdate();
+						stmt.close();
+					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
 	// get user_id from username
 	public int getUserIDfromUsername(String username) {
@@ -627,10 +802,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setString(1, username);
 					resultSet = stmt.executeQuery();
 					if(resultSet.next()) {
-						int res = resultSet.getInt("user_id");
+						int res = resultSet.getInt("User_id");
 						return res;
+					} else {
+						throw new UserExistsException("User already exists in database");
 					}
-					throw new UserDoesNotExistException("User does not exist");
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -927,6 +1103,511 @@ public class DerbyDatabase implements IDatabase {
 		return getGlobalStats(getUserIDfromUsername(username));
 	}
 	
+	// gets a pile id from a pile id
+	public Pile getPileFromPileId(int pileID) {
+		return executeTransaction(new Transaction<Pile>() {
+			@Override
+			public Pile execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Pile.cards, Pile.gameKey"
+							+ " FROM Pile"
+							+ "	WHERE Pile.pile_id = ?"
+							);
+					
+					stmt.setInt(1, pileID);
+					
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					String cardIDString = resultSet.getString("cards");
+					String gameKey = resultSet.getString("gameKey");
+					
+					List<Integer> cardIDs = new ArrayList<Integer>();
+					cardIDs = sqlTranscoder.decode(cardIDString);
+					
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+					
+					ArrayList<Object> cards = new ArrayList<Object>();
+					
+					for(int cardID : cardIDs) {
+						if(gameKey.equals(IDatabase.Key_Blackjack)) {
+							cards.add(getStandardCardFromCardId(cardID));
+						}
+						
+						else if(gameKey.equals(IDatabase.Key_ExplodingKittens)) {
+							cards.add(getExplodingKittensCardFromCardId(cardID));
+						}
+						
+						else if(gameKey.equals(IDatabase.Key_Uno)) {
+							cards.add(getUnoCardFromCardId(cardID));
+						}
+						
+						else {
+							cards.add(getUnoFlipCardFromCardId(cardID));
+						}
+					}
+					
+					Pile pile = new Pile();
+					pile.addCards(cards);
+					return pile;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a standard card given a card id
+	public StandardCard getStandardCardFromCardId(int cardID) {
+		return executeTransaction(new Transaction<StandardCard>() {
+			@Override
+			public StandardCard execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT b.suit, b.rank "
+							+ "	FROM BlackJackCards AS b "
+							+ "	WHERE b.card_id = ?"
+							);
+					
+					stmt.setInt(1, cardID);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return new StandardCard(Rank.fromString(resultSet.getString("rank")), Suit.fromString(resultSet.getString("suit")));
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns the card id of a given standard card
+	public int getCardIdFromStandardCard(StandardCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT b.card_id "
+							+ "	FROM BlackJackCards AS b "
+							+ "	WHERE b.rank = ? AND b.suit = ?"
+							);
+					
+					stmt.setString(1, card.getRank().getSymbol());
+					stmt.setString(2, card.getSuit().toString());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns an exploding kitten card given a card id
+		public ExplodingKittensCard getExplodingKittensCardFromCardId(int cardID) {
+			return executeTransaction(new Transaction<ExplodingKittensCard>() {
+				@Override
+				public ExplodingKittensCard execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+					try {
+						stmt = conn.prepareStatement(
+								"SELECT e.type "
+								+ "	FROM ExplodingKittensCards AS e "
+								+ "	WHERE e.card_id = ?"
+								);
+						
+						stmt.setInt(1, cardID);
+						
+						resultSet = stmt.executeQuery();
+						
+						if(resultSet.next()) {
+							return new ExplodingKittensCard(Type.fromString(resultSet.getString("type")));
+						}
+						
+						return null;
+						
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
+		
+	// Returns the card id of a given exploding kittens card
+	public int getCardIdFromExplodingKittensCard(ExplodingKittensCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT e.card_id "
+							+ "	FROM ExplodingKittensCards AS e "
+							+ "	WHERE e.type = ?"
+							);
+					
+					stmt.setString(1, card.getType().getSymbol());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns an uno card given a card id
+	public UnoCard getUnoCardFromCardId(int cardID) {
+		return executeTransaction(new Transaction<UnoCard>() {
+			@Override
+			public UnoCard execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT u.color, u.type "
+							+ "	FROM UnoCards AS u "
+							+ "	WHERE u.card_id = ?"
+							);
+					
+					stmt.setInt(1, cardID);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return new UnoCard(Color.fromString(resultSet.getString("color")), Value.fromString(resultSet.getString("type")));
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns the card id of a given uno card
+	public int getCardIdFromUnoCard(UnoCard card) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT u.card_id "
+							+ "	FROM UnoCards AS u "
+							+ "	WHERE u.type = ? AND u.color = ?"
+							);
+					
+					stmt.setString(1, card.getValues().getSymbol());
+					stmt.setString(2, card.getColor().getSymbol());
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("card_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns an uno flip card given a card id
+	public UnoFlipCard getUnoFlipCardFromCardId(int cardID) {
+		throw new UnsupportedOperationException("FIX LATER");
+	}
+	
+	// Returns the card id of a given uno flip card
+	public int getCardIdFromUnoFlipCard(UnoFlipCard card) {
+		throw new UnsupportedOperationException("FIX LATER");
+	}
+	
+	// Returns a player given a player id
+	public Player getPlayerFromPlayerId(int playerId) {
+		return executeTransaction(new Transaction<Player>() {
+			@Override
+			public Player execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				Player player;
+				int playerBotId;
+				boolean isHuman;
+				int pileId;
+				int altPileId;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT p.player_bot_id, p.human, p.pile_id, p.alt_pile_id "
+							+ "	FROM Player AS p "
+							+ "	WHERE p.player_id = ?"
+							);
+					
+					stmt.setInt(1, playerId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						playerBotId = resultSet.getInt("player_bot_id");
+						isHuman = resultSet.getBoolean("human");
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						player = new Player(isHuman, playerBotId);
+						player.setPile(getPileFromPileId(pileId));
+						player.setAltPile(getPileFromPileId(altPileId));
+						return player;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a player id given a player
+	public int getPlayerIdFromPlayer(Player player) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int playerBotId = player.getUserBotID();
+				boolean isHuman = player.getIsHuman();
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT p.player_id "
+							+ "	FROM Player AS p "
+							+ "	WHERE p.player_bot_id = ? AND p.human = ?"
+							);
+					
+					stmt.setInt(1, playerBotId);
+					stmt.setBoolean(2, isHuman);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("player_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a game id given a game object
+	public int getGameIdFromGame(Game game) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				String gameCode = game.getGameCode();
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT game_id "
+							+ "	FROM Game "
+							+ "	WHERE code = ?"
+							);
+					
+					stmt.setString(1, gameCode);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("game_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a game id given a game object
+	public Game getGameFromGameId(int gameId) {
+		return executeTransaction(new Transaction<Game>() {
+			@Override
+			public Game execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				Game game;
+				String gameKey;
+				int turnId;
+				String playerIds;
+				String gameCode;
+				int pileId;
+				int altPileId;
+				boolean cardSideA;
+				String wildColor;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT * "
+							+ "	FROM Game "
+							+ "	WHERE game_id = ?"
+							);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						 gameKey = resultSet.getString("gameKey");
+						 turnId = resultSet.getInt("turn_id");
+						 playerIds = resultSet.getString("players");
+						 gameCode = resultSet.getString("code");
+						 pileId = resultSet.getInt("pile_id");
+						 altPileId = resultSet.getInt("alt_pile_id");
+						 cardSideA = resultSet.getBoolean("cardSideA");
+						 wildColor = resultSet.getString("wildColor");
+						 
+						 game = new Game(gameCode, gameKey);
+						 game.setWildColor(wildColor);
+						 game.setMainPile(getPileFromPileId(pileId));
+						 game.setAltPile(getPileFromPileId(altPileId));
+						 game.setTurnOrder(getTurnOrderFromTurnOrderId(turnId));
+						 game.setPlayerIds(sqlTranscoder.decode(playerIds));
+						 ArrayList<Player> players = new ArrayList<>();
+						 for(int id : sqlTranscoder.decode(playerIds)) {
+							 Player player = getPlayerFromPlayerId(id);
+							 players.add(player);
+						 }
+						 game.setPlayers(players);
+						 if(cardSideA != game.getCardSideA()) {
+							 game.flip();
+						 }
+						 
+						 return game;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Updates the given game
+	public void updateGame(int gameId, Game game) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int turnId;
+				int pileId;
+				int altPileId;
+
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT turn_id, pile_id, alt_pile_id" +
+							" FROM Game"
+							+ "	WHERE game_id = ?"
+					);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						turnId = resultSet.getInt("turn_id");
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						
+						updateTurnOrder(turnId, game.getTurnOrder());
+						updatePile(pileId, game.getMainPile());
+						updatePile(altPileId, game.getAltPile());
+						for(Player player : game.getPlayers()) {
+							updatePlayer(getPlayerIdFromPlayer(player), player);
+						}
+						
+						stmt.close();
+						
+						stmt = conn.prepareStatement(
+								"UPDATE Game"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?"
+								+ "	WHERE game_id = ?"
+						);
+						
+						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
+						stmt.setBoolean(2, game.getCardSideA());
+						stmt.setString(3, game.getWildColor());
+						
+						stmt.executeUpdate();
+					}
+					
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// updates user's stats from an Uno statistics object and a user id
 	public void updateUnoStats(StatisticsUno stat, int user_id) {
 		executeTransaction(new Transaction<Void>() {
@@ -1156,6 +1837,225 @@ public class DerbyDatabase implements IDatabase {
 		updateGlobalStats(stat, getUserIDfromUsername(username));
 	}
 	
+	// Updates an existing pile's expose index and/or cards
+	public void updatePile(int pile_id, Pile pile) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				String encodedIds = encodeCardIds(pile.getPile());
+				
+				try {
+					stmt = conn.prepareStatement(
+							"UPDATE Pile"
+							+ " SET exposeIndex = ?, cards = ?"
+							+ "	WHERE pile_id = ?"
+							);
+					
+					stmt.setInt(1, pile.getVisibleIndex());
+					stmt.setString(2, encodedIds);
+					stmt.setInt(3, pile_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
+			}
+		});
+	}
+	
+	public void updatePlayer(int player_id, Player player) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int pileId;
+				int altPileId;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Player.pile_id, Player.alt_pile_id"
+							+ " FROM Player "
+							+ "WHERE Player.player_id = ?"
+							);
+					
+					stmt.setInt(1, player_id);
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						updatePile(pileId, player.getPile());
+						updatePile(altPileId, player.getAltPile());
+					}
+					
+					stmt.close();
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes the stats of a user given a user id
+	public void deleteStats(int userId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Stats" +
+							"	WHERE Stats.user_id = ?"
+							);
+					stmt.setInt(1, userId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes the stats of a user given a username
+	public void deleteStats(String username) {
+		deleteStats(getUserIDfromUsername(username));
+	}
+	
+	// Deletes a user given a user id
+	public void deleteUser(int userId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Users" +
+							"	WHERE Users.user_id = ?"
+							);
+					stmt.setInt(1, userId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes a user given a username
+	public void deleteUser(String username) {
+		deleteUser(getUserIDfromUsername(username));
+	}
+	
+	// Deletes a bot given a bot id
+	public void deleteBot(int botId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Bots" +
+							"	WHERE Bots.bot_id = ?"
+							);
+					stmt.setInt(1, botId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes a player given a player id
+	public void deletePlayer(int playerId) {
+		if (!isHuman(playerId)) {
+			deleteBot(getUserBotIdFromPlayerId(playerId));
+		}
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Player" +
+							" WHERE Player.player_id = ?"
+							);
+					stmt.setInt(1, playerId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes a player given a player
+	public void deletePlayer(Player player) {
+		deletePlayer(getPlayerIdFromPlayer(player));
+	}
+	
+	// Deletes a TurnOrder given a TurnOrder id
+	public void deleteTurnOrder(int turnOrderId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Turn" +
+							"	WHERE Turn.turn_id = ?"
+							);
+					stmt.setInt(1, turnOrderId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes a pile given a pile id
+	public void deletePile(int pileId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Pile" +
+							"	WHERE Pile.pile_id = ?"
+							);
+					stmt.setInt(1, pileId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// return boolean if User exists from username and password
     public boolean login(String username, String password) {
         return executeTransaction(new Transaction<Boolean>() {
@@ -1185,83 +2085,267 @@ public class DerbyDatabase implements IDatabase {
             }
         });
     }
-	
-/*
+   
+   // encodes a list of cards using SqlTranscoder
+   private String encodeCardIds(List<Object> cards) {
+	   return executeTransaction(new Transaction<String>() {
+           @Override
+           public String execute(Connection conn) throws SQLException {
+				ArrayList<Integer> cardIds = new ArrayList<>();
+				Pile pile = new Pile();
+				pile.addCards((ArrayList<Object>)cards);
+				if(pile.getType() == "StandardCard") {
+					for(Object card : cards) {
+							int cardId = getCardIdFromStandardCard((StandardCard)card);
+							cardIds.add(cardId);
+					}
+				}
+				
+				else if(pile.getType() == "ExplodingKittensCard") {
+					for(Object card : cards) {
+						int cardId = getCardIdFromExplodingKittensCard((ExplodingKittensCard)card);
+						cardIds.add(cardId);
+					}
+				}
+				
+				else if(pile.getType() == "UnoCard") {
+					for(Object card : cards) {
+						int cardId = getCardIdFromUnoCard((UnoCard)card);
+						cardIds.add(cardId);
+					}
+				}
+				
+				//TODO ADD UNO FLIP CARDS
 
-	+ Create the following tables:
-		- UnoFlipSide
-		- UnoFlip
-		- Uno
-		- Player
-		- Turn
-		- Game
+				return sqlTranscoder.encode(cardIds);
+           }
+	   });
+   }
+   
+   // Creates TurnOrder and adds it to the Turn table
+	public int createTurnOrder(TurnOrder turn) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+						"INSERT INTO Turn (pointer, adder, turn_order)" +
+						"	VALUES (?, ?, ?)"
+					);
+					stmt.setInt(1, turn.getPointer());
+					stmt.setInt(2, turn.getAdder());
+					stmt.setString(3, sqlTranscoder.encode(turn.getTurnList()));
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+						"SELECT MAX(turn_id) AS turn_id" +
+						"	FROM Turn"
+					);
+					resultSet = stmt.executeQuery();
+					resultSet.next();
+					int ret = resultSet.getInt("turn_id");
+					stmt.close();
+					
+					return ret;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 	
-	+ Initialize the following tables:
-		- UnoFlipSide
-		- UnoFlip
-		- Pile
-		- Player
-		- Turn
-		- Game
+	// Returns a TurnOrder given a turn id
+	public TurnOrder getTurnOrderFromTurnOrderId(int turnId) {
+		return executeTransaction(new Transaction<TurnOrder>() {
+			@Override
+			public TurnOrder execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				TurnOrder turn = new TurnOrder();
+				int pointer;
+				int adder;
+				ArrayList<Integer> TurnList;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT t.pointer, t.adder, t.turn_order "
+							+ "	FROM Turn AS t "
+							+ "	WHERE t.turn_id = ?"
+							);
+					
+					stmt.setInt(1, turnId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						pointer = resultSet.getInt("pointer");
+						turn.setPointer(pointer);
+						adder = resultSet.getInt("adder");
+						turn.setAdder(adder);
+						TurnList = sqlTranscoder.decode(resultSet.getString("turn_order"));
+						turn.setTurnList(TurnList);
+						return turn;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+   
+	// Updates an existing TurnOrder
+	public void updateTurnOrder(int turn_id, TurnOrder turn) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"UPDATE Turn"
+							+ " SET pointer = ?, adder = ?, turn_order = ?"
+							+ "	WHERE turn_id = ?"
+							);
+					
+					stmt.setInt(1, turn.getPointer());
+					stmt.setInt(2, turn.getAdder());
+					stmt.setString(3, sqlTranscoder.encode(turn.getTurnList()));
+					stmt.setInt(4, turn_id);
+					stmt.executeUpdate();
+					stmt.close();
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
+			}
+		});
+	}
 	
-	+ Create the following objects:
-		- Bot
-		- UnoFlip arraylist
-		- UnoFlipSide arraylist
-	
-	+ Change the following objects:
-		- User
-			~ Should include 5 objects for statistics
-			~ Should inherit from Player
+	// get UserBotId from player_id
+	public int getUserBotIdFromPlayerId(int PlayerId) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					
+					stmt = conn.prepareStatement(
+							"SELECT player_bot_id" +
+							"	FROM Player" +
+							"		WHERE Player.player_id = ?"
+					);
+					stmt.setInt(1, PlayerId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						return resultSet.getInt("player_bot_id");
+					}
+					throw new DobbyException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
 			
-	+ Change the following Dobby methods:
-		- getUser
-			~ Should include the new parts to User (statistics loading)
-		
-	+ Create the following Dobby methods: # these may be overloaded as well
-		- Creators
-			~ Game
-			~ Turn
-			~ Pile
-			~ Player
-			~ Uno
-			~ UnoFlip
-			~ UnoFlipSide
-		- Getters
-			~ Game
-			~ Turn
-			~ Pile
-			~ Player
-			~ Uno
-			~ UnoFlip
-			~ ExplodingKittens
-			~ Blackjack
-			~ UnoFlipSide
-		- Updaters
-			~ Game
-			~ Turn
-			~ Pile
-			~ Player
-		- Deleters
-			~ Game
-			~ Turn
-			~ Pile
-			~ Player
-		- Probably more but who knows
+			}
+		});
+	}
 	
-	+ Create the following tests:
-		- createUser
-		- createBot
-		- createAllStats
-		- getUserIDfromUsername # this should be tested w/ all method that call w/ username
-		- getUsernamefromUserID
-		- getUser(user_id)
-		- getUser(username) # this should also test w/ user_id
-
-	+ Fix the following:
-		- Get login to work now that we have database
-
- */
-
-
+	// get User from player_id
+	public User getUserFromPlayerId(int PlayerId) {
+        if (isHuman(PlayerId)) {
+            return getUser(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+            throw new IncorrectPlayerTypeException("Player " + PlayerId + " is a Bot not a User");
+        }
+    }
+	
+	// get Bot object from bot_id
+	public Bot getBot(int BotId) {
+		return executeTransaction(new Transaction<Bot>() {
+			@Override
+			public Bot execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Bots.gameKey, Bots.name, Bots.difficulty" +
+							"	FROM Bots" +
+							"		WHERE Bots.bot_id = ?"
+					);
+					stmt.setInt(1, BotId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						String gameKey = resultSet.getString("gameKey");
+						String name = resultSet.getString("name");
+						int difficulty = resultSet.getInt("difficulty");
+						
+						return new Bot(difficulty, gameKey, name);
+					}
+					throw new UserDoesNotExistException("Bot does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get Bot from player_id
+	public Bot getBotFromPlayerId(int PlayerId) {
+        if (!isHuman(PlayerId)) {
+            return getBot(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+            throw new IncorrectPlayerTypeException("Player " + PlayerId + " is a User not a Bot");
+        }
+    }
+	
+	// get Bot name from bot_id
+	public String getBotNameFromBotId(int BotId) {
+		return executeTransaction(new Transaction<String>() {
+			@Override
+			public String execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Bots.name" +
+							"	FROM Bots" +
+							"		WHERE Bots.bot_id = ?"
+					);
+					stmt.setInt(1, BotId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						return resultSet.getString("name");
+					}
+					throw new UserDoesNotExistException("Bot does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get name from player_id
+	public String getNameFromPlayerId(int PlayerId) {
+		if (isHuman(PlayerId)) {
+            return getUsernamefromUserID(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+        	return getBotNameFromBotId(getUserBotIdFromPlayerId(PlayerId));
+        }
+	}
 }

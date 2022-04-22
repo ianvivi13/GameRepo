@@ -5,6 +5,10 @@ public class UnoParentController extends Game {
 	Color[] allColors = Color.values();
 	Value[] allValues = Value.values();
 	
+	public UnoParentController(String gameCode, String gameKey) {
+		super(gameCode, gameKey);
+	}
+
 	public void initialize(UnoModel model) {
 		model.getDeck().populate();
 		model.getDeck().shuffle();
