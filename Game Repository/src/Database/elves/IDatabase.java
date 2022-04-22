@@ -1,5 +1,6 @@
 package Database.elves;
 
+import Models.Bot;
 import Models.ExplodingKittensCard;
 import Models.Game;
 import Models.Pile;
@@ -22,14 +23,24 @@ public interface IDatabase {
 	public static final String Key_UnoFlip = "UNF";
 	public static final String Key_Blackjack = "BLJ";
 
+	
+	// Still Unsorted
+	public User getUserFromPlayerId(int PlayerId);
+	public Bot getBotFromPlayerId(int PlayerId);
+	public String getBotNameFromBotId(int BotId);
+	public String getNameFromPlayerId(int PlayerId);
+	public void deleteTurnOrder(int turnOrderId);
+	
+	
 	// Player
 	public int createPlayer(Player player);
 	public Player getPlayerFromPlayerId(int playerId);
-	public int getPlayerIdFromPlayer(Player player); //Test
+	public int getUserBotIdFromPlayerId(int PlayerId);
+	public int getPlayerIdFromPlayer(Player player);
 	public void updatePlayer(int player_id, Player player);
-	public void deletePlayer(int playerId); //Test
-	public void deletePlayer(Player player); //Test
-	public boolean isHuman(int PlayerId); //Test
+	public void deletePlayer(int playerId);
+	public void deletePlayer(Player player);
+	public boolean isHuman(int PlayerId);
 	
 	// User
 	public int createUser(String username, String password);
@@ -37,13 +48,14 @@ public interface IDatabase {
 	public User getUser(String username);
 	public int getUserIDfromUsername(String username);
 	public String getUsernamefromUserID(int UserID);
-	public void deleteUser(int userId); //Test
-	public void deleteUser(String username); //Test
+	public void deleteUser(int userId);
+	public void deleteUser(String username);
 	public boolean login(String username, String password);
 	
 	// Bot
-	public int createBot(String gameKey, int difficulty);
-	public void deleteBot(int botId); //Test
+	public int createBot(Bot bot);
+	public Bot getBot(int BotId);
+	public void deleteBot(int botId);
 	
 	// Stat
 	public void createAllStats(int UserId);
@@ -67,8 +79,8 @@ public interface IDatabase {
 	public void updateBlackjackStats(StatisticsBlackjack stat, String username);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, int user_id);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, String username);
-	public void deleteStats(int userId); //Test
-	public void deleteStats(String username); //Test
+	public void deleteStats(int userId);
+	public void deleteStats(String username);
 	
 	// TurnOrder
 	public int createTurnOrder(TurnOrder turn);
@@ -102,6 +114,6 @@ public interface IDatabase {
 	public int createPile(Pile pile);
 	public Pile getPileFromPileId(int pileID);
 	public void updatePile(int pile_id, Pile pile);
-	public void deletePile(int pileId); //Test
+	public void deletePile(int pileId);
 
 }

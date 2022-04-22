@@ -8,10 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+
 import java.io.File;
 
 import Models.sqlTranscoder;
-import Models.BotNameGenerator;
 import Models.Color;
 import Models.Value;
 import Models.ExplodingKittensCard;
@@ -34,6 +36,7 @@ import Models.Rank;
 import Models.UnoCardDobbyInit;
 import Models.UnoFlipCard;
 import Models.StandardCard;
+import Models.Bot;
 
 public class DerbyDatabase implements IDatabase {
 	// Max Attempts of transactions before fail
@@ -139,13 +142,6 @@ public class DerbyDatabase implements IDatabase {
 			System.out.println("Loading initial data...");
 			db.loadInitialData();
 			System.out.println("Success!");
-			System.out.println("Some randomly generated bot names:");
-			BotNameGenerator botName = new BotNameGenerator();
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
-			System.out.println(botName.GenerateName());
 		}
 	}	
 	
@@ -325,26 +321,9 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					db.createAllStats(db.createUser("NewUser","password still"));
 					db.createAllStats(db.createUser("User","password still"));
-					db.createBot(IDatabase.Key_Blackjack,2);
-					db.createBot(IDatabase.Key_ExplodingKittens,2);
-					db.createBot(IDatabase.Key_UnoFlip,2);
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
-					statOne.SetBlackjacks(2);
-					statOne.SetGamesWon(1);
-					statTwo.SetSwaps(3);
-					statTwo.SetGamesLost(1);
-					statThree.SetFlips(4);
-					statThree.SetGamesPlayed(5);
-					statFour.SetDefuses(1);
-					statFour.SetGamesLost(3);
-					statFive.SetRank(1029);
-					statFive.SetGamesPlayed(1928);
-					db.updateUnoStats(statTwo, "NewUser");
-					db.updateUnoFlipStats(statThree, "NewUser");
-					db.updateExplodingKittensStats(statFour, "NewUser");
-					db.updateGlobalStats(statFive, "NewUser");
 					
 					return true;
 				} catch (UserExistsException e) {
@@ -369,59 +348,66 @@ public class DerbyDatabase implements IDatabase {
 	
 	// create new user in database - checks if already exists
 	public int createUser(String username, String password) {
-		return executeTransaction(new Transaction<Integer>() {
+		return  executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
-				
 				try {
-					stmt = conn.prepareStatement(
-							"INSERT INTO Users (username, password)" +
-							"	VALUES (?, ?)"
-						);
-					stmt.setString(1, username);
-					stmt.setString(2, password);
-					stmt.executeUpdate();
-					stmt.close();
+					int i = getUserIDfromUsername(username);
+					return null;
+				} catch (Exception e) {
+					try {
+						stmt = conn.prepareStatement(
+								"INSERT INTO Users (username, password)" +
+								"	VALUES (?, ?)"
+							);
+						stmt.setString(1, username);
+						stmt.setString(2, password);
+						stmt.executeUpdate();
+						stmt.close();
 						
-					stmt = conn.prepareStatement(
-							"SELECT Users.User_id" +
-							"	FROM Users" +
-							"		WHERE Users.username = ?"
-					);
-					stmt.setString(1, username);
-					resultSet = stmt.executeQuery();
-					resultSet.next();
-					int res = resultSet.getInt("user_id");
-					return res;
-				} catch (Exception SQLIntegrityConstraintViolationException) {
-					throw new UserExistsException("User already exists in database");
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
+						stmt = conn.prepareStatement(
+								"SELECT Users.User_id" +
+								"	FROM Users" +
+								"		WHERE Users.username = ?"
+						);
+						stmt.setString(1, username);
+						resultSet = stmt.executeQuery();
+						resultSet.next();
+						int res = resultSet.getInt("user_id");
+						return res;
+					} catch (Exception SQLIntegrityConstraintViolationException) {
+						throw new UserExistsException("User already exists in database");
+						
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
 				}
+				
 			}
 		});
+		
 	}
 	
 	// create new bot in database
-	public int createBot(String gameKey, int difficulty) {
+	public int createBot(Bot bot) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
-				BotNameGenerator botName = new BotNameGenerator();
 				
 				try {
 					stmt = conn.prepareStatement(
 						"INSERT INTO Bots (name, gameKey, difficulty)" +
 						"	VALUES (?, ?, ?)"
 					);
-					stmt.setString(1, botName.GenerateName());
-					stmt.setString(2, gameKey);
-					stmt.setInt(3, difficulty);
+				
+					stmt.setString(1, bot.getName());
+					stmt.setString(2, bot.getGameKey());
+					stmt.setInt(3, bot.getDifficulty());
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -489,7 +475,6 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
-				boolean human;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -500,14 +485,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, PlayerId);
 					resultSet = stmt.executeQuery();
 					
-					if(!resultSet.next()) {
-						stmt.close();
-						return null;
+					if(resultSet.next()) {
+						
+						return resultSet.getBoolean("human");
 					}
-					
-					resultSet.next();
-					human = resultSet.getBoolean("human");
-					return human;
+					return null;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -820,10 +802,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setString(1, username);
 					resultSet = stmt.executeQuery();
 					if(resultSet.next()) {
-						int res = resultSet.getInt("user_id");
+						int res = resultSet.getInt("User_id");
 						return res;
+					} else {
+						throw new UserExistsException("User already exists in database");
 					}
-					throw new UserDoesNotExistException("User does not exist");
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -2001,6 +1984,9 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Deletes a player given a player id
 	public void deletePlayer(int playerId) {
+		if (!isHuman(playerId)) {
+			deleteBot(getUserBotIdFromPlayerId(playerId));
+		}
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -2009,7 +1995,7 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement(
 							"DELETE FROM Player" +
-							"	WHERE Player.player_id = ?"
+							" WHERE Player.player_id = ?"
 							);
 					stmt.setInt(1, playerId);
 					stmt.executeUpdate();
@@ -2024,6 +2010,28 @@ public class DerbyDatabase implements IDatabase {
 	// Deletes a player given a player
 	public void deletePlayer(Player player) {
 		deletePlayer(getPlayerIdFromPlayer(player));
+	}
+	
+	// Deletes a TurnOrder given a TurnOrder id
+	public void deleteTurnOrder(int turnOrderId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"DELETE FROM Turn" +
+							"	WHERE Turn.turn_id = ?"
+							);
+					stmt.setInt(1, turnOrderId);
+					stmt.executeUpdate();
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 	
 	// Deletes a pile given a pile id
@@ -2107,7 +2115,7 @@ public class DerbyDatabase implements IDatabase {
 					}
 				}
 				
-				// ADD UNO FLIP CARDS
+				//TODO ADD UNO FLIP CARDS
 
 				return sqlTranscoder.encode(cardIds);
            }
@@ -2225,5 +2233,119 @@ public class DerbyDatabase implements IDatabase {
 				
 			}
 		});
+	}
+	
+	// get UserBotId from player_id
+	public int getUserBotIdFromPlayerId(int PlayerId) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					
+					stmt = conn.prepareStatement(
+							"SELECT player_bot_id" +
+							"	FROM Player" +
+							"		WHERE Player.player_id = ?"
+					);
+					stmt.setInt(1, PlayerId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						return resultSet.getInt("player_bot_id");
+					}
+					throw new DobbyException("User does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			
+			}
+		});
+	}
+	
+	// get User from player_id
+	public User getUserFromPlayerId(int PlayerId) {
+        if (isHuman(PlayerId)) {
+            return getUser(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+            throw new IncorrectPlayerTypeException("Player " + PlayerId + " is a Bot not a User");
+        }
+    }
+	
+	// get Bot object from bot_id
+	public Bot getBot(int BotId) {
+		return executeTransaction(new Transaction<Bot>() {
+			@Override
+			public Bot execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Bots.gameKey, Bots.name, Bots.difficulty" +
+							"	FROM Bots" +
+							"		WHERE Bots.bot_id = ?"
+					);
+					stmt.setInt(1, BotId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						String gameKey = resultSet.getString("gameKey");
+						String name = resultSet.getString("name");
+						int difficulty = resultSet.getInt("difficulty");
+						
+						return new Bot(difficulty, gameKey, name);
+					}
+					throw new UserDoesNotExistException("Bot does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get Bot from player_id
+	public Bot getBotFromPlayerId(int PlayerId) {
+        if (!isHuman(PlayerId)) {
+            return getBot(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+            throw new IncorrectPlayerTypeException("Player " + PlayerId + " is a User not a Bot");
+        }
+    }
+	
+	// get Bot name from bot_id
+	public String getBotNameFromBotId(int BotId) {
+		return executeTransaction(new Transaction<String>() {
+			@Override
+			public String execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT Bots.name" +
+							"	FROM Bots" +
+							"		WHERE Bots.bot_id = ?"
+					);
+					stmt.setInt(1, BotId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						return resultSet.getString("name");
+					}
+					throw new UserDoesNotExistException("Bot does not exist");
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// get name from player_id
+	public String getNameFromPlayerId(int PlayerId) {
+		if (isHuman(PlayerId)) {
+            return getUsernamefromUserID(getUserBotIdFromPlayerId(PlayerId));
+        } else {
+        	return getBotNameFromBotId(getUserBotIdFromPlayerId(PlayerId));
+        }
 	}
 }

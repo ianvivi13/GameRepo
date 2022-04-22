@@ -3,9 +3,13 @@ package Tests;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.DerbyDatabase;
@@ -24,7 +28,8 @@ import Models.Pile;
 import Models.Player;
 import Models.UnoCard;
 import Models.UnoFlipCard;
-
+import Models.User;
+import Models.Bot;
 import Models.Color;
 import Models.Value;
 import Models.Rank;
@@ -68,6 +73,12 @@ public class DatabaseTest{
 	
 	private static TurnOrder turnOrder = new TurnOrder();
 	
+	private static User userOne;
+	private static int userIdOne;
+	
+	private static Bot botOne;
+	private static Bot botTwo;
+	
 	@BeforeClass
 	public static void setUp() {
 		InitDatabase.init();
@@ -77,9 +88,10 @@ public class DatabaseTest{
 		} catch (IOException e) {
 		}
 		
-		db.createAllStats(db.createUser("FunnyUser69", "Pass"));
+		userIdOne = db.createUser("FunnyUser69", "Pass");
+		db.createAllStats(userIdOne);
 		
-		// Turn Order Creation
+		// TurnOrder Creation
 		
 		turnOrder.AddPlayer(1);
 		turnOrder.AddPlayer(3);
@@ -118,13 +130,18 @@ public class DatabaseTest{
 		pileThree.populateUno();
 		pileThree.shuffle();
 		
+		// creating bots
+		botOne = new Bot(2, "BLJ");
+		botTwo = new Bot(3, "EXP");
+		
+		
 		// Player Creation
 		
-		playerOne = new Player(true, 20);
+		playerOne = new Player(false, 11);
 		playerOne.setPile(new Pile());
 		playerOne.setAltPile(new Pile());
 		
-		playerTwo = new Player(false, 20);
+		playerTwo = new Player(true, 20);
 		playerTwo.setPile(pileOne);
 		playerTwo.setPile(new Pile());
 		
@@ -253,6 +270,15 @@ public class DatabaseTest{
 		pileOne.shuffle();
 		db.updatePile(pileId, pileOne);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileOne));
+		
+		boolean flag = false;
+		db.deletePile(pileId);
+		try {
+			db.getPileFromPileId(pileId);
+		} catch (Exception PersistenceException) {
+			flag = true;
+		}
+		assertTrue(flag);
 	}
 	
 	@Test
@@ -262,6 +288,15 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileTwo);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileTwo));
+		
+		boolean flag = false;
+		db.deletePile(pileId);
+		try {
+			db.getPileFromPileId(pileId);
+		} catch (Exception PersistenceException) {
+			flag = true;
+		}
+		assertTrue(flag);
 	}
 	
 	@Test
@@ -271,10 +306,22 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileThree);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileThree));
+		
+		boolean flag = false;
+		db.deletePile(pileId);
+		try {
+			db.getPileFromPileId(pileId);
+		} catch (Exception PersistenceException) {
+			flag = true;
+		}
+		assertTrue(flag);
 	}
 	
 	@Test
 	public void testPlayerOne() {
+		int botId = db.createBot(botOne);
+		playerOne.setUserBotId(botId);
+		
 		int playerId = db.createPlayer(playerOne);
 		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerOne));
 		Pile p = new Pile();
@@ -282,6 +329,23 @@ public class DatabaseTest{
 		playerOne.setPile(p);
 		db.updatePlayer(playerId, playerOne);
 		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerOne));
+		assertEquals(db.getPlayerIdFromPlayer(playerOne), playerId);
+		assertFalse(db.isHuman(playerId));
+		assertEquals(db.getUserBotIdFromPlayerId(playerId),botId);
+		
+		assertTrue(db.getBotFromPlayerId(playerId).equals(botOne));
+		assertEquals(db.getNameFromPlayerId(playerId), botOne.getName());
+		
+		db.deletePlayer(playerId);
+		assertEquals(db.getPlayerFromPlayerId(playerId), null);
+		
+		boolean flag = false;
+		try {
+			db.getBotNameFromBotId(botId);
+		} catch (Exception UserDoesNotExistException) {
+			flag = true;
+		}
+		assertTrue(flag);
 	}
 	
 	@Test
@@ -293,6 +357,10 @@ public class DatabaseTest{
 		
 		playerTwo.setPile(p);
 		playerTwo.setAltPile(aP);
+		
+		int userId = userIdOne;
+		playerTwo.setUserBotId(userId);
+		
 		int playerId = db.createPlayer(playerTwo);
 		
 		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerTwo));
@@ -305,8 +373,20 @@ public class DatabaseTest{
 		
 		db.updatePlayer(playerId, playerTwo);
 		assertTrue(db.getPlayerFromPlayerId(playerId).equals(playerTwo));
+		assertEquals(db.getPlayerIdFromPlayer(playerTwo), playerId);
+		assertTrue(db.isHuman(playerId));
+		
+		assertEquals(db.getUserBotIdFromPlayerId(playerId),userId);
+		
+		assertEquals(db.getNameFromPlayerId(playerId), "FunnyUser69");
+		User user = new User("FunnyUser69", "Pass");
+		assertTrue(db.getUserFromPlayerId(playerId).equals(user));
+		
+		db.deletePlayer(playerTwo);
+		assertEquals(db.getPlayerFromPlayerId(playerId), null);
+
 	}
-	
+
 	@Test
 	public void testTurnOrder() {
 		int turnId = db.createTurnOrder(turnOrder);
@@ -320,6 +400,54 @@ public class DatabaseTest{
 		turnOrder.NextTurn();
 		db.updateTurnOrder(turnId, turnOrder);
 		assertTrue(db.getTurnOrderFromTurnOrderId(turnId).equals(turnOrder));
+		
+		db.deleteTurnOrder(turnId);
+		assertEquals(db.getTurnOrderFromTurnOrderId(turnId), null);
+	}
+	
+	
+	public void testBotOne() {
+		int botId = db.createBot(botOne);
+		assertTrue(db.getBot(botId).equals(botOne));
+		assertEquals(db.getBotNameFromBotId(botId), botOne.getName());
+		
+		boolean flag = false;
+		db.deleteBot(botId);
+		try {
+			db.getBotNameFromBotId(botId);
+		} catch (Exception UserDoesNotExistException) {
+			flag = true;
+		}
+		assertTrue(flag);
+	}
+	
+	@Test
+	public void testBotTwo() {
+		int botId = db.createBot(botTwo);
+		assertTrue(db.getBot(botId).equals(botTwo));
+		assertEquals(db.getBotNameFromBotId(botId), botTwo.getName());
+		
+		boolean flag = false;
+		db.deleteBot(botId);
+		try {
+			db.getBotNameFromBotId(botId);
+		} catch (Exception UserDoesNotExistException) {
+			flag = true;
+		}
+		assertTrue(flag);
+	}
+	
+	
+
+	@Test
+	public void testUser() {
+		boolean flag = false;
+		try {
+			db.createUser("FunnyUser69", "anything");
+		} catch (Exception UserAlreadyExistsException) {
+			flag = true;
+		}
+		assertTrue(flag);
 	}
 	
 	@Test
@@ -327,4 +455,6 @@ public class DatabaseTest{
 		int gameOneId = db.createGame(gameOne);
 		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
 	}
+
+	
 }
