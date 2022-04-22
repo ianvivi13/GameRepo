@@ -2,6 +2,10 @@ package Models;
 
 public class UnoParentController extends Game {
 	
+	public UnoParentController(String gameCode, String gameKey) {
+		super(gameCode, gameKey);
+	}
+
 	public void initialize(UnoModel model) {
 		model.getDeck().populate();
 		model.getDeck().shuffle();
