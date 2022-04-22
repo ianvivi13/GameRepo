@@ -3,13 +3,9 @@ package Tests;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.DerbyDatabase;
@@ -23,6 +19,7 @@ import Models.StatisticsGlobal;
 import Models.StatisticsUno;
 import Models.StatisticsUnoFlip;
 import Models.ExplodingKittensCard;
+import Models.Game;
 import Models.Pile;
 import Models.Player;
 import Models.UnoCard;
@@ -59,6 +56,10 @@ public class DatabaseTest{
 	private static Player playerOne;
 	private static Player playerTwo;
 	
+	private static Game gameOne;
+	private static Game gameTwo;
+	private static Game gameThree;
+	
 	private static StatisticsBlackjack blackjackStat = new StatisticsBlackjack();
 	private static StatisticsUno unoStat = new StatisticsUno();
 	private static StatisticsUnoFlip flipStat = new StatisticsUnoFlip();
@@ -78,7 +79,8 @@ public class DatabaseTest{
 		
 		db.createAllStats(db.createUser("FunnyUser69", "Pass"));
 		
-		// turn order creation
+		// Turn Order Creation
+		
 		turnOrder.AddPlayer(1);
 		turnOrder.AddPlayer(3);
 		turnOrder.AddPlayer(7);
@@ -125,6 +127,12 @@ public class DatabaseTest{
 		playerTwo = new Player(false, 20);
 		playerTwo.setPile(pileOne);
 		playerTwo.setPile(new Pile());
+		
+		// Game Creation
+		
+		gameOne = new Game("BLJ");
+		gameTwo = new Game("EXP");
+		gameThree = new Game("UNO");
 		
 		// Setting Statistics
 		
@@ -315,12 +323,8 @@ public class DatabaseTest{
 	}
 	
 	@Test
-	public void testDeleters() {
-		int playerId = db.getPlayerIdFromPlayer(playerOne);
-		db.deletePlayer(playerOne);
-		assertFalse(db.getPlayerFromPlayerId(playerId).equals(playerOne));
-		
-		playerId = db.getPlayerIdFromPlayer(playerTwo);
-		db.deletePlayer(playerTwo);
+	public void testGame() {
+		int gameOneId = db.createGame(gameOne);
+		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
 	}
 }

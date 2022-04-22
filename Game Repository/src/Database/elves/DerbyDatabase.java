@@ -27,6 +27,7 @@ import Models.StatisticsGlobal;
 import Models.StatisticsExplodingKittens;
 import Models.BlackJackCardDobbyInit;
 import Models.ExplodingKittensCardDobbyInit;
+import Models.Game;
 import Models.Pile;
 import Models.Player;
 import Models.Rank;
@@ -528,7 +529,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"INSERT INTO Pile(gameKey, exposeIndex, cards)"
 							+ " VALUES(?, ?, ?)"
-							);
+						);
 					
 					stmt.setString(1, gameKey);
 					stmt.setInt(2, exposeIndex);
@@ -569,6 +570,57 @@ public class DerbyDatabase implements IDatabase {
 			gameKey = IDatabase.Key_UnoFlip;
 		}
 		return createPile(gameKey, pile.getVisibleIndex(), pile.getPile());
+	}
+	
+	// Creates a game object and populates it
+	public int createGame(Game game) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int turnId = createTurnOrder(game.getTurnOrder());
+				int pileId = createPile(game.getMainPile());
+				int altPileId = createPile(game.getAltPile());
+				for(Player player : game.getPlayers()) {
+					createPlayer(player);
+				}
+				
+				try {
+					stmt = conn.prepareStatement(
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+						);
+					
+					stmt.setString(1, game.getGameKey());
+					stmt.setInt(2, turnId);
+					stmt.setString(3, sqlTranscoder.encode(game.getPlayerIds()));
+					stmt.setString(4, game.getGameCode());
+					stmt.setInt(5, pileId);
+					stmt.setInt(6, altPileId);
+					stmt.setBoolean(7, game.getCardSideA());
+					stmt.setString(8, game.getWildColor());
+					stmt.executeUpdate();
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+							"SELECT MAX(game_id) AS game_id" +
+							"	FROM Game"
+						);
+						resultSet = stmt.executeQuery();
+						resultSet.next();
+						int ret = resultSet.getInt("game_id");
+						stmt.close();
+						
+						return ret;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+				
+			}
+		});
 	}
 	
 	// create stats in database
@@ -614,6 +666,39 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					return null;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Checks if the gamecode is already in the database
+	public int gameCodeValid(String gameCode) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+
+				try {
+					stmt = conn.prepareStatement(
+						"SELECT Game.game_id" +
+						" FROM Game"
+						+ " WHERE Game.code = ?"
+					);
+					
+					stmt.setString(1, gameCode);
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("game_id");
+					}
+					
+					stmt.close();
+					
+					return -1;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -1371,6 +1456,167 @@ public class DerbyDatabase implements IDatabase {
 					
 					return null;
 					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a game id given a game object
+	public int getGameIdFromGame(Game game) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				String gameCode = game.getGameCode();
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT game_id "
+							+ "	FROM Game "
+							+ "	WHERE code = ?"
+							);
+					
+					stmt.setString(1, gameCode);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						return resultSet.getInt("game_id");
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Returns a game id given a game object
+	public Game getGameFromGameId(int gameId) {
+		return executeTransaction(new Transaction<Game>() {
+			@Override
+			public Game execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				Game game;
+				String gameKey;
+				int turnId;
+				String playerIds;
+				String gameCode;
+				int pileId;
+				int altPileId;
+				boolean cardSideA;
+				String wildColor;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT * "
+							+ "	FROM Game "
+							+ "	WHERE game_id = ?"
+							);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						 gameKey = resultSet.getString("gameKey");
+						 turnId = resultSet.getInt("turn_id");
+						 playerIds = resultSet.getString("players");
+						 gameCode = resultSet.getString("code");
+						 pileId = resultSet.getInt("pile_id");
+						 altPileId = resultSet.getInt("alt_pile_id");
+						 cardSideA = resultSet.getBoolean("cardSideA");
+						 wildColor = resultSet.getString("wildColor");
+						 
+						 game = new Game(gameCode, gameKey);
+						 game.setWildColor(wildColor);
+						 game.setMainPile(getPileFromPileId(pileId));
+						 game.setAltPile(getPileFromPileId(altPileId));
+						 game.setTurnOrder(getTurnOrderFromTurnOrderId(turnId));
+						 game.setPlayerIds(sqlTranscoder.decode(playerIds));
+						 ArrayList<Player> players = new ArrayList<>();
+						 for(int id : sqlTranscoder.decode(playerIds)) {
+							 Player player = getPlayerFromPlayerId(id);
+							 players.add(player);
+						 }
+						 game.setPlayers(players);
+						 if(cardSideA != game.getCardSideA()) {
+							 game.flip();
+						 }
+						 
+						 return game;
+					}
+					
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Updates the given game
+	public void updateGame(int gameId, Game game) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				int turnId;
+				int pileId;
+				int altPileId;
+
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT turn_id, pile_id, alt_pile_id" +
+							" FROM Game"
+							+ "	WHERE game_id = ?"
+					);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						turnId = resultSet.getInt("turn_id");
+						pileId = resultSet.getInt("pile_id");
+						altPileId = resultSet.getInt("alt_pile_id");
+						
+						updateTurnOrder(turnId, game.getTurnOrder());
+						updatePile(pileId, game.getMainPile());
+						updatePile(altPileId, game.getAltPile());
+						for(Player player : game.getPlayers()) {
+							updatePlayer(getPlayerIdFromPlayer(player), player);
+						}
+						
+						stmt.close();
+						
+						stmt = conn.prepareStatement(
+								"UPDATE Game"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?"
+								+ "	WHERE game_id = ?"
+						);
+						
+						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
+						stmt.setBoolean(2, game.getCardSideA());
+						stmt.setString(3, game.getWildColor());
+						
+						stmt.executeUpdate();
+					}
+					
+					stmt.close();
+					
+					return null;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);

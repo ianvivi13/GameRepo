@@ -1,8 +1,7 @@
 package Database.elves;
 
-import java.util.List;
-
 import Models.ExplodingKittensCard;
+import Models.Game;
 import Models.Pile;
 import Models.Player;
 import Models.StandardCard;
@@ -77,6 +76,11 @@ public interface IDatabase {
 	public void updateTurnOrder(int turn_id, TurnOrder turn);
 	
 	// Game
+	public int createGame(Game game); //Test
+	public int getGameIdFromGame(Game game); //Test
+	public Game getGameFromGameId(int gameId); //Test
+	public void updateGame(int gameId, Game game); //Test
+	public int gameCodeValid(String gameCode); //Test
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);

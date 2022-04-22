@@ -10,7 +10,7 @@ import Database.elves.InitDatabase;
 
 
 
-public class BlackJackController extends Game{
+public class BlackJackController extends Game {
 	
 	
 	public void initialize(BlackJackModel model) {
