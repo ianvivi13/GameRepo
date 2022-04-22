@@ -8,16 +8,16 @@ import Database.elves.IDatabase;
 
 public class Game {
 	
-	private ArrayList<Integer> playerIds;
-	private ArrayList<Player> players;
-	private Pile mainPile;
-	private Pile altPile;
-	private String gameCode;
-	private String gameKey;
+	protected ArrayList<Integer> playerIds;
+	protected ArrayList<Player> players;
+	protected Pile mainPile;
+	protected Pile altPile;
+	protected String gameCode;
+	protected String gameKey;
 	protected TurnOrder tko;
 	protected boolean cardSideA;
-	private String wildColor;
-	private IDatabase db;
+	protected String wildColor;
+	protected IDatabase db;
 	
 	public Game(String gameKey){
 		db = DatabaseProvider.getInstance();
