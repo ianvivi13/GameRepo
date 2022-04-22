@@ -125,7 +125,7 @@ public class Pile{
 		
 		for(int i = 0; i < 6; i++) {
 			pile.add(new ExplodingKittensCard(Type.SeeTheFuture));
-			pile.add(new ExplodingKittensCard(Type.AtlerTheFuture));
+			pile.add(new ExplodingKittensCard(Type.AlterTheFuture));
 			pile.add(new ExplodingKittensCard(Type.Shuffle));
 			pile.add(new ExplodingKittensCard(Type.Favor));
 			pile.add(new ExplodingKittensCard(Type.FeralCat));
