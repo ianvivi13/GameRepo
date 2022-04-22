@@ -209,9 +209,41 @@ public class Pile{
     
     public String getType() {
         if(!pile.isEmpty()) {
-            return String.valueOf(this.getCard(0).getClass());
+        	if(this.getCard(0) instanceof UnoCard) {
+        		return "UnoCard";
+        	}
+        	else if(this.getCard(0) instanceof ExplodingKittensCard) {
+        		return "ExplodingKittensCard";
+        	}
+        	else if(this.getCard(0) instanceof UnoFlipCard) {
+        		return "UnoFlipCard";
+        	}
+        	
+        	return "StandardCard";
         }
         return null;
+    }
+    
+    public boolean equals(Pile pile) {
+    	if (this.visibleIndex != pile.visibleIndex) {
+    		return false;
+    	}
+    	
+    	if (this.getType() != pile.getType() ) {
+    		return false;
+    	}
+    	
+    	if (this.getNumCards() != pile.getNumCards()) {
+    		return false;
+    	}
+    	
+    	for (int i = 0 ; i < this.getNumCards() ; i ++) {
+    		if (!this.getCard(i).equals(pile.getCard(i))) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
     }
 	
 

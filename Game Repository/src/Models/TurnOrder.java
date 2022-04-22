@@ -8,6 +8,30 @@ public class TurnOrder {
 	private int pointer;
 	private int adder;
 	
+	public void setPointer(int pointer) {
+		this.pointer = pointer;
+	}
+	
+	public void setAdder(int adder) {
+		this.adder = adder;
+	}
+	
+	public void setTurnList(ArrayList<Integer> TurnList) {
+		this.TurnList = TurnList;
+	}
+	
+	public int getPointer() {
+		return pointer;
+	}
+	
+	public int getAdder() {
+		return adder;
+	}
+	
+	public ArrayList<Integer> getTurnList() {
+		return TurnList;
+	}
+	
 	public TurnOrder() {
 		TurnList = new ArrayList<Integer>();
 		pointer = 0;
@@ -137,4 +161,21 @@ public class TurnOrder {
 		System.out.println("------------------------------");
 	}
 	
+	public boolean equals(TurnOrder turn) {
+
+		if (this.pointer != turn.pointer) {
+			return false;
+		}
+		
+		if (this.adder != turn.adder) {
+			System.out.println("same");
+			return false;
+		}
+		
+		if (!this.TurnList.equals(turn.TurnList)) {
+			return false;
+		}
+		
+		return true;
+	}
 }
