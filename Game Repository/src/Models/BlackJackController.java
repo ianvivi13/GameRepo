@@ -13,24 +13,18 @@ import Database.elves.InitDatabase;
 public class BlackJackController extends Game{
 	
 	
-	public void initialize(BlackJackModel model) {
-		
+//	public void initialize(BlackJackModel model) {
 //		InitDatabase.init();
 //		IDatabase db = DatabaseProvider.getInstance();
+//		pile.populate();
+//		pile.shuffle();
 //		
-//		List<StandardCard> authorList = db
-		
-		
-		model.getDeck().populate();
-		model.getDeck().shuffle();
-		model.getHand().addCards(model.getDeck().removeCards(2));
-		model.getHand().setVisibleIndex(0);
-		model.getDeck().setVisibleIndex(1000000000);
-	}
-	
-	public void hit(BlackJackModel model) {
-		model.getHand().addCards(model.getDeck().removeCards(1));
-	}
+//		
+//	
+//	public void hit() {
+//		IDatabase db = DatabaseProvider.getInstance();
+//		
+//	}
 	
 	// for hold we want to basically skip a players turn
 	public void hold(BlackJackModel model) {
