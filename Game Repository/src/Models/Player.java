@@ -13,6 +13,10 @@ public class Player {
 		altPile = new Pile();
 	}
 	
+	public void setUserBotId(int Id) {
+		this.userBotID = Id;
+	}
+	
 	public boolean getIsHuman() {
 		return isHuman;
 	}

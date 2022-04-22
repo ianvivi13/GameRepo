@@ -25,4 +25,16 @@ public class User {
 		return pass == password;
 	}
 	
+	public boolean equals(User user) {
+		if (!this.username.equals(user.username)) {
+			return false;
+		}
+		
+		if (!this.password.equals(user.password)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
