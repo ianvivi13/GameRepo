@@ -4,15 +4,20 @@ import java.util.ArrayList;
 
 public class Game {
 	
-	private ArrayList<Integer> players;
-	private String gameID;
-	private TurnOrder tko;
+	protected ArrayList<Integer> players;
+	protected String gameID;
+	protected char currentColor;
+	protected boolean cardSideA;
+	protected Pile pile;
+	protected Pile altPile;
+	protected TurnOrder tko;
 	
 	
 	public Game(){
 		players = new ArrayList<>();
 		gameID = " ";
 	}
+	
 	
 	public void nextTurn() {
 		tko.NextTurn();
