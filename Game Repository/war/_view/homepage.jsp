@@ -9,6 +9,89 @@
 	</head>
 	
 	<body class = "StaticBackground">
+
+		<script>
+		let value = localStorage.getItem("buttonValue");
+		console.log(value);
+
+			switch (value) {
+			case 'blackjack':
+				
+				document.body.style.color = "black";
+				document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+
+				localStorage.setItem("buttonValue", 'blackjack');
+				console.log("buttonValue");
+				break;
+
+			case 'uno':
+					
+				document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+				localStorage.setItem("buttonValue", 'uno');
+				console.log("buttonValue");
+				break;    
+
+			case 'unoflip':
+					
+				document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+				localStorage.setItem("buttonValue", 'unoflip');
+				console.log("buttonValue");
+				break;
+
+			case 'expoldingkittens':
+
+				document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+				localStorage.setItem("buttonValue", 'expoldingkittens');
+				console.log("buttonValue");
+				break;
+
+			default:
+		
+			document.body.style.backgroundImage = "url('_view/Back.png')";
+		}
+	
+
+			function radioClicked(){
+				var shapeChoice = document.querySelector('input[name="butt"]:checked').value;
+	
+				switch (shapeChoice) {
+				case 'blackjack':
+					
+					document.body.style.color = "black";
+					document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+
+					localStorage.setItem("buttonValue", 'blackjack');
+					console.log("buttonValue");
+					break;
+	
+				case 'uno':
+						
+					document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+					localStorage.setItem("buttonValue", 'uno');
+					console.log("buttonValue");
+					break;    
+	
+				case 'unoflip':
+					  
+					document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+					localStorage.setItem("buttonValue", 'unoflip');
+					console.log("buttonValue");
+					break;
+	
+				case 'expoldingkittens':
+	
+					document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+					localStorage.setItem("buttonValue", 'expoldingkittens');
+					console.log("buttonValue");
+					break;
+
+					default:
+                    document.body.style.backgroundImage = "url('_view/Back.png')";
+				}
+			};
+					radioClicked();
+			</script>
+
 		<div class="HeaderStyle">
     		Welcome:&nbsp;Admin
     	</div>
@@ -43,7 +126,7 @@
             </a>
 		</div>
 		
-		<div id = "bootybutt">
+		<div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="blackjack">
 				<img src="_view/images/StandardCards/back-sm.png">

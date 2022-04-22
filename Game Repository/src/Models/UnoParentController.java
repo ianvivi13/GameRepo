@@ -2,6 +2,9 @@ package Models;
 
 public class UnoParentController extends Game {
 	
+	Color[] allColors = Color.values();
+	Value[] allValues = Value.values();
+	
 	public void initialize(UnoModel model) {
 		model.getDeck().populate();
 		model.getDeck().shuffle();
@@ -17,26 +20,22 @@ public class UnoParentController extends Game {
 		}
 	}
 
-	public void wild(UnoModel model, Color color) {
-		
+	public void wildPlusFour(UnoModel model, Color color) {
 		nextTurn();
 	}
 	
 	public void skip(UnoModel model) {
-		
-		
+		nextTurn();
 		nextTurn();
 	}
 	
 	public void reverse(UnoModel model) {
-		
-		
+		reverseTurnOrder();
 		nextTurn();
 	}
 	
 	public void play(UnoModel model) {
-		
-		
+		model.getDeck().addCards(model.getHand().removeCards(1));
 		nextTurn();
 	}
 	

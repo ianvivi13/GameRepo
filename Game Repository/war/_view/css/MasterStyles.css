@@ -13,6 +13,14 @@
     background-color: #151019;
     color: #ffffff;
     margin: 0;
+
+    transition: opacity 3s ease-in-out;
+    transition: all 2s ease;
+    -webkit-animation: fade 4s infinite;
+    -moz-animation: fade 4s infinite;
+    -o-animation: fade 4s infinite;
+    animation: fade 4s infinite;
+    opacity: 1;
 }
 
 /* create the back button position - top right */

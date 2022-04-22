@@ -12,11 +12,54 @@
 
     <body class="StaticBackground">
         <script>
+            
+            let value = localStorage.getItem("buttonValue");
+
+            switch (value) {
+            case 'blackjack':
+                
+                document.body.style.color = "black";
+                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+
+                localStorage.setItem("buttonValue", 'blackjack');
+                console.log("buttonValue");
+                break;
+
+            case 'uno':
+                    
+                document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+                localStorage.setItem("buttonValue", 'uno');
+                console.log("buttonValue");
+                break;    
+
+            case 'unoflip':
+                    
+                document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+                localStorage.setItem("buttonValue", 'unoflip');
+                console.log("buttonValue");
+                break;
+
+            case 'expoldingkittens':
+
+                document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+                localStorage.setItem("buttonValue", 'expoldingkittens');
+                console.log("buttonValue");
+                break;
+
+            default:
+        
+            document.body.style.backgroundImage = "url('_view/Back.png')";
+        }
+    
             function radioClicked(){
                 let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
 
                 switch (shapeChoice) {
                 case 'blackjack':
+                    document.body.style.color = "black";
+                    document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+                    localStorage.setItem("buttonValue", 'blackjack');
+
                     document.getElementById("topic").innerHTML = "BlackJack"
                     document.getElementById("unordered").style.borderColor = "blue";
                     document.getElementById("unordered").innerHTML = 
@@ -32,6 +75,10 @@
                     break;
 
                 case 'uno':
+
+                    document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+                    localStorage.setItem("buttonValue", 'uno');
+                    
                     document.getElementById("topic").innerHTML = "Uno"
                     document.getElementById("unordered").style.borderColor = "red";
                     document.getElementById("unordered").innerHTML = `<li>The goal of Uno is for the player to lose all of their cards</li>
@@ -47,6 +94,10 @@
                     break;
 
                 case 'unoflip':
+
+                    document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+                    localStorage.setItem("buttonValue", 'unoflip');
+
                     document.getElementById("topic").innerHTML = "Uno-Flip"
                     document.getElementById("unordered").style.borderColor = "yellow";
                     document.getElementById("unordered").innerHTML = `<li>The goal of Uno-Flip is for the player to lose all of their cards</li>
@@ -66,6 +117,10 @@
                     break;
 
                 case 'expoldingkittens':
+
+                    document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+					localStorage.setItem("buttonValue", 'expoldingkittens');
+
                     document.getElementById("topic").innerHTML = "Exploding Kittens"
                     document.getElementById("unordered").style.borderColor = "green";
                     document.getElementById("unordered").innerHTML = `<li>Each player is given a hand of eight cards: seven random and one defuse</li>
@@ -122,22 +177,22 @@
         
         <label class = "buttspace">
             <input type="radio" name="butt" value="blackjack" onclick="" checked>
-            <img src="_view/css/Standard Card/back-sm.png">
+            <img src="_view/images/BlackJack_Back.jpg">
         </label>
 
         <label class = "buttspace">
             <input type="radio" name="butt" value="uno">
-            <img src="_view/css/Standard Card/back-sm.png">
+            <img src="_view/images/Uno_Back.jpg">
         </label>
 
         <label class = "buttspace">
             <input type="radio" name="butt" value="unoflip">
-            <img src="_view/css/Standard Card/back-sm.png">
+            <img src="_view/images/UnoFlip_Back.jpg">
         </label>
 
         <label class = "buttspace">
             <input type="radio" name="butt" value="expoldingkittens">
-            <img src="_view/css/Standard Card/back-sm.png">
+            <img src="_view/images/Exploding_Back.jpg">
         </label>
     </div>
     </body>

@@ -26,7 +26,9 @@ public class Game {
 		tko.RemovePlayer(player);
 	}
 	
-	
+	public void reverseTurnOrder() {
+		tko.Reverse();
+	}
 	
 	public void updateStats() {
 		

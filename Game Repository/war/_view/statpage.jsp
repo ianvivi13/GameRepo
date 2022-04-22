@@ -10,54 +10,141 @@
 	
 	<body class="StaticBackground">
         <script>
-        function radioClicked(){
-                let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
+        let value = localStorage.getItem("buttonValue");
 
-                switch (shapeChoice) {
-                case 'blackjack':
+        switch (value) {
+        case 'blackjack':
+            
+            document.body.style.color = "black";
+            document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+
+            localStorage.setItem("buttonValue", 'blackjack');
+            console.log("buttonValue");
+
+            document.getElementById("stats").innerHTML = 
+            `<span id = "tit"><h3>Blackjack Stats</h3></span>
+            <p>Games Played:&nbsp; 12</p>
+            <p>Games Won:&nbsp; 6</p>
+            <p>Games Loss:&nbsp; 6</p>
+            <p>Win/Loss Ratio:&nbsp; 0.50</p>  `
+            break;
+
+        case 'uno':
                 
-                    document.getElementById("stats").innerHTML = 
-                    `<span id = "tit"><h3>Blackjack Stats</h3></span>
-                    <p>Games Played:&nbsp; 12</p>
-                    <p>Games Won:&nbsp; 6</p>
-                    <p>Games Loss:&nbsp; 6</p>
-                    <p>Win/Loss Ratio:&nbsp; 0.50</p>  `
-                    break;
+            document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+            localStorage.setItem("buttonValue", 'uno');
+            console.log("buttonValue");
 
-                case 'uno':
-                    
-                    document.getElementById("stats").innerHTML = 
-                    `<span id = "tit"><h3>Uno Stats</h3></span>
-                    <p>Games Played:&nbsp; 33</p>
-                    <p>Games Won:&nbsp; 11</p>
-                    <p>Games Loss:&nbsp; 22</p>
-                    <p>Win/Loss Ratio:&nbsp; 0.33</p>  `
-                    break;
+            document.getElementById("stats").innerHTML = 
+            `<span id = "tit"><h3>Uno Stats</h3></span>
+            <p>Games Played:&nbsp; 33</p>
+            <p>Games Won:&nbsp; 11</p>
+            <p>Games Loss:&nbsp; 22</p>
+            <p>Win/Loss Ratio:&nbsp; 0.33</p>  `
+            break;    
 
-                case 'unoflip':
-                  
-                    document.getElementById("stats").innerHTML = 
-                    `<span id = "tit"><h3>Uno-Flip Stats</h3></span>
-                    <p>Games Played:&nbsp; 45</p>
-                    <p>Games Won:&nbsp; 40</p>
-                    <p>Games Loss:&nbsp; 5</p>
-                    <p>Win/Loss Ratio:&nbsp; 9.0</p>  `
-                    break;
+        case 'unoflip':
+                
+            document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+            localStorage.setItem("buttonValue", 'unoflip');
+            console.log("buttonValue");
 
-                case 'expoldingkittens':
-                    
-                    document.getElementById("stats").innerHTML = 
-                    `<span id = "tit"><h3>Exploding Kittens Stats</h3></span>
-                    <p>Games Played:&nbsp; 10</p>
-                    <p>Games Won:&nbsp; 1</p>
-                    <p>Games Loss:&nbsp; 9</p>
-                    <p>Win/Loss Ratio:&nbsp; 0.11</p>  `
-                    break;
+            document.getElementById("stats").innerHTML = 
+            `<span id = "tit"><h3>Uno-Flip Stats</h3></span>
+            <p>Games Played:&nbsp; 45</p>
+            <p>Games Won:&nbsp; 40</p>
+            <p>Games Loss:&nbsp; 5</p>
+            <p>Win/Loss Ratio:&nbsp; 9.0</p>  `
+            break;
 
-                default:
-                    doucment.getElementById("stats").innerHTML = "Default"
-                }
-                };
+        case 'expoldingkittens':
+
+            document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+            localStorage.setItem("buttonValue", 'expoldingkittens');
+            console.log("buttonValue");
+
+            document.getElementById("stats").innerHTML = 
+            `<span id = "tit"><h3>Exploding Kittens Stats</h3></span>
+            <p>Games Played:&nbsp; 10</p>
+            <p>Games Won:&nbsp; 1</p>
+            <p>Games Loss:&nbsp; 9</p>
+            <p>Win/Loss Ratio:&nbsp; 0.11</p>  `
+            break;
+
+        default:
+            document.body.style.backgroundImage = "url('_view/Back.png')";
+            
+        }
+
+        function radioClicked(){
+            let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
+
+            switch (shapeChoice) {
+            case 'blackjack':
+
+                localStorage.setItem("buttonValue", 'blackjack');
+                console.log("buttonValue");
+            
+                document.body.style.color = "black";
+                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+
+                document.getElementById("stats").innerHTML = 
+                `<span id = "tit"><h3>Blackjack Stats</h3></span>
+                <p>Games Played:&nbsp; 12</p>
+                <p>Games Won:&nbsp; 6</p>
+                <p>Games Loss:&nbsp; 6</p>
+                <p>Win/Loss Ratio:&nbsp; 0.50</p>  `
+                break;
+
+            case 'uno':
+
+                localStorage.setItem("buttonValue", 'uno');
+                console.log("buttonValue");
+                
+                document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";    
+
+                document.getElementById("stats").innerHTML = 
+                `<span id = "tit"><h3>Uno Stats</h3></span>
+                <p>Games Played:&nbsp; 33</p>
+                <p>Games Won:&nbsp; 11</p>
+                <p>Games Loss:&nbsp; 22</p>
+                <p>Win/Loss Ratio:&nbsp; 0.33</p>  `
+                break;
+
+            case 'unoflip':
+
+                localStorage.setItem("buttonValue", 'unoflip');
+                console.log("buttonValue");
+                
+                document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+                
+                document.getElementById("stats").innerHTML = 
+                `<span id = "tit"><h3>Uno-Flip Stats</h3></span>
+                <p>Games Played:&nbsp; 45</p>
+                <p>Games Won:&nbsp; 40</p>
+                <p>Games Loss:&nbsp; 5</p>
+                <p>Win/Loss Ratio:&nbsp; 9.0</p>  `
+                break;
+
+            case 'expoldingkittens':
+
+                localStorage.setItem("buttonValue", 'expoldingkittens');
+                console.log("buttonValue");
+
+                document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+                
+                document.getElementById("stats").innerHTML = 
+                `<span id = "tit"><h3>Exploding Kittens Stats</h3></span>
+                <p>Games Played:&nbsp; 10</p>
+                <p>Games Won:&nbsp; 1</p>
+                <p>Games Loss:&nbsp; 9</p>
+                <p>Win/Loss Ratio:&nbsp; 0.11</p>  `
+                break;
+
+            default:
+                doucment.getElementById("stats").innerHTML = "Default"
+            }
+        };
 
                 radioClicked();
         </script>
