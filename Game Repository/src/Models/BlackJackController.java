@@ -20,6 +20,7 @@ public class BlackJackController extends Game {
 	public void initialize() {
 		mainPile.populate();
 		mainPile.shuffle();
+		mainPile.setVisibleIndex(1000000000);
 		
 		for(Player p : players) {
 			p.getPile().addCards(mainPile.removeCards(2));
@@ -36,7 +37,7 @@ public class BlackJackController extends Game {
 	}
 	
 	// for hold we want to basically skip a players turn
-	public void hold(BlackJackModel model) {
+	public void hold() {
 		nextTurn();
 		db.updateGame(db.getGameIdFromGame(blj), blj);
 	}
@@ -47,8 +48,8 @@ public class BlackJackController extends Game {
 	}
 	
 	// split needs to compare cards by rank and if they are the same then move cards to alt hand
-	public void split(BlackJackModel model) {
-		Player p = players.get(tko.CurrentPlayer());
+	public void split(Player p) {
+		p = players.get(tko.CurrentPlayer());
 		Rank one = ((StandardCard) p.getPile().getCard(p.getPile().getIndexOfTopCard())).getRank();
 		Rank two = ((StandardCard) p.getPile().getCard(p.getPile().getIndexOfTopCard()+1)).getRank();
 		if((p.getPile().getNumCards() == 2) && (one.equals(two))){
