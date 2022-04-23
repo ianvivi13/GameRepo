@@ -2,6 +2,8 @@ package Models;
 
 public class UnoParentController extends Game {
 	
+	Game uno = new Game(gameCode,gameKey);
+	
 	public UnoParentController(String gameCode, String gameKey) {
 		super(gameCode, gameKey);
 	}
@@ -38,11 +40,6 @@ public class UnoParentController extends Game {
 		nextTurn();
 	}
 	
-	public void play(UnoModel model) {
-		
-		
-		nextTurn();
-	}
 	
 	public void checkWin() {
 		
