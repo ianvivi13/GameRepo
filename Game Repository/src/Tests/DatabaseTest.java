@@ -63,7 +63,6 @@ public class DatabaseTest{
 	
 	private static Game gameOne;
 	private static Game gameTwo;
-	private static Game gameThree;
 	
 	private static StatisticsBlackjack blackjackStat = new StatisticsBlackjack();
 	private static StatisticsUno unoStat = new StatisticsUno();
@@ -148,8 +147,7 @@ public class DatabaseTest{
 		// Game Creation
 		
 		gameOne = new Game("BLJ");
-		gameTwo = new Game("EXP");
-		gameThree = new Game("UNO");
+		gameTwo = new Game("UNO");
 		
 		// Setting Statistics
 		
@@ -454,6 +452,36 @@ public class DatabaseTest{
 	public void testGame() {
 		int gameOneId = db.createGame(gameOne);
 		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
+		assertTrue(gameOne.getGameCode().length() == 11);
+		assertTrue(gameOneId == db.getGameIdFromGame(gameOne));
+		gameOne.addPlayer(db.createPlayer(playerOne));
+		gameOne.addPlayer(db.createPlayer(playerTwo));
+		gameOne.getMainPile().populate();
+		gameOne.getMainPile().shuffle();
+		gameOne.getAltPile().populate();
+		gameOne.getAltPile().shuffle();
+		gameOne.flip();
+		db.updateGame(gameOneId, gameOne);
+		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
+		
+		db.deleteGame(gameOneId);
+		assertEquals(db.getGameFromGameId(gameOneId), null);
+		
+		int gameTwoId = db.createGame(gameTwo);
+		assertTrue(db.getGameFromGameId(gameTwoId).equals(gameTwo));
+		assertTrue(gameTwo.getGameCode().length() == 11);
+		assertTrue(gameTwoId == db.getGameIdFromGame(gameTwo));
+		gameTwo.addPlayer(db.createPlayer(playerTwo));
+		gameTwo.addPlayer(db.createPlayer(playerOne));
+		gameTwo.getMainPile().populateUno();
+		gameTwo.getMainPile().shuffle();
+		gameTwo.flip();
+		
+		db.updateGame(gameTwoId, gameTwo);
+		assertTrue(db.getGameFromGameId(gameTwoId).equals(gameTwo));
+		
+		db.deleteGame(gameTwoId);
+		assertEquals(db.getGameFromGameId(gameTwoId), null);
 	}
 
 	

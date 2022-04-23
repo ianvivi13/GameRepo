@@ -1,5 +1,4 @@
 package Database.elves;
-
 import Models.Bot;
 import Models.ExplodingKittensCard;
 import Models.Game;
@@ -93,6 +92,7 @@ public interface IDatabase {
 	public Game getGameFromGameId(int gameId); //Test
 	public void updateGame(int gameId, Game game); //Test
 	public int gameCodeValid(String gameCode); //Test
+	public void deleteGame(int gameId); //Test
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);

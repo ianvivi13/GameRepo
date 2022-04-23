@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
-
 import java.io.File;
 
 import Models.sqlTranscoder;
@@ -1521,7 +1519,9 @@ public class DerbyDatabase implements IDatabase {
 						 
 						 game = new Game(gameCode, gameKey);
 						 game.setWildColor(wildColor);
+						 updatePile(pileId, getPileFromPileId(pileId));
 						 game.setMainPile(getPileFromPileId(pileId));
+						 updatePile(altPileId, getPileFromPileId(altPileId));
 						 game.setAltPile(getPileFromPileId(altPileId));
 						 game.setTurnOrder(getTurnOrderFromTurnOrderId(turnId));
 						 game.setPlayerIds(sqlTranscoder.decode(playerIds));
@@ -1593,6 +1593,7 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
 						stmt.setBoolean(2, game.getCardSideA());
 						stmt.setString(3, game.getWildColor());
+						stmt.setInt(4,  gameId);
 						
 						stmt.executeUpdate();
 					}
@@ -1845,17 +1846,31 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				String encodedIds = encodeCardIds(pile.getPile());
+				String gameKey = "BLJ";
+				
+				if(pile.getType() == "UnoCard") {
+					gameKey = "UNO";
+				}
+				
+				if(pile.getType() == "UnoFlipCard") {
+					gameKey = "UNF";
+				}
+				
+				if(pile.getType() == "ExplodingKittensCard") {
+					gameKey = "EXP";
+				}
 				
 				try {
 					stmt = conn.prepareStatement(
 							"UPDATE Pile"
-							+ " SET exposeIndex = ?, cards = ?"
+							+ " SET exposeIndex = ?, cards = ?, gameKey = ?"
 							+ "	WHERE pile_id = ?"
 							);
 					
 					stmt.setInt(1, pile.getVisibleIndex());
 					stmt.setString(2, encodedIds);
-					stmt.setInt(3, pile_id);
+					stmt.setString(3, gameKey);
+					stmt.setInt(4, pile_id);
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -2051,6 +2066,54 @@ public class DerbyDatabase implements IDatabase {
 					return null;
 				} finally {
 					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
+	// Deletes a game and its "children" given a game id
+	public void deleteGame(int gameId) {
+		executeTransaction(new Transaction<Void>() {
+			@Override
+			public Void execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				Game game = getGameFromGameId(gameId);
+				
+				try {
+					
+					stmt = conn.prepareStatement(
+							"DELETE FROM Game" +
+							"	WHERE Game.game_id = ?"
+							);
+					stmt.setInt(1, gameId);
+					stmt.executeUpdate();
+					
+					stmt.close();
+					
+					stmt = conn.prepareStatement(
+							"SELECT pile_id, alt_pile_id, turn_id"
+							+ " FROM Game" +
+							"	WHERE Game.game_id = ?"
+							);
+					stmt.setInt(1, gameId);
+					resultSet = stmt.executeQuery();
+					if(resultSet.next()) {
+						deletePile(resultSet.getInt("pile_id"));
+						deletePile(resultSet.getInt("alt_pile_id"));
+						deleteTurnOrder(resultSet.getInt("turn_id"));
+						for(int playerId : game.getPlayerIds()) {
+							deletePlayer(playerId);
+							if(!isHuman(playerId)) {
+								deleteBot(getUserBotIdFromPlayerId(playerId));
+							}
+						}
+					}
+					
+					return null;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
 				}
 			}
 		});
