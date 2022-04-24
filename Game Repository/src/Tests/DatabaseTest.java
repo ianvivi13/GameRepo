@@ -268,15 +268,7 @@ public class DatabaseTest{
 		pileOne.shuffle();
 		db.updatePile(pileId, pileOne);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileOne));
-		
-		boolean flag = false;
-		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -286,15 +278,7 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileTwo);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileTwo));
-		
-		boolean flag = false;
-		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -304,15 +288,7 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileThree);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileThree));
-		
-		boolean flag = false;
-		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -482,6 +458,17 @@ public class DatabaseTest{
 		
 		db.deleteGame(gameTwoId);
 		assertEquals(db.getGameFromGameId(gameTwoId), null);
+	}
+	
+	boolean isPileDeleted(int pileId) {
+	    db.deletePile(pileId);
+	    try {
+	        db.getPileFromPileId(pileId);
+	        return false;
+	    } catch (Exception PersistanceException) {
+	        return true;
+
+	    }
 	}
 
 	

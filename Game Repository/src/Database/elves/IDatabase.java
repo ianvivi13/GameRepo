@@ -23,14 +23,6 @@ public interface IDatabase {
 	public static final String Key_Blackjack = "BLJ";
 
 	
-	// Still Unsorted
-	public User getUserFromPlayerId(int PlayerId);
-	public Bot getBotFromPlayerId(int PlayerId);
-	public String getBotNameFromBotId(int BotId);
-	public String getNameFromPlayerId(int PlayerId);
-	public void deleteTurnOrder(int turnOrderId);
-	
-	
 	// Player
 	public int createPlayer(Player player);
 	public Player getPlayerFromPlayerId(int playerId);
@@ -40,6 +32,9 @@ public interface IDatabase {
 	public void deletePlayer(int playerId);
 	public void deletePlayer(Player player);
 	public boolean isHuman(int PlayerId);
+	public int getPileIdFromPlayerId(int playerId); //Test
+	public int getAltPileIdFromPlayerId(int playerId); //Test
+	public String getNameFromPlayerId(int PlayerId);
 	
 	// User
 	public int createUser(String username, String password);
@@ -50,11 +45,14 @@ public interface IDatabase {
 	public void deleteUser(int userId);
 	public void deleteUser(String username);
 	public boolean login(String username, String password);
+	public User getUserFromPlayerId(int PlayerId);
 	
 	// Bot
 	public int createBot(Bot bot);
 	public Bot getBot(int BotId);
 	public void deleteBot(int botId);
+	public Bot getBotFromPlayerId(int PlayerId);
+	public String getBotNameFromBotId(int BotId);
 	
 	// Stat
 	public void createAllStats(int UserId);
@@ -85,6 +83,7 @@ public interface IDatabase {
 	public int createTurnOrder(TurnOrder turn);
 	public TurnOrder getTurnOrderFromTurnOrderId(int turnId);
 	public void updateTurnOrder(int turn_id, TurnOrder turn);
+	public void deleteTurnOrder(int turnOrderId);
 	
 	// Game
 	public int createGame(Game game); //Test
@@ -93,6 +92,8 @@ public interface IDatabase {
 	public void updateGame(int gameId, Game game); //Test
 	public int gameCodeValid(String gameCode); //Test
 	public void deleteGame(int gameId); //Test
+	public int getPileIdFromGameId(int gameId); //Test
+	public int getAltPileIdFromGameId(int gameId); //Test
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);
