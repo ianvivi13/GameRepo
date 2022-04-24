@@ -1,6 +1,6 @@
 package Database.elves;
 
-public class UserExistsException extends RuntimeException {
+public class UserExistsException extends DobbyException {
 	private static final long serialVersionUID = 1L;
 
 	public UserExistsException(String msg) {

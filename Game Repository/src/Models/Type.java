@@ -2,7 +2,7 @@ package Models;
 
 public enum Type {
 	
-	AtlerTheFuture("AF"),
+	AlterTheFuture("AF"),
 	Attack("AT"),
 	BeardCat("BC"),
 	Cattermelon("CM"),

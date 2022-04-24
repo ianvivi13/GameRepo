@@ -20,6 +20,8 @@ public class StatisticsPageServelet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		
+		
 		req.getRequestDispatcher("_view/statpage.jsp").forward(req, resp);
 	}
 	

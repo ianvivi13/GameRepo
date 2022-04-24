@@ -1,0 +1,59 @@
+.split {
+    height: 100%;
+    width: 50%;
+    
+    z-index: 1;
+    overflow-x: hidden;
+    padding-top: 5px;
+}
+
+#players {
+    bottom: 0;
+    border: 2px solid green;
+
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+
+#player1 {
+    border: 2px solid red;
+    left: 0;
+    width: 49.7%;
+    float: left;
+    height: 98%;
+    
+}
+
+#playermain {
+    border: 2px solid coral;
+    left: 0;
+    width: 49.4%;
+    float: left;
+    height: 96%;
+}
+
+#playeralt {
+    right: 0;
+    width: 49.4%;
+    height: 96%;
+    border: 2px solid pink;
+}
+
+#player2 {
+    right: 0;
+    width: 49.7%;
+    height: 98%;
+    border: 2px solid orange;
+}
+
+#deck {
+    top: -10;
+    border: 2px solid turquoise;
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 42%;
+
+}

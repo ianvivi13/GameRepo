@@ -38,6 +38,7 @@ public class NewAccountPageServlet extends HttpServlet {
 		IDatabase db = DatabaseProvider.getInstance();
 		try {
 			db.createUser(username, password);
+			//req.setAttribute("user", username);
 			resp.sendRedirect("http://localhost:8080/gamerepo/login");
 		} catch (UserExistsException e) {
 			System.out.println("Woops you're a dumb");

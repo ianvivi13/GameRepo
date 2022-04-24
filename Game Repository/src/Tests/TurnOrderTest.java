@@ -11,6 +11,7 @@ import Models.TurnOrder;
 
 public class TurnOrderTest {
 	private TurnOrder turns;
+	private TurnOrder duplicateTurns;
 	
 	@Before
 	public void setUp() {
@@ -19,6 +20,12 @@ public class TurnOrderTest {
 		turns.AddPlayer(2);
 		turns.AddPlayer(3);
 		turns.AddPlayer(4);
+		
+		duplicateTurns = new TurnOrder();
+		duplicateTurns.AddPlayer(1);
+		duplicateTurns.AddPlayer(2);
+		duplicateTurns.AddPlayer(3);
+		duplicateTurns.AddPlayer(4);
 	}
 	
 	@Test
@@ -65,9 +72,10 @@ public class TurnOrderTest {
 		assertEquals(turns.CurrentPlayer(),3);	// current player 3
 		turns.RemovePlayer(3);					// remove player 3
 		assertEquals(turns.CurrentPlayer(),1);	// current player 3
-		
-		
-		
-		
+	}
+	
+	@Test
+	public void testEquals() {
+		assertTrue(turns.equals(duplicateTurns));
 	}
 }

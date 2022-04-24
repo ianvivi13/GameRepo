@@ -117,6 +117,52 @@ public class Pile{
 		}
 	}
 	
+	public void populateExplodingKittens(int numPlayers) {
+		Type[] allTypes = Type.values();
+		for(int i = 0; i < numPlayers - 1; i++) {
+			pile.add(new ExplodingKittensCard(Type.ExplodingKitten));
+		}
+		
+		for(int i = 0; i < 6; i++) {
+			pile.add(new ExplodingKittensCard(Type.SeeTheFuture));
+			pile.add(new ExplodingKittensCard(Type.AlterTheFuture));
+			pile.add(new ExplodingKittensCard(Type.Shuffle));
+			pile.add(new ExplodingKittensCard(Type.Favor));
+			pile.add(new ExplodingKittensCard(Type.FeralCat));
+		}
+		
+		for(int i = 0; i < 7; i++) {
+			pile.add(new ExplodingKittensCard(Type.BeardCat));
+			pile.add(new ExplodingKittensCard(Type.Cattermelon));
+			pile.add(new ExplodingKittensCard(Type.HairyPotatoCat));
+			pile.add(new ExplodingKittensCard(Type.RainbowRalphingCat));
+			pile.add(new ExplodingKittensCard(Type.TacoCat));
+			pile.add(new ExplodingKittensCard(Type.DrawFromBottom));
+		}
+		
+		for(int i = 0; i < 7; i++) {
+			pile.add(new ExplodingKittensCard(Type.BeardCat));
+			pile.add(new ExplodingKittensCard(Type.Cattermelon));
+			pile.add(new ExplodingKittensCard(Type.HairyPotatoCat));
+			pile.add(new ExplodingKittensCard(Type.RainbowRalphingCat));
+			pile.add(new ExplodingKittensCard(Type.TacoCat));
+			pile.add(new ExplodingKittensCard(Type.DrawFromBottom));
+		}
+		
+		for(int i = 0; i < 10; i++) {
+			pile.add(new ExplodingKittensCard(Type.Nope));
+			pile.add(new ExplodingKittensCard(Type.Skip));
+		}
+		
+		for(int i = 0; i < 11; i++) {
+			pile.add(new ExplodingKittensCard(Type.Attack));
+		}
+		
+		for(int i = 0; i < 10; i++) {
+			pile.add(new ExplodingKittensCard(Type.Defuse));
+		}
+	}
+	
 	public void populateUno() {
 		Color[] allColors = Color.values();
 		Value[] allValues = Value.values();
@@ -163,9 +209,41 @@ public class Pile{
     
     public String getType() {
         if(!pile.isEmpty()) {
-            return String.valueOf(this.getCard(0).getClass());
+        	if(this.getCard(0) instanceof UnoCard) {
+        		return "UnoCard";
+        	}
+        	else if(this.getCard(0) instanceof ExplodingKittensCard) {
+        		return "ExplodingKittensCard";
+        	}
+        	else if(this.getCard(0) instanceof UnoFlipCard) {
+        		return "UnoFlipCard";
+        	}
+        	
+        	return "StandardCard";
         }
         return null;
+    }
+    
+    public boolean equals(Pile pile) {
+    	if (this.visibleIndex != pile.visibleIndex) {
+    		return false;
+    	}
+    	
+    	if (this.getType() != pile.getType() ) {
+    		return false;
+    	}
+    	
+    	if (this.getNumCards() != pile.getNumCards()) {
+    		return false;
+    	}
+    	
+    	for (int i = 0 ; i < this.getNumCards() ; i ++) {
+    		if (!this.getCard(i).equals(pile.getCard(i))) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
     }
 	
 
