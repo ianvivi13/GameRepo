@@ -2,10 +2,8 @@ package Models;
 
 public class ExplodingKittensCard implements Comparable<ExplodingKittensCard>{
 	private Type type;
-	private String imagePath;
 	
-	public ExplodingKittensCard(Type type, String imagePath) {
-		this.imagePath = imagePath;
+	public ExplodingKittensCard(Type type) {
 		this.type = type;	
 	}
 	
@@ -13,13 +11,9 @@ public class ExplodingKittensCard implements Comparable<ExplodingKittensCard>{
 		return type;
 	}
 	
-	public String getImagePath() {
-		return imagePath;
-	}
-	
 	@Override
 	public String toString() {
-		return imagePath.toString() + type.toString(); 
+		return type.toString(); 
 	}
 	
 	@Override

@@ -1,5 +1,9 @@
 package Database.elves;
 
+import java.util.List;
+
+import Models.Pile;
+import Models.Player;
 import Models.StatisticsBlackjack;
 import Models.StatisticsExplodingKittens;
 import Models.StatisticsGlobal;
@@ -18,7 +22,17 @@ public interface IDatabase {
 	public int createUser(String username, String password);
 	public void createAllStats(int UserId);
 	public int createBot(String gameKey, int difficulty);
-	public int createPile(String gameKey, int exposeIndex);
+	public int createPile(Pile pile);
+	public int createPlayer(Player player);
+	
+	// Deleters
+	public void deleteStats(int userId);
+	public void deleteStats(String username);
+	public void deleteUser(int userId);
+	public void deleteUser(String username);
+	public void deleteBot(int botId);
+	public void deletePlayer(int playerId);
+	public void deletePile(int pileId);
 	
 	// Card Initializers
 	public void initializeBlackJackCards();
@@ -43,8 +57,10 @@ public interface IDatabase {
 	
 	// User data retrieval
 	public String getUsernamefromUserID(int UserID);
+	//public Pile getPileFromPileId(int pileID);
 	public User getUser(int UserID);
 	public User getUser(String username);
+	public boolean isHuman(int PlayerId);
 	
 	// Stats updating - overloaded to allow use of username or user_id
 	public void updateGlobalStats(StatisticsGlobal stat, int user_id);
@@ -57,4 +73,12 @@ public interface IDatabase {
 	public void updateBlackjackStats(StatisticsBlackjack stat, String username);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, int user_id);
 	public void updateExplodingKittensStats(StatisticsExplodingKittens stat, String username);
+	
+	// Other updaters
+	public void updatePile(int pile_id, Pile pile);
+	//public void updatePlayer(int player_id, Player player);
+	
+	// Quality of Life
+	public String encodeCardIds(List<Object> cards);
+	//public int getPileFromCardList(List<Object> cards);
 }
