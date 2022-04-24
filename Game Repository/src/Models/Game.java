@@ -214,6 +214,14 @@ public class Game {
 		tko.Reverse();
 	}
 	
+	public void currentPlayer(String player) {
+		tko.CurrentPlayer();
+	}
+	
+	public void reverseOrder() {
+		tko.Reverse();
+	}
+	
 	public void updateStats() {
 		
 	}

@@ -24,8 +24,15 @@ public class UnoParentController extends Game {
 		}
 	}
 
+	//If the current card attempting to be 
 	public void wildPlusFour(UnoModel model, Color color) {
-		nextTurn();
+		if (model.getHand().getCard() == Value.Wild_Four) {
+			//change color
+			nextTurn();
+			for(int x = 0; x < 4; x++ ) {
+				model.getDeck().drawCard(model.getHand());
+			}
+		}
 	}
 	
 	public void skip(UnoModel model) {

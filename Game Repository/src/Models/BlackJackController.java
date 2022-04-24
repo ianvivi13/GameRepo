@@ -67,5 +67,4 @@ public class BlackJackController extends Game {
 //		db.updateBlackjackStats(stat, user_id);
 //		db.updateGlobalStats(stat, user_id);
 	}
-
 }
