@@ -25,14 +25,16 @@
 				break;
 
 			case 'uno':
-					
+
+				document.body.style.color = "black";
 				document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
 				localStorage.setItem("buttonValue", 'uno');
 				console.log("buttonValue");
 				break;    
 
 			case 'unoflip':
-					
+
+				document.body.style.color = "white";	
 				document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
 				localStorage.setItem("buttonValue", 'unoflip');
 				console.log("buttonValue");
@@ -40,13 +42,15 @@
 
 			case 'expoldingkittens':
 
+				document.body.style.color = "white";
 				document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
 				localStorage.setItem("buttonValue", 'expoldingkittens');
 				console.log("buttonValue");
 				break;
 
 			default:
-		
+			
+			document.body.style.color = "white";
 			document.body.style.backgroundImage = "url('_view/Back.png')";
 		}
 	
@@ -66,6 +70,7 @@
 	
 				case 'uno':
 						
+					document.body.style.color = "black";
 					document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
 					localStorage.setItem("buttonValue", 'uno');
 					console.log("buttonValue");
@@ -73,6 +78,7 @@
 	
 				case 'unoflip':
 					  
+					document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
 					localStorage.setItem("buttonValue", 'unoflip');
 					console.log("buttonValue");
@@ -80,12 +86,14 @@
 	
 				case 'expoldingkittens':
 	
+					document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
 					localStorage.setItem("buttonValue", 'expoldingkittens');
 					console.log("buttonValue");
 					break;
 
 					default:
+					document.body.style.color = "white";
                     document.body.style.backgroundImage = "url('_view/Back.png')";
 				}
 			};
@@ -93,7 +101,7 @@
 			</script>
 
 		<div class="HeaderStyle">
-    		Welcome:&nbsp;Admin
+    		Welcome: ${user}
     	</div>
 
         <div class = "BackButton">
@@ -139,7 +147,7 @@
 
 			<label class = "buttspace">
 				<input type="radio" name="butt" value="unoflip">
-				<img src="_view/images/ExplodingKittens/back.jpg">
+				<img src="_view/images/UnoFlipCards/FlipDark/v_f.jpg">
 			</label>
 
 			<label class = "buttspace">

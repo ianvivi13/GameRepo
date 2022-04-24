@@ -1,10 +1,12 @@
 package Servlets;
 
 import java.io.IOException;
+
+import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class JoinExtendedPageServlet extends HttpServlet {
+public class BlackJackPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -20,16 +22,17 @@ public class JoinExtendedPageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Join Extended Servlet: doGet");
+		System.out.println("BlackJack Servlet: doGet");
 		
-		req.getRequestDispatcher("_view/joinextended.jsp").forward(req, resp);
+		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		req.getRequestDispatcher("_view/joinextended.jsp").forward(req, resp);
+		
+		req.setAttribute("username", "user");
+		
+		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
 	}
-	
 }

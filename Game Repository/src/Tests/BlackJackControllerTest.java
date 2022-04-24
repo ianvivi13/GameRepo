@@ -19,11 +19,13 @@ public class BlackJackControllerTest{
 	
 	@Before
 	public void setUp() {
+		/*
 		controller = new BlackJackController();
 		model = new BlackJackModel();
 		turns = new TurnOrder();
 		turns.AddPlayer(1);
 		turns.AddPlayer(2);
+		*/
 	}
 	
 //	@Test

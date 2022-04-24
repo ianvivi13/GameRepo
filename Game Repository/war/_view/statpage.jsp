@@ -31,6 +31,7 @@
 
         case 'uno':
                 
+            document.body.style.color = "black";
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
             localStorage.setItem("buttonValue", 'uno');
             console.log("buttonValue");
@@ -45,6 +46,7 @@
 
         case 'unoflip':
                 
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
             localStorage.setItem("buttonValue", 'unoflip');
             console.log("buttonValue");
@@ -59,6 +61,7 @@
 
         case 'expoldingkittens':
 
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
             localStorage.setItem("buttonValue", 'expoldingkittens');
             console.log("buttonValue");
@@ -72,9 +75,10 @@
             break;
 
         default:
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/Back.png')";
             
-        }
+    }
 
         function radioClicked(){
             let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
@@ -82,10 +86,10 @@
             switch (shapeChoice) {
             case 'blackjack':
 
+                document.body.style.color = "black";
                 localStorage.setItem("buttonValue", 'blackjack');
                 console.log("buttonValue");
             
-                document.body.style.color = "black";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
 
                 document.getElementById("stats").innerHTML = 
@@ -98,6 +102,7 @@
 
             case 'uno':
 
+                document.body.style.color = "black";
                 localStorage.setItem("buttonValue", 'uno');
                 console.log("buttonValue");
                 
@@ -113,6 +118,7 @@
 
             case 'unoflip':
 
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'unoflip');
                 console.log("buttonValue");
                 
@@ -128,6 +134,7 @@
 
             case 'expoldingkittens':
 
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'expoldingkittens');
                 console.log("buttonValue");
 
@@ -142,7 +149,14 @@
                 break;
 
             default:
-                doucment.getElementById("stats").innerHTML = "Default"
+
+                document.body.style.color = "white";
+                doucment.getElementById("stats").innerHTML = 
+                `<span id = "tit"><h3>Global Stats</h3></span>
+                <p>Games Played:&nbsp; 100</p>
+                <p>Games Won:&nbsp; 40</p>
+                <p>Games Loss:&nbsp; 60</p>
+                <p>Win/Loss Ratio:&nbsp; 0.67</p `
             }
         };
 
@@ -151,7 +165,7 @@
 
 
         <div class = "HeaderStyle">
-            Stats:&nbsp;Admin
+            Stats: ${user}
         </div>
     
         <div class = "BackButton">
@@ -188,7 +202,7 @@
 
             <label class = "buttspace">
                 <input type="radio" name="butt" value="unoflip">
-                <img src="_view/images/ExplodingKittens/back.jpg">
+                <img src="_view/images/UnoFlipCards/FlipDark/v_f.jpg">
             </label>
 
             <label class = "buttspace">

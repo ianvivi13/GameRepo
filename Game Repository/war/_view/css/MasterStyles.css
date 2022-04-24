@@ -23,6 +23,17 @@
     opacity: 1;
 }
 
+.BlackJack {
+    background-image: url(Back.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #151019;
+    color: #ffffff;
+    margin: 0;
+}
+
 /* create the back button position - top right */
 .BackButton {
 	position: absolute;
@@ -56,6 +67,8 @@ button.ButtonStyle {
 /* create a standard for input based forms */
 .FormStyle {
     width: 100%;
+    display: inline-block;
+    white-space: nowrap;
 }
 .FormStyle input {
     font-size: 18px;
@@ -64,6 +77,7 @@ button.ButtonStyle {
     color: white;
     border-radius: 15px;
     width: 400px;
+    clear: both;
 }
 
 /* create a standard for input sections */

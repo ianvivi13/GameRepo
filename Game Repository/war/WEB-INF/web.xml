@@ -50,6 +50,10 @@
     <servlet-name>InstructionPageServlet</servlet-name>
     <servlet-class>Servlets.InstructionPageServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>BlackJackPageServlet</servlet-name>
+    <servlet-class>Servlets.BlackJackPageServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -95,5 +99,9 @@
   <servlet-mapping>
     <servlet-name>InstructionPageServlet</servlet-name>
     <url-pattern>/instructions</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BlackJackPageServlet</servlet-name>
+    <url-pattern>/blackjack</url-pattern>
   </servlet-mapping>
   </web-app>

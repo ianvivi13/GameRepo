@@ -27,6 +27,7 @@
 	
 				case 'uno':
 						
+                    document.body.style.color = "black";
 					document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
 					localStorage.setItem("buttonValue", 'uno');
 					console.log("buttonValue");
@@ -34,6 +35,7 @@
 	
 				case 'unoflip':
 					  
+                    document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
 					localStorage.setItem("buttonValue", 'unoflip');
 					console.log("buttonValue");
@@ -41,18 +43,21 @@
 	
 				case 'expoldingkittens':
 	
+                    document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
 					localStorage.setItem("buttonValue", 'expoldingkittens');
 					console.log("buttonValue");
 					break;
 
-					default:
+				default:
+                    
+                    document.body.style.color = "white";
                     document.body.style.backgroundImage = "url('_view/Back.png')";
 				}
 
         </script>
         
-        <div class="HeaderStyle">Singleplayer:&nbsp;Admin</div>
+        <div class="HeaderStyle">Singleplayer: ${user}</div>
         
         <div class="BackButton">
             <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
