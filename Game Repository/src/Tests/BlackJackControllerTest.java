@@ -13,7 +13,9 @@ import Models.Rank;
 import Models.StandardCard;
 import Models.Suit;
 import Models.TurnOrder;
+import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
+import Database.elves.InitDatabase;
 
 public class BlackJackControllerTest{
 	
@@ -22,15 +24,18 @@ public class BlackJackControllerTest{
 	private Player one;
 	private Player two;
 	private TurnOrder turns;
+	private IDatabase db;
 	
 	@Before
 	public void setUp() {
-		pp = new Game(null);
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		control = new BlackJackController(IDatabase.Key_Blackjack);
 		one = new Player(true, 1);
 		two = new Player(true, 2);
-		control.addPlayer(one.getUserBotID());
-		control.addPlayer(two.getUserBotID());
+		
+		control.addPlayer(db.createPlayer(one));
+		control.addPlayer(db.createPlayer(two));
 		
 	}
 	

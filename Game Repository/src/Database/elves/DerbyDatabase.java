@@ -561,12 +561,15 @@ public class DerbyDatabase implements IDatabase {
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
+				
+				System.out.println(game.getTurnOrder());
+				System.out.println(game.getMainPile());
+				System.out.println(game.getAltPile());
+				
+				
 				int turnId = createTurnOrder(game.getTurnOrder());
 				int pileId = createPile(game.getMainPile());
 				int altPileId = createPile(game.getAltPile());
-				for(Player player : game.getPlayers()) {
-					createPlayer(player);
-				}
 				
 				try {
 					stmt = conn.prepareStatement(

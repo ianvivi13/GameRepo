@@ -12,7 +12,7 @@ import Database.elves.InitDatabase;
 
 public class BlackJackController extends Game {
 	
-	private IDatabase db = null;
+	private IDatabase db;
 	private int i;
 	
 	public BlackJackController(String gameKey) {
@@ -20,6 +20,9 @@ public class BlackJackController extends Game {
 	}
 	
 	public void initialize() throws Exception {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		
 		getMainPile().populate();
 		getMainPile().shuffle();
 		getMainPile().setVisibleIndex(1000000000);
@@ -28,7 +31,7 @@ public class BlackJackController extends Game {
 			p.getPile().addCards(getMainPile().removeCards(2));
 		}
 		Game jlb = new Game(getGameKey());
-		i = db.createGame(jlb);
+		i = db.createGame(this);
 	}
 	
 //	public void hit(Game game) {
