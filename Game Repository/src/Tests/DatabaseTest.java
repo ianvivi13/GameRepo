@@ -268,6 +268,7 @@ public class DatabaseTest{
 		pileOne.shuffle();
 		db.updatePile(pileId, pileOne);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileOne));
+		db.deletePile(pileId);
 		assertTrue(isPileDeleted(pileId));
 	}
 	
@@ -278,6 +279,7 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileTwo);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileTwo));
+		db.deletePile(pileId);
 		assertTrue(isPileDeleted(pileId));
 	}
 	
@@ -288,6 +290,7 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileThree);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileThree));
+		db.deletePile(pileId);
 		assertTrue(isPileDeleted(pileId));
 	}
 	
@@ -311,7 +314,7 @@ public class DatabaseTest{
 		assertEquals(db.getNameFromPlayerId(playerId), botOne.getName());
 		
 		db.deletePlayer(playerId);
-		assertEquals(db.getPlayerFromPlayerId(playerId), null);
+		assertTrue(isPlayerDeleted(playerId));
 		
 		boolean flag = false;
 		try {
@@ -461,7 +464,6 @@ public class DatabaseTest{
 	}
 	
 	boolean isPileDeleted(int pileId) {
-	    db.deletePile(pileId);
 	    try {
 	        db.getPileFromPileId(pileId);
 	        return false;
@@ -470,6 +472,15 @@ public class DatabaseTest{
 
 	    }
 	}
-
+	
+	boolean isPlayerDeleted(int playerId) {
+        try {
+        	db.getPlayerFromPlayerId(playerId);
+        	System.out.println("Fuck");
+        	return false;
+        } catch (Exception PersistanceException) {
+	        return true;
+	    }
+	}
 	
 }

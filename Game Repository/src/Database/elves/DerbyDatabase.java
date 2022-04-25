@@ -2170,9 +2170,11 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Deletes a player given a player id
 	public void deletePlayer(int playerId) {
-		if (!isHuman(playerId)) {
-			deleteBot(getUserBotIdFromPlayerId(playerId));
-		}
+		int pileId = getPileIdFromPlayerId(playerId);
+		int altPileId = getAltPileIdFromPlayerId(playerId);
+		boolean isHuman = isHuman(playerId);
+		int userBotId = getUserBotIdFromPlayerId(playerId);
+		
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -2191,6 +2193,12 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
+		
+		deletePile(pileId);
+		deletePile(altPileId);
+		if(isHuman) {
+			deleteBot(userBotId);
+		}
 	}
 	
 	// Deletes a player given a player
