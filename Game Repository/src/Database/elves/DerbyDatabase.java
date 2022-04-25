@@ -562,9 +562,9 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				
-				System.out.println(game.getTurnOrder());
-				System.out.println(game.getMainPile());
-				System.out.println(game.getAltPile());
+//				System.out.println(game.getTurnOrder());
+//				System.out.println(game.getMainPile());
+//				System.out.println(game.getAltPile());
 				
 				
 				int turnId = createTurnOrder(game.getTurnOrder());
