@@ -14,6 +14,10 @@
 		let value = localStorage.getItem("buttonValue");
 		console.log(value);
 
+		//if (localStorage.getItem("buttonValue") == 'null' || localStorage.getItem("buttonValue") == null) {
+		//	document.body.style.backgroundImage = "url('_view/Back.png')";
+		//}
+
 			switch (value) {
 			case 'blackjack':
 				
@@ -51,7 +55,7 @@
 			default:
 			
 			document.body.style.color = "white";
-			document.body.style.backgroundImage = "url('_view/Back.png')";
+			document.body.style.backgroundImage = "url('_view/css/Back.png')";
 		}
 	
 
@@ -94,7 +98,7 @@
 
 					default:
 					document.body.style.color = "white";
-                    document.body.style.backgroundImage = "url('_view/Back.png')";
+                    document.body.style.backgroundImage = "url('_view/css/Back.png')";
 				}
 			};
 					radioClicked();

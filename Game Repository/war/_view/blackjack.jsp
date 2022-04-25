@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,11 +21,12 @@
     <div id="players">
         <div class="split" id="player1">
             <div class="split" id="playermain">
-                Main
+                
+                Main Player
             </div>
 
             <div class="split" id="playeralt">
-                Alt
+                Alt Player
             </div>
         </div>
         <div class="split" id="player2">

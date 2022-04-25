@@ -11,6 +11,9 @@
 	</head>
 	
 	<body class=StaticBackground>
+		<script>
+			localStorage.clear();
+		</script>
 		<div class="login">
 			<div class="title">Login</div>
 			<div class="FormStyle">

@@ -49,7 +49,7 @@
         default:
 
             document.body.style.color = "white";
-            document.body.style.backgroundImage = "url('_view/Back.png')";
+            document.body.style.backgroundImage = "url('_view/css/Back.png')";
         }
         </script>
     	<div class="HeaderStyle">
