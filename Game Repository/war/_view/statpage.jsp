@@ -149,7 +149,7 @@
                 break;
 
             default:
-
+                document.body.style.backgroundImage = "url('_view/css/Back.png')";
                 document.body.style.color = "white";
                 doucment.getElementById("stats").innerHTML = 
                 `<span id = "tit"><h3>Global Stats</h3></span>
