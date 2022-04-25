@@ -13,22 +13,28 @@ import Database.elves.InitDatabase;
 public class BlackJackController extends Game {
 	
 	private IDatabase db = null;
+	private Game blj;
 	private int i;
 	
 	public BlackJackController(String gameKey) {
 		super(gameKey);
+		blj = new Game(gameKey);
 	}
 	
 	public void initialize() throws Exception {
 		getMainPile().populate();
 		getMainPile().shuffle();
 		getMainPile().setVisibleIndex(1000000000);
-		
 		for(Player p : getPlayers()) {
-			p.getPile().addCards(getMainPile().removeCards(2));
+			
+			//getMainPile().removeCards(2);
+			//p.getPile().addCards(getMainPile().removeCards(2));
+			System.out.println(p);
+			System.out.println(p.getUserBotID());
+			
+				//System.out.println(getMainPile().getNumCards());
+				
 		}
-		Game jlb = new Game(getGameKey());
-		i = db.createGame(jlb);
 	}
 	
 //	public void hit(Game game) {

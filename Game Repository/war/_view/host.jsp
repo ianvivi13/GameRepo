@@ -43,6 +43,9 @@
 	
           document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+          //document.getElementById("topic").innerHTML = 'Exploding Kittens';
+          console.log(document.getElementById("topic").innerHTML)
+  
 					localStorage.setItem("buttonValue", 'expoldingkittens');
 					console.log("buttonValue");
 					break;
@@ -62,7 +65,7 @@
       </a>
     </div>
     
-    <h2 id="topic"><span class="underline">Card Game Desired</span></h2>
+    <h2 id="topic">Card Game Desired</h2>
     
     <div class="topics"><span class="underline">Difficulty Level</span>
     <div class="difficulty-slider">

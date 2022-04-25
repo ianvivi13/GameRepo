@@ -13,14 +13,14 @@ public class BlackJackPageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String user = (String) req.getSession().getAttribute("user");
-		if (user == null) {
-			System.out.println("User is not logged in");
+		//String user = (String) req.getSession().getAttribute("user");
+		//if (user == null) {
+			//System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
-			return;
-		}
+			//resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			//return;
+		//}
 		
 		System.out.println("BlackJack Servlet: doGet");
 		

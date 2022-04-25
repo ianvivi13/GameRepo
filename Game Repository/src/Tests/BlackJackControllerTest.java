@@ -28,7 +28,7 @@ public class BlackJackControllerTest{
 		pp = new Game(null);
 		control = new BlackJackController(IDatabase.Key_Blackjack);
 		one = new Player(true, 1);
-		two = new Player(true, 2);
+		two = new Player(false, 2);
 		control.addPlayer(one.getUserBotID());
 		control.addPlayer(two.getUserBotID());
 		
@@ -37,6 +37,7 @@ public class BlackJackControllerTest{
 	@Test
 	public void testInitialize() throws Exception {
 		control.initialize();
+	}
 	
 	@Test
 	public void testHold() throws Exception {

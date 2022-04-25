@@ -54,7 +54,31 @@
                     document.body.style.color = "white";
                     document.body.style.backgroundImage = "url('_view/css/Back.png')";
 				}
+                
+    
+                function gameFunction() {
+                
+                    if (value == 'blackjack') {
+                        location.href = "http://localhost:8080/gamerepo/blackjack";
+                    
+                    }   else if (value == 'uno') {
 
+                        location.href = "http://localhost:8080/gamerepo/home";
+
+                    }   else if (value == 'unoflip') {
+
+                        location.href = "http://localhost:8080/gamerepo/home";
+
+                    }   else if (value == 'expoldingkittens') {
+
+                        location.href = "http://localhost:8080/gamerepo/home";
+
+                    } else {
+
+                        location.href = "http://localhost:8080/gamerepo/home";
+
+                    }
+            }
         </script>
         
         <div class="HeaderStyle">Singleplayer: ${user}</div>
@@ -98,12 +122,7 @@
           </label>
           <br><br>
 
-    <a href="http://localhost:8080/gamerepo/singleplayer"><button class="branch" type="submit">Play</button><br>
+    <a onClick="gameFunction()" ><button class="branch" type="submit">Play</button><br>
     </a>
     </body>
 </html>
-
-
-
-
-

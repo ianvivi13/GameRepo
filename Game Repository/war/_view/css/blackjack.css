@@ -5,6 +5,7 @@
     z-index: 1;
     overflow-x: hidden;
     padding-top: 5px;
+    display: inline-block;
 }
 
 #players {
@@ -55,5 +56,18 @@
     left: 0;
     right: 0;
     height: 42%;
+}
 
+button.ButtonStyle {
+    width: 190px;
+    padding: 12px 10px;
+    font-size: 18px;
+    color: #ffffff;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+    text-align: center;
+}
+
+#center {
+    text-align: center;
 }
