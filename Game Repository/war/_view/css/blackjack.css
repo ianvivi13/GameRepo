@@ -28,7 +28,7 @@
 }
 
 #playermain {
-    border: 2px solid coral;
+    
     left: 0;
     width: 49.4%;
     float: left;
@@ -39,7 +39,7 @@
     right: 0;
     width: 49.4%;
     height: 96%;
-    border: 2px solid pink;
+    
 }
 
 #player2 {
@@ -68,6 +68,17 @@ button.ButtonStyle {
     text-align: center;
 }
 
-#center {
+.center {
     text-align: center;
+    margin-top: 62%;
+}
+
+#centers {
+    text-align: center;
+}
+
+#Hit {
+    margin-top: 68%;
+    text-align: center;
+    margin-left: 29%;
 }

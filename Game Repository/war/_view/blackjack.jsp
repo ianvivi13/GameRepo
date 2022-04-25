@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+
+<!% BotNameGenerator botName = new BotNameGenerator(); %>
+
+
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
@@ -23,16 +27,17 @@
     <div id="players">
         <div class="split" id="player1">
             <div class="split" id="playermain">
-                <div id="center">Main Hand: ${user}</div>
+                <div id="centers">Main Hand: ${user}</div>
                 
-
+                <form>
                 <button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
+            </form>
             </div>
 
             <div class="split" id="playeralt">
-                <div id="center">Alt Hand: ${user}</div>
+                <div id="centers">Alt Hand: ${user}</div>
                 
-                <form>
+                <form class="center">
                     <button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
                 <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
                 </form>
@@ -40,13 +45,13 @@
         </div>
         <div class="split" id="player2">
             <div class="split" id="playermain">
-                <div id="center">
+                <div id="centers">
                     Main Hand: 
                 </div>
             </div>
 
             <div class="split" id="playeralt">
-                <div id="center">
+                <div id="centers">
                     Alternate Hand: 
                 </div>
             </div>
