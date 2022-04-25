@@ -573,7 +573,6 @@ public class DerbyDatabase implements IDatabase {
 							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor)"
 							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
 						);
-					
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
 					stmt.setString(3, sqlTranscoder.encode(game.getPlayerIds()));

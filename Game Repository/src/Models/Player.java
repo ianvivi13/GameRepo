@@ -38,7 +38,7 @@ public class Player {
 	}
 	
 	public void setAltPile(Pile altPile) {
-		this.altPile = altPile;
+		this.altPile = pile;
 	}
 	
 	public boolean equals(Player player) {

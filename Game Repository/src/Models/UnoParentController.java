@@ -5,6 +5,8 @@ public class UnoParentController extends Game {
 	Color[] allColors = Color.values();
 	Value[] allValues = Value.values();
 	
+	Game uno = new Game(gameCode,gameKey);
+	
 	public UnoParentController(String gameCode, String gameKey) {
 		super(gameCode, gameKey);
 	}
