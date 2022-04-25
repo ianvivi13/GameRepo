@@ -130,8 +130,8 @@ public class Game {
 	public void addPlayer(int playerId) {
 		db = DatabaseProvider.getInstance();
 		tko.AddPlayer(playerId);
-		players.add(db.getPlayerFromPlayerId(playerId));
-		
+		playerIds.add(playerId);
+		players.add(db.getPlayerFromPlayerId(playerId));	
 	}
 	
 	public void removePlayerFromTurn(int playerId) {

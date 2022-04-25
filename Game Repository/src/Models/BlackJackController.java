@@ -20,6 +20,9 @@ public class BlackJackController extends Game {
 	}
 	
 	public void initialize() throws Exception {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		
 		getMainPile().populate();
 		getMainPile().shuffle();
 		getMainPile().setVisibleIndex(1000000000);
