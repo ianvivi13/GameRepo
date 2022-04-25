@@ -13,7 +13,9 @@ import Models.Rank;
 import Models.StandardCard;
 import Models.Suit;
 import Models.TurnOrder;
+import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
+import Database.elves.InitDatabase;
 
 public class BlackJackControllerTest{
 	
@@ -21,59 +23,56 @@ public class BlackJackControllerTest{
 	private BlackJackController control;
 	private Player one;
 	private Player two;
-	private TurnOrder turns;
+	private IDatabase db;
 	
 	@Before
 	public void setUp() {
-		pp = new Game(null);
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		control = new BlackJackController(IDatabase.Key_Blackjack);
 		one = new Player(true, 1);
-		two = new Player(false, 2);
-		control.addPlayer(one.getUserBotID());
-		control.addPlayer(two.getUserBotID());
+		two = new Player(true, 2);
+		control.addPlayer(db.createPlayer(one));
+		control.addPlayer(db.createPlayer(two));
 		
 	}
 	
 	@Test
 	public void testInitialize() throws Exception {
 		control.initialize();
+	
+		// main deck should have 48 cards
+		assertEquals(48, control.getMainPile().getNumCards());
+		assertEquals(1000000000, control.getMainPile().getVisibleIndex());	
+
+		assertEquals(2, control.getPlayers().get(0).getPile().getNumCards());
+		assertEquals(0, control.getPlayers().get(0).getPile().getVisibleIndex());
+		
+		assertEquals(2, control.getPlayers().get(1).getPile().getNumCards());
+		assertEquals(0, control.getPlayers().get(1).getPile().getVisibleIndex());
 	}
 	
 	@Test
 	public void testHold() throws Exception {
-		
-//		one = control.getPlayers().get(turns.CurrentPlayer());
-//		two = control.getPlayers().get(turns.CurrentPlayer() + 1);
-//		assertEquals(2, one.getPile().getNumCards());
-//		assertEquals(0, one.getPile().getVisibleIndex());
-//		
-//		assertEquals(2, two.getPile().getNumCards());
-//		assertEquals(0, two.getPile().getVisibleIndex());
+		control.hold();
+		assertEquals(2, control.getTurnOrder().CurrentPlayer());
 	}
 	
-//	@Test
-//	public void testHold() throws Exception {
-//		control.hold();
-//		assertEquals(2, turns.CurrentPlayer());
-//	}
+	@Test
+	public void testHit() throws Exception {
+		control.initialize();
+		
+		assertEquals(48, control.getMainPile().getNumCards());
+		
+		assertEquals(2, control.getPlayers().get(0).getPile().getNumCards());
+		
+		control.hit(one);
+		
+		assertEquals(47, control.getMainPile().getNumCards());
+		assertEquals(3, one.getPile().getNumCards());
+		
+	}
 	
-//	@Test
-//	public void testHit() throws Exception {
-//		control.initialize();
-//		
-//		assertEquals(48, control.getMainPile().getNumCards());
-//		Player one = control.getPlayers().get(turns.CurrentPlayer());
-//		Player two = control.getPlayers().get(turns.CurrentPlayer() + 1);
-//		assertEquals(2, one.getPile().getNumCards());
-//		assertEquals(2, two.getPile().getNumCards());
-//		
-//		control.hit();
-//		
-//		assertEquals(47, control.getMainPile().getNumCards());
-//		assertEquals(3, one.getPile().getNumCards());
-//		
-//	}
-//	
 //	@Test
 //	public void testSplit() throws Exception {
 //	Pile p1 = new Pile();
