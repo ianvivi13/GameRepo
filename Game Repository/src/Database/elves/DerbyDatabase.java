@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
-
 import java.io.File;
 
 import Models.sqlTranscoder;
@@ -561,19 +559,21 @@ public class DerbyDatabase implements IDatabase {
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
+				
+//				System.out.println(game.getTurnOrder());
+//				System.out.println(game.getMainPile());
+//				System.out.println(game.getAltPile());
+				
+				
 				int turnId = createTurnOrder(game.getTurnOrder());
 				int pileId = createPile(game.getMainPile());
 				int altPileId = createPile(game.getAltPile());
-				for(Player player : game.getPlayers()) {
-					createPlayer(player);
-				}
 				
 				try {
 					stmt = conn.prepareStatement(
 							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor)"
 							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
 						);
-					
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
 					stmt.setString(3, sqlTranscoder.encode(game.getPlayerIds()));

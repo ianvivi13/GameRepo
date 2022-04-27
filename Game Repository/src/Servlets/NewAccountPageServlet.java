@@ -40,13 +40,14 @@ public class NewAccountPageServlet extends HttpServlet {
 			db.createUser(username, password);
 			//req.setAttribute("user", username);
 			resp.sendRedirect("http://localhost:8080/gamerepo/login");
-		} catch (UserExistsException e) {
+		} catch (Exception e) {
 			System.out.println("Woops you're a dumb");
+			resp.sendRedirect("http://localhost:8080/gamerepo/new");
 			
 			PrintWriter out = resp.getWriter(); 
 			out.println("<script type=\"text/javascript\">"); 
 			out.println("alert('Username already exist');"); 
-			out.println("location='http://localhost:8080/gamerepo/new';"); 
+			out.println("location=http://localhost:8080/gamerepo/new"); 
 			out.println("</script>");
 		} 
 	}
