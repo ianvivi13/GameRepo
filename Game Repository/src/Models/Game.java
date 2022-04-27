@@ -211,5 +211,20 @@ public class Game {
 		
 		return true;
 	}
-
+	
+	public void reverseTurnOrder() {
+		tko.Reverse();
+	}
+	
+	public void currentPlayer(String player) {
+		tko.CurrentPlayer();
+	}
+	
+	public void reverseOrder() {
+		tko.Reverse();
+	}
+	
+	public void updateStats() {
+		
+	}
 }

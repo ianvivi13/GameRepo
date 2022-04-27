@@ -12,6 +12,15 @@ public class HomePageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		String user = (String) req.getSession().getAttribute("user");
+		if (user == null) {
+			System.out.println("User is not logged in");
+			
+			// user is not logged in, or the session expired
+			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			return;
+		}
+		
 		System.out.println("Home Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
@@ -21,6 +30,18 @@ public class HomePageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		User model = new User(null, null);
+		
+		String username = getString(resp, "username");
+		model.setUsername(username);
+		
+		req.setAttribute("user", model);
+		
 		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
+	}
+
+	private String getString(HttpServletResponse req, String name) {
+		return ((ServletRequest) req).getParameter(name);
+		
 	}
 }

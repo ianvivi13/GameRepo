@@ -11,8 +11,52 @@
     </head>
     
     <body class=StaticBackground>
+		<script>
+			let value = localStorage.getItem("buttonValue");
+				console.log(value);
+	
+					switch (value) {
+					case 'blackjack':
+						
+						document.body.style.color = "black";
+						document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+	
+						localStorage.setItem("buttonValue", 'blackjack');
+						console.log("buttonValue");
+						break;
+		
+					case 'uno':
+
+						document.body.style.color = "black";	
+						document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+						localStorage.setItem("buttonValue", 'uno');
+						console.log("buttonValue");
+						break;    
+		
+					case 'unoflip':
+						  
+						document.body.style.color = "white";
+						document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+						localStorage.setItem("buttonValue", 'unoflip');
+						console.log("buttonValue");
+						break;
+		
+					case 'expoldingkittens':
+		
+						document.body.style.color = "white";
+						document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+						localStorage.setItem("buttonValue", 'expoldingkittens');
+						console.log("buttonValue");
+						break;
+	
+					default:
+						document.body.style.color = "white";
+			  			document.body.style.backgroundImage = "url('_view/css/Back.png')";
+					}
+		  </script>
+
     	<div class="HeaderStyle">
-    		<a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button>
+    		<a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" id="game" type="submit">Host</button>
     	</div>
     	<div class="BackButton">
     		<a href="http://localhost:8080/gamerepo/home">

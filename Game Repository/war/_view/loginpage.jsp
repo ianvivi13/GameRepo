@@ -11,25 +11,26 @@
 	</head>
 	
 	<body class=StaticBackground>
+		<script>
+			localStorage.clear();
+		</script>
 		<div class="login">
 			<div class="title">Login</div>
 			<div class="FormStyle">
 				<form class="form" action="${pageContext.servletContext.contextPath}/login" method="post">
 					<div class="InputStyle">
-						<input id="uword" type="text" name="Username" placeholder="Username" required>
+						<input id="uword" type="text" name="Username" placeholder="Username" value="${username}" required>
 					</div>
 					<div class="InputStyle">
-						<input id="pword" type="password" name="Password" placeholder="Password" required>
+						<input id="pword" type="password" name="Password" placeholder="Password" value="${password}" required>
 					</div>
 		
 						<button class="ButtonStyle" type="submit">Sign In</button>
 					
-					<a href="http://localhost:8080/gamerepo/home">
-						<button class="ButtonStyle" type="submit">Play as Guest</button>
+					<a href="http://localhost:8080/gamerepo/new">
+						<button class="ButtonStyle" form="false">Create New Account</button>
 					</a>
-					<div class="signup">
-						<a href="http://localhost:8080/gamerepo/new">Create New Account</a>
-					</div>
+					
 				</form>
 			</div>
 		</div>
