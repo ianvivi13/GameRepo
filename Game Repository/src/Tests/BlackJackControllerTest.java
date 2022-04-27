@@ -27,7 +27,6 @@ public class BlackJackControllerTest{
 	
 	@Before
 	public void setUp() {
-<<<<<<< HEAD
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		pp = new Game(IDatabase.Key_Blackjack);
@@ -52,15 +51,6 @@ public class BlackJackControllerTest{
 		
 		assertEquals(2, pp.getPlayers().get(1).getPile().getNumCards());
 		assertEquals(0, pp.getPlayers().get(1).getPile().getVisibleIndex());
-=======
-		/*
-		controller = new BlackJackController();
-		model = new BlackJackModel();
-		turns = new TurnOrder();
-		turns.AddPlayer(1);
-		turns.AddPlayer(2);
-		*/
->>>>>>> refs/remotes/origin/main
 	}
 	
 //	@Test
