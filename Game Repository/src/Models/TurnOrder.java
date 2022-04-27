@@ -71,8 +71,8 @@ public class TurnOrder {
 	}
 
 	public int CurrentPlayer() {
-		int i = TurnList.isEmpty() ? null : TurnList.get(pointer);
-		return i;
+			int i = TurnList.isEmpty() ? null : TurnList.get(pointer);
+			return i;
 	}
 	
 	public void RemovePlayer(Integer player) {
