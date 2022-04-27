@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-
+<@ page import ="java.util.*" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/c" %>
 <!% BotNameGenerator botName = new BotNameGenerator(); %>
-
 
 <html>
     <head>
@@ -26,27 +26,29 @@
     </div>
     <div id="players">
         <div class="split" id="player1">
-            <div class="split" id="playermain">
                 <div id="centers">Main Hand: ${user}</div>
                 
+                <c:url
+
                 <form>
                 <button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
             </form>
-            </div>
+           
 
-            <div class="split" id="playeralt">
+           
                 <div id="centers">Alt Hand: ${user}</div>
                 
-                <form class="center">
-                    <button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
-                <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
-                </form>
-            </div>
+            <form class="center">
+                <button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
+            <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+            </form>
         </div>
         <div class="split" id="player2">
             <div class="split" id="playermain">
                 <div id="centers">
                     Main Hand: 
+
+                    
                 </div>
             </div>
 
