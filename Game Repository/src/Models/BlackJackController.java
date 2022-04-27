@@ -28,14 +28,14 @@ public class BlackJackController {
 		for(Player p : model.getPlayers()) {
 			p.getPile().addCards(model.getMainPile().removeCards(2));
 		}
-		gameID = db.createGame(model);
+		db.createGame(model);
 	}
 	
-//	// for hold we want to basically skip a players turn
-//	public void hold(Game model){
-//		model.nextTurn();
-//		db.updateGame(i, model);
-//	}
+	// for hold we want to basically skip a players turn
+	public void hold(Game model){
+		model.nextTurn();
+		db.updateGame(db.getGameIdFromGame(model), model);
+	}
 	
 //	
 //	public void hit() {
