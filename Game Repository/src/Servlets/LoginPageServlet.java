@@ -39,7 +39,7 @@ public class LoginPageServlet extends HttpServlet {
 		InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
 		
-		if (db.login(username, password)) { //Changed from try to if
+		if (db.login(username, password)) {
 			user.setUsername(username);
 			user.setPassword(password);
 			//System.out.println(user.getUsername());
