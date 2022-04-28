@@ -9,10 +9,12 @@ import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import Models.UnoCard;
 import Models.StandardCard;
 import Models.Pile;
 import Models.Rank;
 import Models.Suit;
+
 public class PileTest{
 	
 	private Pile pile;
@@ -290,5 +292,14 @@ public class PileTest{
 	@Test
 	public void testEquals() {
 		assertTrue(fullPile.equals(duplicatePile));
+	}
+	
+	@Test
+	public void Temporary() {
+		ArrayList<Object> arr = fullUnoPile.getPile();
+		for(Object c : arr) {
+			UnoCard t = ((UnoCard) c);
+			System.out.println(t.getImagePath());
+		}
 	}
 }
