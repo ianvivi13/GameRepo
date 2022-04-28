@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<@ page import ="java.util.*" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/c" %>
-<!% BotNameGenerator botName = new BotNameGenerator(); %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 
 <html>
     <head>
@@ -9,6 +10,10 @@
         <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
         <link rel="stylesheet" type="text/css" href="_view/css/blackjack.css"/>
 
+        <%@page import="Models.StandardCard" %>
+        <%@page import="Models.BotNameGenerator" %>
+        <%@page import="Models.Pile" %>
+        
         <title>
             BlackJack
         </title>
@@ -17,24 +22,28 @@
         <script>
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
             document.body.style.color = "black";
+            
+            <%BotNameGenerator botName = new BotNameGenerator(); %>
         </script>
         <div id="left"><a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
     </div>
     <div id="deck">
-        Deck
+		
+    <% for (int i = 0; i < 3; i++) {
+    	out.print()
+    }
+    	>
+    
+    
     </div>
     <div id="players">
         <div class="split" id="player1">
                 <div id="centers">Main Hand: ${user}</div>
-                
-                <c:url
 
                 <form>
                 <button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
             </form>
-           
-
            
                 <div id="centers">Alt Hand: ${user}</div>
                 
@@ -46,7 +55,7 @@
         <div class="split" id="player2">
             <div class="split" id="playermain">
                 <div id="centers">
-                    Main Hand: 
+                    Main Hand: <% out.println(botName.GenerateName()); %>
 
                     
                 </div>
