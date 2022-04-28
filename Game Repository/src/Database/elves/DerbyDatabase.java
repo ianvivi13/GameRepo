@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
-
 import java.io.File;
 
 import Models.sqlTranscoder;

@@ -5,23 +5,21 @@ import java.util.Random;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
-import Database.elves.InitDatabase;
 
 public class Game {
 	
-	private ArrayList<Integer> playerIds;
-	private ArrayList<Player> players;
-	private Pile mainPile;
-	private Pile altPile;
-	private String gameCode;
-	private String gameKey;
-	private TurnOrder tko;
-	private boolean cardSideA;
-	private String wildColor;
-	private IDatabase db;
+	protected ArrayList<Integer> playerIds;
+	protected ArrayList<Player> players;
+	protected Pile mainPile;
+	protected Pile altPile;
+	protected String gameCode;
+	protected String gameKey;
+	protected TurnOrder tko;
+	protected boolean cardSideA;
+	protected String wildColor;
+	protected IDatabase db;
 	
 	public Game(String gameKey){
-		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		playerIds = new ArrayList<>();
 		players = new ArrayList<>();
@@ -130,8 +128,8 @@ public class Game {
 	public void addPlayer(int playerId) {
 		db = DatabaseProvider.getInstance();
 		tko.AddPlayer(playerId);
-		playerIds.add(playerId);
-		players.add(db.getPlayerFromPlayerId(playerId));	
+		players.add(db.getPlayerFromPlayerId(playerId));
+		
 	}
 	
 	public void removePlayerFromTurn(int playerId) {

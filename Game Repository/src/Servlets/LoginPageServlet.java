@@ -38,8 +38,8 @@ public class LoginPageServlet extends HttpServlet {
 		
 		InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
-		try {
-			db.login(username, password);
+		
+		if (db.login(username, password)) {
 			user.setUsername(username);
 			user.setPassword(password);
 			//System.out.println(user.getUsername());
@@ -47,7 +47,7 @@ public class LoginPageServlet extends HttpServlet {
 			req.getSession().setAttribute("user", username);
 			//req.setAttribute("user", username);
 			resp.sendRedirect("http://localhost:8080/gamerepo/home");
-		} catch (UserExistsException e) {
+		} else {
 			System.out.println("Woops you're a dumb");
 			
 			PrintWriter out = resp.getWriter(); 
