@@ -13,6 +13,7 @@
         <%@page import="Models.StandardCard" %>
         <%@page import="Models.BotNameGenerator" %>
         <%@page import="Models.Pile" %>
+        <%@page import="Models.Game" %>
         
         <title>
             BlackJack
@@ -29,47 +30,73 @@
         </a>
     </div>
     <div id="deck">
-		
-    <% for (int i = 0; i < 3; i++) {
-    	out.print()
-    }
-    	>
-    
+	<div id="imgCenter">
+    <% for (int i = 0; i < 52; i++) { %>
+    	<img id="pili" src="_view/images/StandardCards/back-sm.png">
+  <%  }
+    	%>
+    	</div>
     
     </div>
     <div id="players">
         <div class="split" id="player1">
                 <div id="centers">Main Hand: ${user}</div>
-
+                
+                //User user = getAttribue
+                <% if (playOne == user) {
+                		
+                	//DISPLAY CARDS EXPOSED IF THIS IS PLAYER 1... Only the top card exposed
+                   } else {
+                	   //Display the cards unexposed
+                   }
+                	
+                	%>
+                
+                //DISPLAY CARDS HERE
+                
+                //If player 2 does not display the retrieved attribute of the second player, do not display
+                <% if (playOne == user) { %> //---------------------------------
                 <form>
                 <button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
-            </form>
-           
-                <div id="centers">Alt Hand: ${user}</div>
-                
+            </form>         
+            
             <form class="center">
                 <button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
-            <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+                <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
             </form>
+            
+            	<% } %>
+            
         </div>
         <div class="split" id="player2">
-            <div class="split" id="playermain">
-                <div id="centers">
-                    Main Hand: <% out.println(botName.GenerateName()); %>
-
-                    
-                </div>
-            </div>
-
-            <div class="split" id="playeralt">
-                <div id="centers">
-                    Alternate Hand: 
-                </div>
-            </div>
+        	//Should be retrieved from the db
+        	<div id="centers">Main Hand: <% out.println(botName.GenerateName()); %> </div>
+            
+        	//User user = getAttribue
+            <% if (playOne == user) {
+            		
+            	//DISPLAY CARDS EXPOSED IF THIS IS PLAYER 1... Only the top card exposed
+               } else {
+            	   //Display the cards unexposed
+               }
+            	
+            	%>
+        	
+            	//If player 2 does not display the retrieved attribute of the second player, do not display
+        		<% if ( ) {%>
+        		<form>
+            		<button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
+            	</form>
+        
+        		<form class="center">
+            		<button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
+            		<button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+            	</form>
+        
+        <% } %>
+      
+        	</div>
         </div>
-    </div>
-
-
     </body>
 
 </html>

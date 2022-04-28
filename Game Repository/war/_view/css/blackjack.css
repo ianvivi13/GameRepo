@@ -11,7 +11,7 @@
 #players {
     bottom: 0;
     border: 2px solid green;
-
+    flex-wrap: wrap;
     position: fixed;
     left: 0;
     right: 0;
@@ -70,7 +70,6 @@ button.ButtonStyle {
 
 .center {
     text-align: center;
-    margin-top: 62%;
 }
 
 #centers {
@@ -78,7 +77,23 @@ button.ButtonStyle {
 }
 
 #Hit {
-    margin-top: 68%;
+    margin-top: 32%;
     text-align: center;
-    margin-left: 29%;
+    margin-left: 37.8%;
 }
+
+#pili {
+    
+    margin-left: -8%;
+}
+
+#pili:nth-child(1) {
+    margin-left: 2.5%;
+    align-items: center;
+}
+
+#imgCenter {
+    margin-left: 42%;
+    margin-top: 4%;
+}
+
