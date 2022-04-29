@@ -1593,7 +1593,7 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
 						stmt.setBoolean(2, game.getCardSideA());
 						stmt.setString(3, game.getWildColor());
-						
+						stmt.setInt(4, gameId);
 						stmt.executeUpdate();
 					}
 					
