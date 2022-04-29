@@ -10,7 +10,6 @@ public class BlackJackController {
 	
 
 	private IDatabase db;
-	private boolean win = false;
 	
 	
 	public int initialize(Game model) throws Exception {
@@ -62,18 +61,15 @@ public class BlackJackController {
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		Player next = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer() + 1);
 		if(current.getPile().getValueStandard() == 21 && next.getPile().getValueStandard() <= current.getPile().getValueStandard()) {
-			win = true;
+			return true;
 		}
 		else if(current.getPile().getValueStandard() < 21 && next.getPile().getValueStandard() < current.getPile().getValueStandard()) {
-			win = true;
+			return true;
 		}
 		else if(current.getPile().getValueStandard() == next.getPile().getValueStandard() && current.getPile().getNumCards() < next.getPile().getNumCards()) {
-			win = true;
+			return true;
 		}
-		else {
-			win = false;
-		}
-		return win;
+		return false;
 	}
 	
 	public boolean checkBust(Game model) {
