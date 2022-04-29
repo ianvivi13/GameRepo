@@ -46,4 +46,21 @@ public class UnoCard implements Comparable<UnoCard>{
 		return this.values.compareTo(o.values);
 	}
 	
+	public String getImagePath() {
+		String im = "_view/images/UnoCards/";
+		String c = color.toString();
+		String v = values.toString();
+		
+		im += c.toLowerCase();
+		
+		im += "_";
+		
+		im += v.toLowerCase();
+		
+		return im + ".png";
+	}
+	
+	public String getBackPath() {
+		return "_view/images/UnoCards/back.png";
+	}
 }

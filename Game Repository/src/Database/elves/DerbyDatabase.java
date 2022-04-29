@@ -124,9 +124,7 @@ public class DerbyDatabase implements IDatabase {
 		
 	// method to delete Dobby.db if exists and user accepts before re-creation
 	private static Boolean DeleteDobby() {
-		// check if Dobby.db exists
 		File DobbyPath = new File("Dobby.db");
-		Boolean DobbyExists = DobbyPath.exists();
 		deleteDirectory(DobbyPath);
 		return true;
 	}
@@ -317,11 +315,53 @@ public class DerbyDatabase implements IDatabase {
 				StatisticsExplodingKittens statFour = new StatisticsExplodingKittens();
 				StatisticsGlobal statFive = new StatisticsGlobal();
 				try {
-					db.createAllStats(db.createUser("NewUser","password still"));
-					db.createAllStats(db.createUser("User","password still"));
+					int userOne = db.createUser("NewUser","password still");
+					int userTwo = db.createUser("User","password still");
+					db.createAllStats(userOne);
+					db.createAllStats(userTwo);
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
+					
+					/*
+					 create game with game stuffs in it to test display
+					 */				
+					
+					// create piles
+					Pile empty = new Pile();
+					Pile main = new Pile();
+					main.populate();
+					main.shuffle();
+					Pile pileOne = new Pile();
+					Pile pileTwo = new Pile();
+					pileOne.addCards(main.removeCards(2));
+					pileTwo.addCards(main.removeCards(3));
+					
+					// create players
+					Player playOne = new Player(true, userOne);
+					Player playTwo = new Player(true, userTwo);
+					playOne.setAltPile(empty);
+					playTwo.setAltPile(empty);
+					playOne.setPile(pileOne);
+					playTwo.setPile(pileTwo);
+					
+					// initialize players in database
+					int p1 = db.createPlayer(playOne);
+					int p2 = db.createPlayer(playTwo);
+					
+					// create game
+					Game game = new Game("BLJ");
+					game.setMainPile(main);
+					game.setAltPile(empty);
+					game.addPlayer(p1);
+					game.addPlayer(p2);
+					
+					// initialize game in database
+					int g = db.createGame(game);
+					System.out.println(g);
+					/*
+					end fake game creation
+					 */
 					
 					return true;
 				} catch (UserExistsException e) {
@@ -428,43 +468,50 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Creates a player and adds it to the Player table
 	public int createPlayer(Player player) {
-		return executeTransaction(new Transaction<Integer>() {
-			@Override
-			public Integer execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				int pileId = createPile(player.getPile());
-				int altPileId = createPile(player.getAltPile());
-				
-				try {
-					stmt = conn.prepareStatement(
-						"INSERT INTO Player (player_bot_id, human, pile_id, alt_pile_id)" +
-						"	VALUES (?, ?, ?, ?)"
-					);
-					stmt.setInt(1, player.getUserBotID());
-					stmt.setBoolean(2, player.getIsHuman());
-					stmt.setInt(3, pileId);
-					stmt.setInt(4, altPileId);
-					stmt.executeUpdate();
-					stmt.close();
-					
-					stmt = conn.prepareStatement(
-						"SELECT MAX(player_id) AS player_id" +
-						"	FROM Player"
-					);
-					resultSet = stmt.executeQuery();
-					resultSet.next();
-					int ret = resultSet.getInt("player_id");
-					stmt.close();
-					
-					return ret;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
+
+			int i = getPlayerIdFromPlayer(player);
+			System.out.println(i);
+			if (i > 0) {
+				throw new PlayerAlreadyExistsException("Player is in database already, delete them or avoid creating them");
+			} else {
+				return executeTransaction(new Transaction<Integer>() {
+					@Override
+					public Integer execute(Connection conn) throws SQLException {
+						PreparedStatement stmt = null;
+						ResultSet resultSet = null;
+						int pileId = createPile(player.getPile());
+						int altPileId = createPile(player.getAltPile());
+						
+						try {
+							stmt = conn.prepareStatement(
+								"INSERT INTO Player (player_bot_id, human, pile_id, alt_pile_id)" +
+								"	VALUES (?, ?, ?, ?)"
+							);
+							stmt.setInt(1, player.getUserBotID());
+							stmt.setBoolean(2, player.getIsHuman());
+							stmt.setInt(3, pileId);
+							stmt.setInt(4, altPileId);
+							stmt.executeUpdate();
+							stmt.close();
+							
+							stmt = conn.prepareStatement(
+								"SELECT MAX(player_id) AS player_id" +
+								"	FROM Player"
+							);
+							resultSet = stmt.executeQuery();
+							resultSet.next();
+							int ret = resultSet.getInt("player_id");
+							stmt.close();
+							
+							return ret;
+						} finally {
+							DBUtil.closeQuietly(resultSet);
+							DBUtil.closeQuietly(stmt);
+						}
+					}
+				});
 			}
-		});
-	}
+	} 
 	
 	// Determines if a given player is human
 	public boolean isHuman(int PlayerId) {
@@ -504,7 +551,6 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				String encodedIds = encodeCardIds(cards);
-				
 				try {
 					stmt = conn.prepareStatement(
 							"INSERT INTO Pile(gameKey, exposeIndex, cards)"
@@ -525,9 +571,8 @@ public class DerbyDatabase implements IDatabase {
 						resultSet.next();
 						int ret = resultSet.getInt("pile_id");
 						stmt.close();
-						
 						return ret;
-					
+						
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -1437,7 +1482,7 @@ public class DerbyDatabase implements IDatabase {
 						return resultSet.getInt("player_id");
 					}
 					
-					return null;
+					return -1;
 					
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -2116,7 +2161,6 @@ public class DerbyDatabase implements IDatabase {
 				}
 				
 				//TODO ADD UNO FLIP CARDS
-
 				return sqlTranscoder.encode(cardIds);
            }
 	   });

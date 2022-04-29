@@ -23,6 +23,56 @@ public class StandardCard implements Comparable<StandardCard>{
 		return suit;
 	}
 	
+	public String getImagePath() {
+		String im = "_view/images/StandardCards/";
+		String r = rank.toString();
+		String s = suit.toString();
+		switch (r) {
+			case "T":
+				im += "10";
+				break;
+			case "J":
+				im += "jack";
+				break;
+			case "Q":
+				im += "queen";
+				break;
+			case "K":
+				im += "king";
+				break;
+			case "A":
+				im += "ace";
+				break;
+			default:
+				im += r;
+		}
+		
+		im += "_";
+		
+		switch (s) {
+			case "H":
+				im += "hearts";
+				break;
+			case "D":
+				im += "diamonds";
+				break;
+			case "S":
+				im += "spades";
+				break;
+			case "C":
+				im += "clubs";
+				break;
+			default:
+				im += s;
+		}
+		
+		return im + ".png";
+	}
+	
+	public String getBackPath() {
+		return "_view/images/StandardCards/back-sm.png";
+	}
+	
 	@Override
 	public String toString() {
 		return rank.toString() + suit.toString(); 
