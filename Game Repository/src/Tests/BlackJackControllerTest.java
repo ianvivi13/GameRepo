@@ -2,7 +2,10 @@ package Tests;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.BlackJackController;
@@ -14,75 +17,74 @@ import Models.StandardCard;
 import Models.Suit;
 import Models.TurnOrder;
 import Database.elves.DatabaseProvider;
+import Database.elves.DerbyDatabase;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
 
 public class BlackJackControllerTest{
 	
-	private Game pp;
-	private BlackJackController control;
-	private Player one;
-	private Player two;
-	private IDatabase db;
+	private static Game model;
+	private static BlackJackController control;
+	private static Player one;
+	private static Player two;
+	private static IDatabase db;
+	private static String[] dumb;
+	private static int modelId;
 	
-	@Before
-	public void setUp() {
+	
+	@BeforeClass
+	public static void setUp() {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		control = new BlackJackController(IDatabase.Key_Blackjack);
+		try {
+			DerbyDatabase.main(dumb);
+		} catch (IOException e){
+			
+		}
+		model = new Game(IDatabase.Key_Blackjack);
+		control = new BlackJackController();
 		one = new Player(true, 1);
 		two = new Player(true, 2);
-		control.addPlayer(db.createPlayer(one));
-		control.addPlayer(db.createPlayer(two));
+		model.addPlayer(db.createPlayer(one));
+		model.addPlayer(db.createPlayer(two));
+		try {
+			modelId = control.initialize(model);
+		} catch (Exception e) {
+		}
 		
 	}
 	
 	@Test
-	public void testInitialize() throws Exception {
-		control.initialize();
-	
+	public void testGameSim() throws Exception {
+		
+		//Test if initialize method works
+		model = db.getGameFromGameId(modelId);
 		// main deck should have 48 cards
-		assertEquals(48, control.getMainPile().getNumCards());
-		assertEquals(1000000000, control.getMainPile().getVisibleIndex());	
+		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(1).getPile().getVisibleIndex());
+		
+		//Test if hold method works
+		control.hold(model);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(model.getTurnOrder().CurrentPlayer(), db.getPlayerIdFromPlayer(two));
+		
+		//Test if hit method work
+		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
+		control.hit(model);
+		model = db.getGameFromGameId(modelId);
+		
+		assertEquals(47, model.getMainPile().getNumCards());
+		assertEquals(3, model.getPlayers().get(1).getPile().getNumCards());
+		
+		//Test if freeze method works
+		control.freeze(model);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(1, model.getTurnOrder().getTurnList().size());
+	}
 
-		assertEquals(2, control.getPlayers().get(0).getPile().getNumCards());
-		assertEquals(0, control.getPlayers().get(0).getPile().getVisibleIndex());
-		
-		assertEquals(2, control.getPlayers().get(1).getPile().getNumCards());
-		assertEquals(0, control.getPlayers().get(1).getPile().getVisibleIndex());
-	}
 	
-	@Test
-	public void testHold() throws Exception {
-		control.hold();
-		assertEquals(2, control.getTurnOrder().CurrentPlayer());
-	}
-	
-	@Test
-	public void testHit() throws Exception {
-		control.initialize();
-		
-		assertEquals(48, control.getMainPile().getNumCards());
-		
-		assertEquals(2, control.getPlayers().get(0).getPile().getNumCards());
-		
-		control.hit(one);
-		
-		assertEquals(47, control.getMainPile().getNumCards());
-		assertEquals(3, one.getPile().getNumCards());
-		
-	}
-	
-//	@Test
-//	public void testSplit() throws Exception {
-//	Pile p1 = new Pile();
-//	p1.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
-//	p1.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
-//	Player yer = new Player(false, 0);
-//	yer.setPile(p1);
-//	
-//	control.split(yer);
-//	
-//	assertEquals(yer.getPile().getCard(0),yer.getAltPile().getCard(0));
-//	}
 }
