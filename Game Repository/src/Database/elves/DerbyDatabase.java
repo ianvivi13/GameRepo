@@ -325,7 +325,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					/*
 					 create game with game stuffs in it to test display
-					 */				
+					 */		
 					
 					// create piles
 					Pile empty = new Pile();
@@ -359,6 +359,7 @@ public class DerbyDatabase implements IDatabase {
 					// initialize game in database
 					int g = db.createGame(game);
 					System.out.println(g);
+					
 					/*
 					end fake game creation
 					 */

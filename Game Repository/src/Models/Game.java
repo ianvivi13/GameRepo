@@ -63,6 +63,10 @@ public class Game {
 		wildColor = color;
 	}
 	
+	public Player getIndexPlayer(int index) {
+		return players.get(index);
+	}
+	
 	public void setGameCode(String code) {
 		gameCode = code;
 	}

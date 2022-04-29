@@ -56,7 +56,7 @@
                 
                 <div class="cards">  
 	                <% for (Object o : playerLeft.getPile().getPile()) { %>
-	                <%StandardCard c = ((StandardCard) o);%>
+	                <% StandardCard c = ((StandardCard) o); %>
 	                <% String pathLeft = c.getImagePath(); %>
 	            	<img id="pili" src="<%out.println(pathLeft);%>">
 	               <%  
@@ -65,28 +65,32 @@
                 </div>
                 
                 <form>
-                <button class="ButtonStyle" id="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
+                <button class="ButtonStyle" id="Hit" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
+                
+                <%%>
             </form>         
             
             <form class="center">
-                <button class="ButtonStyle" id="blend" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
-                <button class="ButtonStyle" id="blend" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+                <button class="ButtonStyle" id="blend" name="Hold" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
+                <button class="ButtonStyle" id="blend" name="Freeze" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+                
             </form>
-            
             
         </div>
         <div class="split" id="player2">
         	
         	<div><% out.println(playerRight); %> </div>
         	
-        	<div class="cards">  
-            <% for (Object o : playerRight.getPile().getPile()) { %>
-            <%StandardCard c = ((StandardCard) o);%>
-            <% String pathRight = c.getImagePath(); %>
-        	<img id="pili" src="<%out.println(pathRight);%>">
-           <%  
-           }
-            %>
+	        	<div class="cards">  
+	            	<% for (Object o : playerRight.getPile().getPile()) { %>
+	            	<% StandardCard c = ((StandardCard) o); %>
+	            	<% String pathRight = c.getImagePath(); %>
+	            	<img id="pili" src="<%out.println(pathRight);%>">
+	            	<%  
+	            		}
+	            	%>
+	            	</div>
+        	
             </div>
         	</div>
         </div>

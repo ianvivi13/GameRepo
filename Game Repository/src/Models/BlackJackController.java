@@ -10,6 +10,7 @@ public class BlackJackController {
 	
 
 	private IDatabase db;
+	private boolean win = false;
 	
 	
 	public int initialize(Game model) throws Exception {
@@ -40,8 +41,8 @@ public class BlackJackController {
 		db = DatabaseProvider.getInstance();
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		current.getPile().addCards(model.getMainPile().removeCards(1));
+		checkBust(model);
 		model.nextTurn();
-		//checkWin(model);
 		db.updateGame(db.getGameIdFromGame(model), model);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 		} 
@@ -54,12 +55,29 @@ public class BlackJackController {
 	}
 	
 	public boolean checkWin(Game model) {
-		
-		for(Player p : model.getPlayers()) {
-			if(p.getPile().getValueStandard() == 21) {
-				return true;
-			}
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		Player next = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer() + 1);
+		if(current.getPile().getValueStandard() == 21 && next.getPile().getValueStandard() <= current.getPile().getValueStandard()) {
+			win = true;
 		}
+		else if(current.getPile().getValueStandard() < 21 && next.getPile().getValueStandard() < current.getPile().getValueStandard()) {
+			win = true;
+		}
+		else if(current.getPile().getValueStandard() == next.getPile().getValueStandard() && current.getPile().getNumCards() < next.getPile().getNumCards()) {
+			win = true;
+		}
+		else {
+			win = false;
+		}
+		return win;
+	}
+	
+	public boolean checkBust(Game model) {
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(current.getPile().getValueStandard() >  21) {
+			return true;
+		}
+		
 		return false;
 	}
 }

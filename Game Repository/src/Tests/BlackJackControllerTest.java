@@ -39,7 +39,6 @@ public class BlackJackControllerTest{
 		try {
 			DerbyDatabase.main(dumb);
 		} catch (IOException e){
-			
 		}
 		model = new Game(IDatabase.Key_Blackjack);
 		control = new BlackJackController();
@@ -84,6 +83,10 @@ public class BlackJackControllerTest{
 		control.freeze(model);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(1, model.getTurnOrder().getTurnList().size());
+		
+//		control.checkWin(model);
+//		model = db.getGameFromGameId(modelId);
+//		System.out.println(control.checkWin(model));
 	}
 
 	
