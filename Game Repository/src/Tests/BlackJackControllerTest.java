@@ -29,6 +29,7 @@ public class BlackJackControllerTest{
 	private static Player two;
 	private static IDatabase db;
 	private static String[] dumb;
+	private static int modelId;
 	
 	
 	@BeforeClass
@@ -47,7 +48,7 @@ public class BlackJackControllerTest{
 		model.addPlayer(db.createPlayer(one));
 		model.addPlayer(db.createPlayer(two));
 		try {
-			control.initialize(model);
+			modelId = control.initialize(model);
 		} catch (Exception e) {
 		}
 		
@@ -56,29 +57,34 @@ public class BlackJackControllerTest{
 	@Test
 	public void testGameSim() throws Exception {
 		
-	
+		//Test if initialize method works
+		model = db.getGameFromGameId(modelId);
 		// main deck should have 48 cards
 		assertEquals(48, model.getMainPile().getNumCards());
-		assertEquals(1000000000, model.getMainPile().getVisibleIndex());	
-
-		assertEquals(2, one.getPile().getNumCards());
-		assertEquals(1, one.getPile().getVisibleIndex());
+		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(1).getPile().getVisibleIndex());
 		
-		assertEquals(2, two.getPile().getNumCards());
-		assertEquals(1, two.getPile().getVisibleIndex());
-		
+		//Test if hold method works
 		control.hold(model);
-		System.out.println(one.getPile().getNumCards());
+		model = db.getGameFromGameId(modelId);
 		assertEquals(model.getTurnOrder().CurrentPlayer(), db.getPlayerIdFromPlayer(two));
 		
+		//Test if hit method work
 		assertEquals(48, model.getMainPile().getNumCards());
-		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
-		
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
 		control.hit(model);
-		System.out.println(one.getPile().getNumCards());
+		model = db.getGameFromGameId(modelId);
 		
 		assertEquals(47, model.getMainPile().getNumCards());
-		assertEquals(3, one.getPile().getNumCards());
+		assertEquals(3, model.getPlayers().get(1).getPile().getNumCards());
+		
+		//Test if freeze method works
+		control.freeze(model);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(1, model.getTurnOrder().getTurnList().size());
 	}
+
 	
 }
