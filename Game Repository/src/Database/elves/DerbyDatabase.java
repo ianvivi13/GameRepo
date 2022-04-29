@@ -468,43 +468,50 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Creates a player and adds it to the Player table
 	public int createPlayer(Player player) {
-		return executeTransaction(new Transaction<Integer>() {
-			@Override
-			public Integer execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				int pileId = createPile(player.getPile());
-				int altPileId = createPile(player.getAltPile());
-				
-				try {
-					stmt = conn.prepareStatement(
-						"INSERT INTO Player (player_bot_id, human, pile_id, alt_pile_id)" +
-						"	VALUES (?, ?, ?, ?)"
-					);
-					stmt.setInt(1, player.getUserBotID());
-					stmt.setBoolean(2, player.getIsHuman());
-					stmt.setInt(3, pileId);
-					stmt.setInt(4, altPileId);
-					stmt.executeUpdate();
-					stmt.close();
-					
-					stmt = conn.prepareStatement(
-						"SELECT MAX(player_id) AS player_id" +
-						"	FROM Player"
-					);
-					resultSet = stmt.executeQuery();
-					resultSet.next();
-					int ret = resultSet.getInt("player_id");
-					stmt.close();
-					
-					return ret;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
+
+			int i = getPlayerIdFromPlayer(player);
+			System.out.println(i);
+			if (i > 0) {
+				throw new PlayerAlreadyExistsException("Player is in database already, delete them or avoid creating them");
+			} else {
+				return executeTransaction(new Transaction<Integer>() {
+					@Override
+					public Integer execute(Connection conn) throws SQLException {
+						PreparedStatement stmt = null;
+						ResultSet resultSet = null;
+						int pileId = createPile(player.getPile());
+						int altPileId = createPile(player.getAltPile());
+						
+						try {
+							stmt = conn.prepareStatement(
+								"INSERT INTO Player (player_bot_id, human, pile_id, alt_pile_id)" +
+								"	VALUES (?, ?, ?, ?)"
+							);
+							stmt.setInt(1, player.getUserBotID());
+							stmt.setBoolean(2, player.getIsHuman());
+							stmt.setInt(3, pileId);
+							stmt.setInt(4, altPileId);
+							stmt.executeUpdate();
+							stmt.close();
+							
+							stmt = conn.prepareStatement(
+								"SELECT MAX(player_id) AS player_id" +
+								"	FROM Player"
+							);
+							resultSet = stmt.executeQuery();
+							resultSet.next();
+							int ret = resultSet.getInt("player_id");
+							stmt.close();
+							
+							return ret;
+						} finally {
+							DBUtil.closeQuietly(resultSet);
+							DBUtil.closeQuietly(stmt);
+						}
+					}
+				});
 			}
-		});
-	}
+	} 
 	
 	// Determines if a given player is human
 	public boolean isHuman(int PlayerId) {
@@ -1475,7 +1482,7 @@ public class DerbyDatabase implements IDatabase {
 						return resultSet.getInt("player_id");
 					}
 					
-					return null;
+					return -1;
 					
 				} finally {
 					DBUtil.closeQuietly(resultSet);
