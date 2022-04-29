@@ -89,9 +89,9 @@ public class BlackJackControllerTest{
 		model = db.getGameFromGameId(modelId);
 		assertEquals(1, model.getTurnOrder().getTurnList().size());
 		
-//		control.checkWin(model);
-//		model = db.getGameFromGameId(modelId);
-//		System.out.println(control.checkWin(model));
+		control.checkWin(model);
+		model = db.getGameFromGameId(modelId);
+		assertTrue(control.checkWin(model));
 	}
 
 	
