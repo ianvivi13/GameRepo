@@ -30,7 +30,7 @@
 #playermain {
     
     left: 0;
-    width: 49.4%;
+    width: 49.7%;
     float: left;
     height: 96%;
 }
@@ -38,7 +38,7 @@
 #playeralt {
     right: 0;
     width: 49.4%;
-    height: 96%;
+    height: 98%;
     
 }
 
@@ -77,13 +77,12 @@ button.ButtonStyle {
 }
 
 #Hit {
-    margin-top: 32%;
+    margin-top: 31%;
     text-align: center;
     margin-left: 37.8%;
 }
 
 #pili {
-    
     margin-left: -8%;
 }
 
@@ -93,7 +92,12 @@ button.ButtonStyle {
 }
 
 #imgCenter {
-    margin-left: 42%;
+    margin-left: 38%;
+    margin-top: 4%;
+}
+
+.cards {
+    margin-left: 40%;
     margin-top: 4%;
 }
 

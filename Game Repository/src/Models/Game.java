@@ -109,6 +109,14 @@ public class Game {
 		return players;
 	}
 	
+	public Player getIndexPlayer(int index) {
+		try {
+			return players.get(index);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public TurnOrder getTurnOrder() {
 		return tko;
 	}
