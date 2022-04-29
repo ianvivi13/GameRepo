@@ -2,72 +2,89 @@ package Tests;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.BlackJackController;
-import Models.BlackJackModel;
+import Models.Game;
+import Models.Pile;
+import Models.Player;
 import Models.Rank;
+import Models.StandardCard;
 import Models.Suit;
 import Models.TurnOrder;
+import Database.elves.DatabaseProvider;
+import Database.elves.DerbyDatabase;
+import Database.elves.IDatabase;
+import Database.elves.InitDatabase;
 
 public class BlackJackControllerTest{
 	
-	private BlackJackController controller;
-	private BlackJackModel model;
-	private TurnOrder turns;
+	private static Game model;
+	private static BlackJackController control;
+	private static Player one;
+	private static Player two;
+	private static IDatabase db;
+	private static String[] dumb;
+	private static int modelId;
 	
-	@Before
-	public void setUp() {
-		/*
-		controller = new BlackJackController();
-		model = new BlackJackModel();
-		turns = new TurnOrder();
-		turns.AddPlayer(1);
-		turns.AddPlayer(2);
-		*/
+	
+	@BeforeClass
+	public static void setUp() {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		try {
+			DerbyDatabase.main(dumb);
+		} catch (IOException e){
+			
+		}
+		model = new Game(IDatabase.Key_Blackjack);
+		control = new BlackJackController();
+		one = new Player(true, 1);
+		two = new Player(true, 2);
+		model.addPlayer(db.createPlayer(one));
+		model.addPlayer(db.createPlayer(two));
+		try {
+			modelId = control.initialize(model);
+		} catch (Exception e) {
+		}
+		
 	}
-	
-//	@Test
-//	public void testInitModel() throws Exception {
-//		BlackJackModel bModel = new BlackJackModel();
-//		controller.initialize(bModel);
-//		
-//		// main deck should have 24 cards,
-//		
-//		assertEquals(50, bModel.getDeck().getNumCards());
-//		assertEquals(1000000000, bModel.getDeck().getVisibleIndex());
-//		
-//		assertEquals(2, bModel.getHand().getNumCards());
-//		assertEquals(0, bModel.getHand().getVisibleIndex());
-//	}
 	
 	@Test
-	public void testHold() throws Exception {
+	public void testGameSim() throws Exception {
 		
+		//Test if initialize method works
+		model = db.getGameFromGameId(modelId);
+		// main deck should have 48 cards
+		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
+		//assertEquals(1, model.getPlayers().get(1).getPile().getVisibleIndex());
 		
-		controller.hold(model);
+		//Test if hold method works
+		control.hold(model);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(model.getTurnOrder().CurrentPlayer(), db.getPlayerIdFromPlayer(two));
 		
-		assertEquals("2", turns.CurrentPlayer());
+		//Test if hit method work
+		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
+		control.hit(model);
+		model = db.getGameFromGameId(modelId);
+		
+		assertEquals(47, model.getMainPile().getNumCards());
+		assertEquals(3, model.getPlayers().get(1).getPile().getNumCards());
+		
+		//Test if freeze method works
+		control.freeze(model);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(1, model.getTurnOrder().getTurnList().size());
 	}
+
 	
-//	@Test
-//	public void testHit() throws Exception {
-//		BlackJackModel cModel = new BlackJackModel();
-//		controller.initialize(cModel);
-//		
-//		assertEquals(50, cModel.getDeck().getNumCards());
-//		assertEquals(2, cModel.getHand().getNumCards());
-//		
-//		controller.hit(cModel);
-//		
-//		assertEquals(49, cModel.getDeck().getNumCards());
-//		assertEquals(3, cModel.getHand().getNumCards());
-//		
-//	}
-	
-	@Test
-	public void testSplit() throws Exception {
-		
-	}
 }
