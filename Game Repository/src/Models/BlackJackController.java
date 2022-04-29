@@ -10,7 +10,6 @@ public class BlackJackController {
 	
 
 	private IDatabase db;
-	private int gameID;
 	
 	
 	public int initialize(Game model) throws Exception {
@@ -19,13 +18,14 @@ public class BlackJackController {
 		
 		model.getMainPile().populate();
 		model.getMainPile().shuffle();
-		model.getMainPile().setVisibleIndex(1000000000);
 		
-		for(Player p : model.getPlayers()) {
-			p.getPile().addCards(model.getMainPile().removeCards(2));
-			p.getPile().setVisibleIndex(p.getPile().getIndexOfTopCard());;
+		for(Player players : model.getPlayers()) {
+			players.getPile().addCards(model.getMainPile().removeCards(2));
+			players.getPile().setVisibleIndex(players.getPile().getIndexOfTopCard());
 		}
-		return db.createGame(model);
+		int gameID = db.createGame(model);
+		db.updateGame(gameID, model);
+		return gameID;
 	}
 	
 	// for hold we want to basically skip a players turn
@@ -33,48 +33,38 @@ public class BlackJackController {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		model.nextTurn();
-		db.updateGame(gameID, model);
+		db.updateGame(db.getGameIdFromGame(model), model);
 	}
 	
 	
 	public void hit(Game model) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		//Player p = model.getPlayers().get(model.getTurnOrder().CurrentPlayer());
-		int boob = 0;
-		for(Player p: model.getPlayers()) {
-			if(db.getPlayerIdFromPlayer(p) == model.getTurnOrder().CurrentPlayer()) {
-				boob = db.getPlayerIdFromPlayer(p);
-				break;
-			}
-		}
-		try {
-		Player current = db.getPlayerFromPlayerId(boob);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		current.getPile().addCards(model.getMainPile().removeCards(1));
 		model.nextTurn();
-		db.updateGame(gameID, model);
-		} catch (Exception e) {
-			System.out.println("Couldnt find a player");
-		}
+		//checkWin(model);
+		db.updateGame(db.getGameIdFromGame(model), model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		} 
+	
+	// for stay/freeze we want to skip a players turn until the other player calls stay
+	public void freeze(Game model) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
+		db.updateGame(db.getGameIdFromGame(model), model);
 	}
 	
-//	// for stay/freeze we want to skip a players turn until the other player calls stay
-//	public void freeze(Player p) {
-//		removePlayerFromTurn(db.getPlayerIdFromPlayer(p));
-//		db.updateGame(i, this);
-//	}
 	
-	
-//	public boolean checkWin() {
-//		for(Player p : getPlayers()) {
-//			if(p.getPile().getValueStandard() == 21) {
-//				return true;
-//			}
-//		}
-//		return false;
-////		db.getBlackjackStats(UserID)
-////		db.updateBlackjackStats(, user_id);
-////		db.updateGlobalStats(stat, user_id);
-//	}
+	public boolean checkWin(Game model) {
+		
+		for(Player p : model.getPlayers()) {
+			if(p.getPile().getValueStandard() == 21) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
