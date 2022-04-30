@@ -46,14 +46,15 @@ public class LoginPageServlet extends HttpServlet {
 			
 			req.getSession().setAttribute("user", username);
 			//req.setAttribute("user", username);
-			resp.sendRedirect("http://localhost:8080/gamerepo/home");
+			resp.sendRedirect("../gamerepo/home");
+			
 		} else {
 			System.out.println("Woops you're a dumb");
 			
 			PrintWriter out = resp.getWriter(); 
 			out.println("<script type=\"text/javascript\">"); 
 			out.println("alert('There is an invalid entry for password or username');"); 
-			out.println("location='http://localhost:8080/gamerepo/login';"); 
+			out.println("location='../gamerepo/login';"); 
 			out.println("</script>");
 		}
 //		if(db.login(username, password)) {

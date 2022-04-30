@@ -12,7 +12,7 @@
         </title>
     </head>
     <body class="BlackJack">
-        <div id="left"><a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
+        <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
     </div>
     <div id="deck">

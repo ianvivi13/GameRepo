@@ -60,7 +60,7 @@
         <div class="HeaderStyle">Singleplayer: ${user}</div>
         
         <div class="BackButton">
-            <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
+            <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
 
@@ -98,7 +98,7 @@
           </label>
           <br><br>
 
-    <a href="http://localhost:8080/gamerepo/singleplayer"><button class="branch" type="submit">Play</button><br>
+    <a href="../gamerepo/singleplayer"><button class="branch" type="submit">Play</button><br>
     </a>
     </body>
 </html>
