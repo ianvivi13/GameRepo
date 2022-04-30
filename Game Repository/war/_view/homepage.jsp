@@ -108,11 +108,11 @@
     		Welcome: ${user}
     	</div>
 
-        <div class = "BackButton">
+        <form class = "BackButton">
 			<a href="http://localhost:8080/gamerepo/login">
-            	<button class="ButtonStyle" type="submit">Log Out</button>
+            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
             </a>
-        </div>
+        </form>
 
 		<div class = "buttons">
 			<a href="http://localhost:8080/gamerepo/instructions">

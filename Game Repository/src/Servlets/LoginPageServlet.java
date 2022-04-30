@@ -12,6 +12,7 @@ import Database.elves.InitDatabase;
 import Database.elves.UserExistsException;
 import Models.Pair;
 import Models.User;
+import Models.Player;
 
 public class LoginPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -47,6 +48,8 @@ public class LoginPageServlet extends HttpServlet {
 			req.getSession().setAttribute("user", username);
 			//req.setAttribute("user", username);
 			resp.sendRedirect("http://localhost:8080/gamerepo/home");
+			
+			
 		} else {
 			System.out.println("Woops you're a dumb");
 			
@@ -55,25 +58,9 @@ public class LoginPageServlet extends HttpServlet {
 			out.println("alert('There is an invalid entry for password or username');"); 
 			out.println("location='http://localhost:8080/gamerepo/login';"); 
 			out.println("</script>");
+		
 		}
-//		if(db.login(username, password)) {
-//			System.out.println("Does it print properlt");
-//			user.setPassword(password);
-//			user.setUsername(username);
-//			System.out.println("Does it print properlt");
-//			resp.sendRedirect("http://localhost:8080/gamerepo/home");
-//			
-//			return;
-//		}
-//		else {
-//			 
-//			PrintWriter out = resp.getWriter(); 
-//			out.println("<script type=\"text/javascript\">"); 
-//			out.println("alert('There is an invalid entry for password or username');"); 
-//			out.println("location='http://localhost:8080/gamerepo/login';"); 
-//			out.println("</script>");
-//			return;
-//		}
+
 	}
 	
 }

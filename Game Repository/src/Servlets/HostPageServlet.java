@@ -4,12 +4,19 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
+import Database.elves.InitDatabase;
+import Models.BlackJackController;
+import Models.Game;
+import Models.User;
+
 public class HostPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	throws ServletException, IOException {
 		
 		String user = (String) req.getSession().getAttribute("user");
 		if (user == null) {
@@ -20,6 +27,13 @@ public class HostPageServlet extends HttpServlet {
 			return;
 		}
 		
+		System.out.println(user);
+		
+		IDatabase db;
+		db = DatabaseProvider.getInstance();
+		int i = db.getUserIDfromUsername(user);
+		System.out.println(i);
+		
 		System.out.println("Join Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
@@ -27,7 +41,7 @@ public class HostPageServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	throws ServletException, IOException {
 
 		req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
 	}
