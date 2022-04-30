@@ -4,7 +4,7 @@
 
 <%@page import="Models.Game" %>
 <%@page import= "Database.elves.DatabaseProvider" %>
-<%@page import= " Database.elves.DerbyDatabase" %>
+<%@page import= "Database.elves.DerbyDatabase" %>
 <%@page import= "Database.elves.IDatabase" %>
 <%@page import= "Database.elves.InitDatabase" %>
 
@@ -63,15 +63,7 @@
 					<%IDatabase db = DatabaseProvider.getInstance(); %>
 					<%int gId = (int) session.getAttribute("gameId"); %>
 					<%Game game = db.getGameFromGameId(gId); %>
-					
-					window.setInterval('refresh()', 1000); 	
-				    // Call a function every 1000 milliseconds 
-				    // (OR 1 seconds).
-
-				    // Refresh or reload page.
-				    function refresh() {
-				    	window .location.reload();
-				    }
+		
 				    
 					
 		  </script>
@@ -81,7 +73,7 @@
     	</div>
     	<div class="BackButton">
     		<a href="../gamerepo/home">
-            	<button class="ButtonStyle" type="submit">Disband Lobby</button>
+            	<button class="ButtonStyle" name="leave" type="submit">Disband Lobby</button>
             </a>
     	</div>
         <div class="AccountCreation">

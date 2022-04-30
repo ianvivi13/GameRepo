@@ -18,7 +18,7 @@
             switch (value) {
             case 'blackjack':
                 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 document.getElementById("topic").innerText = "BlackJack";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
 
@@ -29,7 +29,7 @@
 
             case 'uno':
                     
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
                 localStorage.setItem("buttonValue", 'uno');
                 console.log(value);
@@ -38,7 +38,7 @@
 
             case 'unoflip':
                     
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
                 localStorage.setItem("buttonValue", 'unoflip');
                 console.log(value);
@@ -47,7 +47,7 @@
 
             case 'expoldingkittens':
 
-            document.body.style.color = "black";
+            document.body.style.color = "white";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
                 localStorage.setItem("buttonValue", 'expoldingkittens');
                 console.log(value);
@@ -56,7 +56,7 @@
 
             default:
         
-            document.body.style.color = "black";
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
         }
     
@@ -66,12 +66,11 @@
             switch (shapeChoice) {
             case 'blackjack':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
                 localStorage.setItem("buttonValue", 'blackjack');
 
                 document.getElementById("topic").innerHTML = "BlackJack"
-                document.getElementById("unordered").style.borderColor = "blue";
                 document.getElementById("unordered").innerHTML = 
                 `<li>The goal of blackjack is for the player to tally points up to 21</li>
                 <li>The player is given a choice to "Hit," "Freeze," or "Hold."</li>
@@ -86,12 +85,11 @@
 
             case 'uno':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
                 localStorage.setItem("buttonValue", 'uno');
                 
                 document.getElementById("topic").innerHTML = "Uno"
-                document.getElementById("unordered").style.borderColor = "red";
                 document.getElementById("unordered").innerHTML = `<li>The goal of Uno is for the player to lose all of their cards</li>
                 <li>The player will start their hand with 7 cards randomly selected from the deck</li>
                 <li>To place a card, it must either match the color or number/symbol of the card in the waste pile</li>
@@ -174,17 +172,19 @@
 
     <h2 id="topic" >Blackjack</h2>
     
-    <ul id="unordered">
-        <li>The goal of blackjack is for the player to tally points up to 21</li>
-        <li>The player is given a choice to "Hit," "Freeze," or "Hold."</li>
-        <li>Choosing "Hold" makes the player skip their turn and wait until the turn-order comes back around</li>
-        <li>Choosing "Hit" makes the player take a card from the deck</li>
-        <li>You will be given a card from a 52-standard card deck</li>
-        <li>Each card equals thier value but Kings, Queens, and Jacks are 10 points</li>
-        <li>Aces allow the user to choose between the card's values of 11 or 1</li>
-        <li>If the player goes over this limit of 21, they are removed from the game</li>
-        <li>No other player will know the amount of points you have or what card you have</li>
-    </ul>
+    <div id="backing">
+	    <ul id="unordered">
+	        <li>The goal of blackjack is for the player to tally points up to 21</li>
+	        <li>The player is given a choice to "Hit," "Freeze," or "Hold."</li>
+	        <li>Choosing "Hold" makes the player skip their turn and wait until the turn-order comes back around</li>
+	        <li>Choosing "Hit" makes the player take a card from the deck</li>
+	        <li>You will be given a card from a 52-standard card deck</li>
+	        <li>Each card equals thier value but Kings, Queens, and Jacks are 10 points</li>
+	        <li>Aces allow the user to choose between the card's values of 11 or 1</li>
+	        <li>If the player goes over this limit of 21, they are removed from the game</li>
+	        <li>No other player will know the amount of points you have or what card you have</li>
+	    </ul>
+    </div>
 
     <div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
         

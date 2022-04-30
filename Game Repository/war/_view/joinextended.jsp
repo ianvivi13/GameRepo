@@ -80,7 +80,7 @@
     	</div>
     	<div class="BackButton">
     		<a href="../gamerepo/home">
-            	<button class="ButtonStyle" type="submit">Leave Lobby</button>
+            	<button class="ButtonStyle" name="leave" type="submit">Leave Lobby</button>
             </a>
     	</div>
         <div class="AccountCreation">

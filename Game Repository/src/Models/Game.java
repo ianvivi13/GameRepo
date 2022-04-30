@@ -115,6 +115,10 @@ public class Game {
 		return players;
 	}
 	
+	public int getNumOfPlayers() {
+		return players.size();
+	}
+	
 	public TurnOrder getTurnOrder() {
 		return tko;
 	}

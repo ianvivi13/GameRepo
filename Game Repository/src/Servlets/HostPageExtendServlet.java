@@ -33,6 +33,12 @@ public class HostPageExtendServlet extends HttpServlet {
 		
 		System.out.println("GC: " + game.getGameCode());
 		
+		if (req.getParameter("leave") != null) {
+			
+			//Will delete the game and relocate the host... In join extended, if there no longer exists a game with the same id, exit to home
+			resp.sendRedirect("../gamerepo/home");
+		}
+		
 		req.getRequestDispatcher("_view/hostextend.jsp").forward(req, resp);
 	}
 	
