@@ -317,6 +317,15 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					int userOne = db.createUser("NewUser","password still");
 					int userTwo = db.createUser("User","password still");
+					
+					/*
+					Temp users for quick login
+					 */
+					db.createUser("1", "1");
+					db.createUser("2", "2");
+					db.createUser("3", "3");
+					db.createUser("4", "4");
+				
 					db.createAllStats(userOne);
 					db.createAllStats(userTwo);
 					initializeBlackJackCards();
@@ -471,7 +480,7 @@ public class DerbyDatabase implements IDatabase {
 	public int createPlayer(Player player) {
 
 			int i = getPlayerIdFromPlayer(player);
-			System.out.println(i);
+			System.out.println("player id - from db: " + i);
 			if (i > 0) {
 				throw new PlayerAlreadyExistsException("Player is in database already, delete them or avoid creating them");
 			} else {

@@ -6,26 +6,25 @@ import javax.servlet.http.*;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
-import Database.elves.InitDatabase;
 import Models.BlackJackController;
 import Models.Game;
-import Models.User;
+import Models.Player;
 
 public class HostPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-	throws ServletException, IOException {
-		
+			throws ServletException, IOException {
 		String user = (String) req.getSession().getAttribute("user");
 		if (user == null) {
 			System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			resp.sendRedirect("../gamerepo/login");
 			return;
 		}
+		System.out.println("Host Servlet: doGet");
 		
 		System.out.println(user);
 		
@@ -34,14 +33,13 @@ public class HostPageServlet extends HttpServlet {
 		int i = db.getUserIDfromUsername(user);
 		System.out.println(i);
 		
-		System.out.println("Join Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
 	}

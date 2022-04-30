@@ -169,7 +169,7 @@
         </div>
     
         <div class = "BackButton">
-            <a href="http://localhost:8080/gamerepo/home">
+            <a href="../gamerepo/home">
                 <button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
         </div>    

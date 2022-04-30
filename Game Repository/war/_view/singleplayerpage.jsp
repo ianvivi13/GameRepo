@@ -84,7 +84,7 @@
         <div class="HeaderStyle">Singleplayer: ${user}</div>
         
         <div class="BackButton">
-            <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
+            <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
 

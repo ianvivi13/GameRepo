@@ -57,11 +57,11 @@
 				}
       </script>
 
-      <div id="left"><a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button> 
+      <div id="left"><a href="../gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button> 
       </a>
     </div>
     <div class="BackButton">
-      <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
+      <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
       </a>
     </div>
     

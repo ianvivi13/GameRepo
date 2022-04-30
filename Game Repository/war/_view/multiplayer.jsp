@@ -57,16 +57,16 @@
         <div class="HeaderStyle">Multiplayer: ${user}</div>
         
         <div class="BackButton">
-            <a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
+            <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
 
     <h2 id="topic"><u>Card Game Desired</u></h2>
     
-    <a href="http://localhost:8080/gamerepo/host"><button class="branch" type="submit">Host</button><br>
+    <a href="../gamerepo/host"><button class="branch" type="submit">Host</button><br>
     </a>
     
-    <a href="http://localhost:8080/gamerepo/join"><button class="branch" type="submit">Join</button>
+    <a href="../gamerepo/join"><button class="branch" type="submit">Join</button>
     </a>
 
     </body>
