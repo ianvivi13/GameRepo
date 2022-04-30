@@ -66,6 +66,10 @@ public class Game {
 		wildColor = color;
 	}
 	
+	public Player getIndexPlayer(int index) {
+		return players.get(index);
+	}
+	
 	public void setGameCode(String code) {
 		gameCode = code;
 	}
@@ -120,6 +124,10 @@ public class Game {
 	
 	public ArrayList<Player> getPlayers() {
 		return players;
+	}
+	
+	public int getNumOfPlayers() {
+		return players.size();
 	}
 	
 	public TurnOrder getTurnOrder() {

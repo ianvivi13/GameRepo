@@ -20,6 +20,14 @@ public class LoginPageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		HttpSession session = req.getSession(false);
+				
+			if(req.getParameter("logout") != null ){  
+				resp.sendRedirect("../gamerepo/login");
+		        session.invalidate();
+		        return;
+			}
+		
 		System.out.println("Login Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/loginpage.jsp").forward(req, resp);

@@ -21,8 +21,17 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Home Servlet: doGet");
+		HttpSession session = req.getSession(false);
 		
+		System.out.println("HeHeHe");
+		if (req.getParameter("logout") != null) {
+			System.out.println("HAHAHA");
+			resp.sendRedirect("../gamerepo/login");
+			session.invalidate();
+			return;
+		}
+		
+		System.out.println("Home Servlet: doGet");
 		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
 	}
 	

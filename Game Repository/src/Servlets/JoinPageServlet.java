@@ -37,13 +37,22 @@ public class JoinPageServlet extends HttpServlet {
 			
 			int g = db.gameCodeValid(gameCode);
 			if (g > 0) {
+
 				Game d = db.getGameFromGameId(g);
 				if (!d.lobbyFull()) {
 					try {
 						Player player = new Player(true, i);
 						int p = db.createPlayer(player);
-						
 						d.addPlayer(p);
+						/*
+						 temp
+						 */
+						//d.getMainPile().populate();
+						//d.getMainPile().shuffle();
+						//d.getIndexPlayer(0).getPile().addCards(d.getMainPile().removeCards(4));
+						//d.getIndexPlayer(1).getPile().addCards(d.getMainPile().removeCards(5));
+						
+						//------------
 						db.updateGame(g, d);
 						req.getSession().setAttribute("gameId", g);
 			            resp.sendRedirect("../gamerepo/joinextended");
@@ -51,7 +60,10 @@ public class JoinPageServlet extends HttpServlet {
 			        	resp.sendRedirect("../gamerepo/home");
 			        	return;
 			        }
+				} else {
+					resp.sendRedirect("../gamerepo/join");
 				}
+
 			} else {
 				resp.sendRedirect("../gamerepo/join");
 			}

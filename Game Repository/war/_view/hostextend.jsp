@@ -4,7 +4,7 @@
 
 <%@page import="Models.Game" %>
 <%@page import= "Database.elves.DatabaseProvider" %>
-<%@page import= " Database.elves.DerbyDatabase" %>
+<%@page import= "Database.elves.DerbyDatabase" %>
 <%@page import= "Database.elves.IDatabase" %>
 <%@page import= "Database.elves.InitDatabase" %>
 
@@ -76,7 +76,7 @@
     	</div>
     	<div class="BackButton">
     		<a href="../gamerepo/home">
-            	<button class="ButtonStyle" type="submit">Disband Lobby</button>
+            	<button class="ButtonStyle" name="leave" type="submit">Disband Lobby</button>
             </a>
     	</div>
         <div class="AccountCreation">

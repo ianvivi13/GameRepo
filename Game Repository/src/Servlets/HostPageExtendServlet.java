@@ -24,14 +24,35 @@ public class HostPageExtendServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Join Servlet: doGet");
+		System.out.println("Host Extended Servlet: doGet");
 		
 		IDatabase db;
         db = DatabaseProvider.getInstance();
         int gId = (int) req.getSession().getAttribute("gameId");
         Game game = db.getGameFromGameId(gId);
 		
+        if (game.lobbyFull()) {
+        	switch (game.getGameCode()) {
+        		case IDatabase.Key_ExplodingKittens:
+        			resp.sendRedirect("../gamerepo/home");
+        		case IDatabase.Key_Uno:
+        			resp.sendRedirect("../gamerepo/home");
+        		case IDatabase.Key_UnoFlip:
+        			resp.sendRedirect("../gamerepo/home");
+        		default:
+        			
+        			resp.sendRedirect("../gamerepo/blackjack");
+        	}
+        	
+        }
+        
 		System.out.println("GC: " + game.getGameCode());
+		
+		if (req.getParameter("leave") != null) {
+			
+			//Will delete the game and relocate the host... In join extended, if there no longer exists a game with the same id, exit to home
+			resp.sendRedirect("../gamerepo/home");
+		}
 		
 		req.getRequestDispatcher("_view/hostextend.jsp").forward(req, resp);
 	}

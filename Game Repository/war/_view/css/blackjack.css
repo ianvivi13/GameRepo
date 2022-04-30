@@ -5,12 +5,13 @@
     z-index: 1;
     overflow-x: hidden;
     padding-top: 5px;
+    display: inline-block;
 }
 
 #players {
     bottom: 0;
     border: 2px solid green;
-
+    flex-wrap: wrap;
     position: fixed;
     left: 0;
     right: 0;
@@ -27,9 +28,9 @@
 }
 
 #playermain {
-    border: 2px solid coral;
+    
     left: 0;
-    width: 49.4%;
+    width: 49.7%;
     float: left;
     height: 96%;
 }
@@ -37,8 +38,8 @@
 #playeralt {
     right: 0;
     width: 49.4%;
-    height: 96%;
-    border: 2px solid pink;
+    height: 98%;
+    
 }
 
 #player2 {
@@ -55,5 +56,48 @@
     left: 0;
     right: 0;
     height: 42%;
-
 }
+
+button.ButtonStyle {
+    width: 190px;
+    padding: 12px 10px;
+    font-size: 18px;
+    color: #ffffff;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+#centers {
+    text-align: center;
+}
+
+#Hit {
+    margin-top: 31%;
+    text-align: center;
+    margin-left: 37.8%;
+}
+
+#pili {
+    margin-left: -8%;
+}
+
+#pili:nth-child(1) {
+    margin-left: 2.5%;
+    align-items: center;
+}
+
+#imgCenter {
+    margin-left: 38%;
+    margin-top: 4%;
+}
+
+.cards {
+    margin-left: 40%;
+    margin-top: 4%;
+}
+

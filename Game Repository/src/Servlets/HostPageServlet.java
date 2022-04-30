@@ -11,30 +11,30 @@ import Models.Game;
 import Models.Player;
 
 public class HostPageServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String user = (String) req.getSession().getAttribute("user");
-		if (user == null) {
-			System.out.println("User is not logged in");
-			
-			// user is not logged in, or the session expired
-			resp.sendRedirect("../gamerepo/login");
-			return;
-		}
-		System.out.println("Host Servlet: doGet");
-		
-		
-		IDatabase db;
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String user = (String) req.getSession().getAttribute("user");
+        if (user == null) {
+            System.out.println("User is not logged in");
+            
+            // user is not logged in, or the session expired
+            resp.sendRedirect("../gamerepo/login");
+            return;
+        }
+        System.out.println("Host Servlet: doGet");
+        
+        
+        IDatabase db;
         db = DatabaseProvider.getInstance();
         int i = db.getUserIDfromUsername(user);
         System.out.println("UserId:" + i);
         try {
-        	
-        	Player player1 = new Player(true, i);
-        	
+            
+            Player player1 = new Player(true, i);
+            
             int created = db.createPlayer(player1);
             
             Game model = new Game("BLJ");
@@ -53,19 +53,19 @@ public class HostPageServlet extends HttpServlet {
             
 
         } catch (Exception PlayerAlreadyExistsException) {
-        	resp.sendRedirect("../gamerepo/home");
-        	return;
+            resp.sendRedirect("../gamerepo/home");
+            return;
         }
-        	
+            
         
        
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-		req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
-	}
-	
+        req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
+    }
+    
 }

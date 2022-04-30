@@ -15,7 +15,7 @@
         switch (value) {
         case 'blackjack':
             
-            document.body.style.color = "black";
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
 
             localStorage.setItem("buttonValue", 'blackjack');
@@ -31,7 +31,7 @@
 
         case 'uno':
                 
-            document.body.style.color = "black";
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
             localStorage.setItem("buttonValue", 'uno');
             console.log("buttonValue");
@@ -86,7 +86,7 @@
             switch (shapeChoice) {
             case 'blackjack':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'blackjack');
                 console.log("buttonValue");
             
@@ -102,7 +102,7 @@
 
             case 'uno':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'uno');
                 console.log("buttonValue");
                 
