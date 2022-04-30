@@ -187,8 +187,6 @@ public class Pile{
 			pile.add(new UnoCard(Color.BLACK, Value.Wild));
 			pile.add(new UnoCard(Color.BLACK, Value.Wild_Four));
 		}
-		
-		pile.add(new UnoCard(Color.BLACK, Value.SwapHands));
 	}
 	
 	
@@ -245,13 +243,5 @@ public class Pile{
     	
     	return true;
     }
-	
-
-    
-	
-	
-//	public void swapCards(ArrayList<Card> cardsToSwap, int swappee, int swapper) {
-//		Collections.swap(cardsToSwap, swappee, swapper);
-//	}
 	
 }

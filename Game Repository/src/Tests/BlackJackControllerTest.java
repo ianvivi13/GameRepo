@@ -25,7 +25,6 @@ import Database.elves.PlayerAlreadyExistsException;
 public class BlackJackControllerTest{
 	
 	private static Game model;
-	private static BlackJackController control;
 	private static Player one;
 	private static Player two;
 	private static IDatabase db;
@@ -42,7 +41,6 @@ public class BlackJackControllerTest{
 		} catch (IOException e){
 		}
 		model = new Game(IDatabase.Key_Blackjack);
-		control = new BlackJackController();
 		one = new Player(true, db.createUser("dummy", "u"));
 		two = new Player(true, db.createUser("baby", "t"));
 		try {
@@ -51,8 +49,9 @@ public class BlackJackControllerTest{
 		} catch(PlayerAlreadyExistsException e) {
 			
 		}
+		modelId = db.createGame(model);
 		try {
-			modelId = control.initialize(model);
+			BlackJackController.initialize(modelId);
 		} catch (Exception e) {
 		}
 		
@@ -66,32 +65,32 @@ public class BlackJackControllerTest{
 		// main deck should have 48 cards
 		assertEquals(48, model.getMainPile().getNumCards());
 		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
-		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
 		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
-		//assertEquals(1, model.getPlayers().get(1).getPile().getVisibleIndex());
 		
 		//Test if hold method works
-		control.hold(model);
+		BlackJackController.hold(modelId);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(model.getTurnOrder().CurrentPlayer(), db.getPlayerIdFromPlayer(two));
 		
 		//Test if hit method work
 		assertEquals(48, model.getMainPile().getNumCards());
 		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
-		control.hit(model);
+		BlackJackController.hit(modelId);
 		model = db.getGameFromGameId(modelId);
 		
 		assertEquals(47, model.getMainPile().getNumCards());
 		assertEquals(3, model.getPlayers().get(1).getPile().getNumCards());
+		assertTrue(BlackJackController.checkBust(modelId));
 		
 		//Test if freeze method works
-		control.freeze(model);
+		BlackJackController.freeze(modelId);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(1, model.getTurnOrder().getTurnList().size());
 		
-		control.checkWin(model);
 		model = db.getGameFromGameId(modelId);
-		//assertTrue(control.checkWin(model));
+		assertFalse(BlackJackController.checkWin(modelId));
+		System.out.println(model.getPlayers().get(0).getPile().getValueStandard());
+		System.out.println(model.getPlayers().get(1).getPile().getValueStandard());
 	}
 
 	

@@ -35,7 +35,8 @@
             <%int gId = (int) session.getAttribute("gameId"); %>
             <%Game game = db.getGameFromGameId(gId); %>
             <%String us = (String) session.getAttribute("user"); %>
-            
+            <%int currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
+
             function timeRefresh(time) {
             	setTimeout("location.reload(false);", time);
           	} 
@@ -46,7 +47,7 @@
     </div>
     <div id="deck">
 	<div id="imgCenter">
-    <% for (int i = 0; i < game.getMainPile().getNumCards(); i++) { %>
+    <% for (int i = 0; i < 1; i++) { %>
     	<img id="pili" src="_view/images/StandardCards/back-sm.png">
   <%  }
     	%>
@@ -77,18 +78,14 @@
 	               }
 	                %>
                 </div>
-                
-                <form>
-                <button class="ButtonStyle" id="Hit" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
-                
-                <%%>
-            </form>         
             
-            <form class="center">
+            <% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+            <form class="center" id="Hit" method="post">
+            	<button class="ButtonStyle" id="blend" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
                 <button class="ButtonStyle" id="blend" name="Hold" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
                 <button class="ButtonStyle" id="blend" name="Freeze" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
-                
             </form>
+            <% } %>
             
         </div>
         <div class="split" id="player2">
@@ -107,8 +104,7 @@
 			            	<img id="pili" src="<%out.println(pathRight);%>">
 		            	<% } %>
 	            	<% }%>
-	            	</div>
-        	
+	            </div>
             </div>
         </div>
     </body>

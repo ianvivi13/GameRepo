@@ -6,7 +6,9 @@ import javax.servlet.http.*;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
+import Models.BlackJackController;
 import Models.Game;
+
 
 public class HostPageExtendServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -31,20 +33,25 @@ public class HostPageExtendServlet extends HttpServlet {
         int gId = (int) req.getSession().getAttribute("gameId");
         Game game = db.getGameFromGameId(gId);
 		
-        if (game.lobbyFull()) {
-        	switch (game.getGameCode()) {
-        		case IDatabase.Key_ExplodingKittens:
-        			resp.sendRedirect("../gamerepo/home");
-        		case IDatabase.Key_Uno:
-        			resp.sendRedirect("../gamerepo/home");
-        		case IDatabase.Key_UnoFlip:
-        			resp.sendRedirect("../gamerepo/home");
-        		default:
-        			
-        			resp.sendRedirect("../gamerepo/blackjack");
-        	}
-        	
-        }
+        try {
+	        if (game.lobbyFull()) {
+	        	switch (game.getGameCode()) {
+	        		case IDatabase.Key_ExplodingKittens:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		case IDatabase.Key_Uno:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		case IDatabase.Key_UnoFlip:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		default:
+	        			BlackJackController.initialize(gId);
+	        			resp.sendRedirect("../gamerepo/blackjack");
+	        	}
+	        	
+	        }
+		} catch (Exception e) {
+			System.out.println(e);
+			resp.sendRedirect("../gamerepo/home");
+		}
         
 		System.out.println("GC: " + game.getGameCode());
 		

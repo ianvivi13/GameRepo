@@ -6,8 +6,9 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
 import Models.BlackJackController;
-import Models.BlackJackModel;
 import Models.Game;
 
 public class BlackJackPageServlet extends HttpServlet {
@@ -17,27 +18,40 @@ public class BlackJackPageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		//String user = (String) req.getSession().getAttribute("user");
-		//if (user == null) {
-			//System.out.println("User is not logged in");
+		String user = (String) req.getSession().getAttribute("user");
+		if (user == null) {
+			System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-		
-			//resp.sendRedirect("../gamerepo/login");
-			//return;
-		//}
-		
+			resp.sendRedirect("../gamerepo/login");
+			return;
+		}
+
 		System.out.println("BlackJack Servlet: doGet");
 		
 		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		req.setAttribute("username", "user");
-		
-		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int gId = (int) req.getSession().getAttribute("gameId");
+        
+        try {
+            if (req.getParameter("Hit") != null) {
+                //Set....
+            	BlackJackController.hit(gId);
+            	BlackJackController.checkBust(gId);
+            	
+            } else if (req.getParameter("Hold") != null) {
+            	BlackJackController.hold(gId);
+            } else if (req.getParameter("Freeze") != null) {
+            	BlackJackController.freeze(gId);
+            	BlackJackController.checkWin(gId);
+            }
+        } catch (Exception e) {
+            System.out.println("There is an error with:" + e);
+        }
+
+		resp.sendRedirect("../gamerepo/blackjack");
 	}
 }

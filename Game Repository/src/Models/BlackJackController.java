@@ -9,55 +9,63 @@ import Database.elves.InitDatabase;
 public class BlackJackController {
 	
 
-	private IDatabase db;
+	private static IDatabase db;
 	
 	
-	public int initialize(Game model) throws Exception {
+	public static void initialize(int gameId) throws Exception {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		
+		Game model = db.getGameFromGameId(gameId);
+		
 		model.getMainPile().populate();
 		model.getMainPile().shuffle();
-
+		model.getMainPile().shuffle();
+		
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(2));
 			players.getPile().setVisibleIndex(players.getPile().getIndexOfTopCard());
 		}
-		int gameID = db.createGame(model);
-		db.updateGame(gameID, model);
-		return gameID;
+		db.updateGame(gameId, model);
 	}
 	
-	public void hold(Game model){
+	// for hold we want to basically skip a players turn
+	public static void hold(int gameId){
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
 		model.nextTurn();
-		db.updateGame(db.getGameIdFromGame(model), model);
+		db.updateGame(gameId, model);
 	}
 	
-	public void hit(Game model) {
+	
+	public static void hit(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		current.getPile().addCards(model.getMainPile().removeCards(1));
-		checkBust(model);
+		checkBust(gameId);
 		model.nextTurn();
-		db.updateGame(db.getGameIdFromGame(model), model);
+		db.updateGame(gameId, model);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 		} 
 	
-	public void freeze(Game model) {
+	// for stay/freeze we want to skip a players turn until the other player calls stay
+	public static void freeze(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
 		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
-		model.nextTurn();
 		db.updateGame(db.getGameIdFromGame(model), model);
 	}
 	
-	public boolean checkWin(Game model) {
-		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		Player next = db.getPlayerFromPlayerId(model.getTurnOrder().getPointer()+1);
-		db.updateGame(db.getGameIdFromGame(model), model);
+	
+	public static boolean checkWin(int gameId) {
+		Game model = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(model.getPlayerIds().get(0));
+		Player next = db.getPlayerFromPlayerId(model.getPlayerIds().get(1));
+		db.updateGame(gameId, model);
 		if(current.getPile().getValueStandard() == next.getPile().getValueStandard() && current.getPile().getNumCards() < next.getPile().getNumCards()) {
 			return true;
 		}
@@ -70,9 +78,10 @@ public class BlackJackController {
 		return false;
 	}
 	
-	public boolean checkBust(Game model) {
+	public static boolean checkBust(int gameId) {
+		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		db.updateGame(db.getGameIdFromGame(model), model);
+		db.updateGame(gameId, model);
 		if(current.getPile().getValueStandard() >  21) {
 			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
 			return true;
@@ -80,4 +89,5 @@ public class BlackJackController {
 		
 		return false;
 	}
+
 }
