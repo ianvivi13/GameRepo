@@ -53,14 +53,14 @@ public class BlackJackController {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
-		model.nextTurn();
 		db.updateGame(db.getGameIdFromGame(model), model);
 	}
 	
 	
 	public boolean checkWin(Game model) {
-		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		Player next = db.getPlayerFromPlayerId(model.getTurnOrder().getPointer()+1);
+		Player current = db.getPlayerFromPlayerId(model.getPlayerIds().get(0));
+		Player next = db.getPlayerFromPlayerId(model.getPlayerIds().get(1));
+		//need to find a way to get next player
 		db.updateGame(db.getGameIdFromGame(model), model);
 		if(current.getPile().getValueStandard() == next.getPile().getValueStandard() && current.getPile().getNumCards() < next.getPile().getNumCards()) {
 			return true;
