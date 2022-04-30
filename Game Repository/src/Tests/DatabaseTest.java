@@ -189,6 +189,19 @@ public class DatabaseTest{
 	}
 	
 	@Test
+	public void testNoDupPlayers() {
+		Player DupPlayer = new Player(true, 1);
+		boolean flag = false;
+		try {
+			int i = db.createPlayer(DupPlayer);
+			System.out.println(i);
+		} catch (Exception PlayerAlreadyExistsException) {
+			flag = true;
+		}
+		assertTrue(flag);
+	}
+	
+	@Test
 	public void testGetStandardCard() {
 		assertEquals(db.getStandardCardFromCardId(db.getCardIdFromStandardCard(cardOne)), cardOne);
 		assertEquals(db.getStandardCardFromCardId(db.getCardIdFromStandardCard(cardTwo)), cardTwo);

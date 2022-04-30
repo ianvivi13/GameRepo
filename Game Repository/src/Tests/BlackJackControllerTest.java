@@ -20,6 +20,7 @@ import Database.elves.DatabaseProvider;
 import Database.elves.DerbyDatabase;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
+import Database.elves.PlayerAlreadyExistsException;
 
 public class BlackJackControllerTest{
 	
@@ -42,10 +43,14 @@ public class BlackJackControllerTest{
 		}
 		model = new Game(IDatabase.Key_Blackjack);
 		control = new BlackJackController();
-		one = new Player(true, 1);
-		two = new Player(true, 2);
+		one = new Player(true, db.createUser("dummy", "u"));
+		two = new Player(true, db.createUser("baby", "t"));
+		try {
 		model.addPlayer(db.createPlayer(one));
 		model.addPlayer(db.createPlayer(two));
+		} catch(PlayerAlreadyExistsException e) {
+			
+		}
 		try {
 			modelId = control.initialize(model);
 		} catch (Exception e) {
@@ -84,9 +89,9 @@ public class BlackJackControllerTest{
 		model = db.getGameFromGameId(modelId);
 		assertEquals(1, model.getTurnOrder().getTurnList().size());
 		
-//		control.checkWin(model);
-//		model = db.getGameFromGameId(modelId);
-//		System.out.println(control.checkWin(model));
+		control.checkWin(model);
+		model = db.getGameFromGameId(modelId);
+		//assertTrue(control.checkWin(model));
 	}
 
 	
