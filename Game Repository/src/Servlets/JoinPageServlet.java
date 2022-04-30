@@ -37,18 +37,21 @@ public class JoinPageServlet extends HttpServlet {
 			
 			int g = db.gameCodeValid(gameCode);
 			if (g > 0) {
-				try {
-					Player player = new Player(true, i);
-					int p = db.createPlayer(player);
-					Game d = db.getGameFromGameId(g);
-					d.addPlayer(p);
-					db.updateGame(g, d);
-					req.getSession().setAttribute("gameId", g);
-		            resp.sendRedirect("../gamerepo/joinextended");
-				} catch (Exception PlayerAlreadyExistsException) {
-		        	resp.sendRedirect("../gamerepo/home");
-		        	return;
-		        }
+				Game d = db.getGameFromGameId(g);
+				if (!d.lobbyFull()) {
+					try {
+						Player player = new Player(true, i);
+						int p = db.createPlayer(player);
+						
+						d.addPlayer(p);
+						db.updateGame(g, d);
+						req.getSession().setAttribute("gameId", g);
+			            resp.sendRedirect("../gamerepo/joinextended");
+					} catch (Exception PlayerAlreadyExistsException) {
+			        	resp.sendRedirect("../gamerepo/home");
+			        	return;
+			        }
+				}
 			} else {
 				resp.sendRedirect("../gamerepo/join");
 			}

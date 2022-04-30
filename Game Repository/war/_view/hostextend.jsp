@@ -63,16 +63,11 @@
 					<%IDatabase db = DatabaseProvider.getInstance(); %>
 					<%int gId = (int) session.getAttribute("gameId"); %>
 					<%Game game = db.getGameFromGameId(gId); %>
-					
-					window.setInterval('refresh()', 1000); 	
-				    // Call a function every 1000 milliseconds 
-				    // (OR 1 seconds).
-
-				    // Refresh or reload page.
-				    function refresh() {
-				    	window .location.reload();
-				    }
 				    
+					function timeRefresh(time) {
+			        	setTimeout("location.reload(false);", time);
+			      	} 
+			    	timeRefresh(1000)
 					
 		  </script>
 

@@ -288,7 +288,8 @@ public class DerbyDatabase implements IDatabase {
 						"	pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
 						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
 						+ "	cardSideA BOOLEAN ,"
-						+ "	wildColor VARCHAR(1))"
+						+ "	wildColor VARCHAR(1) ,"
+						+ " MaxPlayers INTEGER)"
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -625,8 +626,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor)"
-							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
 						);
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
@@ -636,6 +637,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(6, altPileId);
 					stmt.setBoolean(7, game.getCardSideA());
 					stmt.setString(8, game.getWildColor());
+					stmt.setInt(9, game.getMaxPlayers());
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -1551,6 +1553,7 @@ public class DerbyDatabase implements IDatabase {
 				int altPileId;
 				boolean cardSideA;
 				String wildColor;
+				int MaxPlayers;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -1572,6 +1575,7 @@ public class DerbyDatabase implements IDatabase {
 						 altPileId = resultSet.getInt("alt_pile_id");
 						 cardSideA = resultSet.getBoolean("cardSideA");
 						 wildColor = resultSet.getString("wildColor");
+						 MaxPlayers = resultSet.getInt("MaxPlayers");
 						 
 						 game = new Game(gameCode, gameKey);
 						 game.setWildColor(wildColor);
@@ -1579,6 +1583,7 @@ public class DerbyDatabase implements IDatabase {
 						 game.setAltPile(getPileFromPileId(altPileId));
 						 game.setTurnOrder(getTurnOrderFromTurnOrderId(turnId));
 						 game.setPlayerIds(sqlTranscoder.decode(playerIds));
+						 game.setMaxPlayers(MaxPlayers);
 						 ArrayList<Player> players = new ArrayList<>();
 						 for(int id : sqlTranscoder.decode(playerIds)) {
 							 Player player = getPlayerFromPlayerId(id);
@@ -1640,14 +1645,15 @@ public class DerbyDatabase implements IDatabase {
 						
 						stmt = conn.prepareStatement(
 								"UPDATE Game"
-								+ " SET players = ?, cardSideA = ?, wildColor = ?"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?"
 								+ "	WHERE game_id = ?"
 						);
 						
 						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
 						stmt.setBoolean(2, game.getCardSideA());
 						stmt.setString(3, game.getWildColor());
-						stmt.setInt(4, gameId);
+						stmt.setInt(4, game.getMaxPlayers());
+						stmt.setInt(5, gameId);
 						stmt.executeUpdate();
 					}
 					

@@ -16,7 +16,7 @@
         <title>Join Extended</title>
     </head>
     
-    <body class=StaticBackground>
+    <body class=StaticBackground onLoad="timeRefresh(1000);">
 		<script>
 			let value = localStorage.getItem("buttonValue");
         console.log(value);
@@ -30,7 +30,7 @@
             localStorage.setItem("buttonValue", 'blackjack');
             console.log("buttonValue");
             break;
-
+			
         case 'uno':
             document.body.style.color = "black";
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
@@ -64,16 +64,12 @@
 		<%IDatabase db = DatabaseProvider.getInstance(); %>
 		<%int gId = (int) session.getAttribute("gameId"); %>
 		<%Game game = db.getGameFromGameId(gId); %>
-		
-		window.setInterval('refresh()', 1000); 	
-	    // Call a function every 1000 milliseconds 
-	    // (OR 1 seconds).
-
-	    // Refresh or reload page.
-	    function refresh() {
-	    	window .location.reload();
-	    }
         
+    	function timeRefresh(time) {
+        	setTimeout("location.reload(false);", time);
+      	} 
+    	timeRefresh(1000)
+    	
 		</script>
     	<div class="HeaderStyle">
     		Join Lobby

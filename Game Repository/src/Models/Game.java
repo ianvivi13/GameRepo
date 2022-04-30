@@ -19,6 +19,7 @@ public class Game {
 	private boolean cardSideA;
 	private String wildColor;
 	private IDatabase db;
+	private int MaxPlayers;
 	
 	public Game(String gameKey){
 		InitDatabase.init();
@@ -32,6 +33,7 @@ public class Game {
 		cardSideA = true;
 		wildColor = "B";
 		tko = new TurnOrder();
+		MaxPlayers = 2;
 		
 		while(db.gameCodeValid(gameCode) > 0) {
 			gameCode = generateGameCode();
@@ -47,6 +49,7 @@ public class Game {
 		altPile = new Pile();
 		cardSideA = true;
 		wildColor = "B";
+		MaxPlayers = 2;
 		tko = new TurnOrder();
 	}
 	
@@ -73,6 +76,14 @@ public class Game {
 	
 	public void setAltPile(Pile pile) {
 		altPile = pile;
+	}
+	
+	public void setMaxPlayers(int val) {
+		MaxPlayers = val;
+	}
+	
+	public int getMaxPlayers() {
+		return MaxPlayers;
 	}
 	
 	public void setTurnOrder(TurnOrder turn) {
@@ -210,6 +221,10 @@ public class Game {
 		}
 		
 		return true;
+	}
+	
+	public boolean lobbyFull() {
+		return (MaxPlayers == playerIds.size());
 	}
 	
 	public void reverseTurnOrder() {
