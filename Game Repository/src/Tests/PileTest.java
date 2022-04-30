@@ -46,7 +46,7 @@ public class PileTest{
 		assertEquals(52, fullPile.getNumCards());
 		
 		assertEquals(0, unoPile.getNumCards());
-		assertEquals(109, fullUnoPile.getNumCards());
+		assertEquals(108, fullUnoPile.getNumCards());
 		
 	}
 	
