@@ -12,7 +12,7 @@ public class BlackJackController {
 	private IDatabase db;
 	
 	
-	public int initialize(Game model) throws Exception {
+	public void initialize(Game model) throws Exception {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		
@@ -23,9 +23,9 @@ public class BlackJackController {
 			players.getPile().addCards(model.getMainPile().removeCards(2));
 			players.getPile().setVisibleIndex(players.getPile().getIndexOfTopCard());
 		}
-		int gameID = db.createGame(model);
-		db.updateGame(gameID, model);
-		return gameID;
+//		int gameID = db.createGame(model);
+		db.updateGame(db.getGameIdFromGame(model), model);
+//		return gameID;
 	}
 	
 	// for hold we want to basically skip a players turn
