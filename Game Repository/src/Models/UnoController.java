@@ -27,6 +27,22 @@ private IDatabase db;
 		return gameID;
 	}
 	
+	public boolean checkUno(Game model) {
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(current.getPile().getNumCards() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkWin(Game model) {
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(current.getPile().getNumCards() == 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	public Selection select(Game model, Location location) {
 		ArrayList<Object> removed;
 		if (location.getLocationType() == LocationType.MAIN_DECK) {
