@@ -67,7 +67,6 @@
                 <form>
                 <button class="ButtonStyle" id="Hit" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
                 
-                <%%>
             </form>         
             
             <form class="center">

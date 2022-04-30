@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
 import Models.BlackJackController;
 import Models.BlackJackModel;
 import Models.Game;
@@ -35,7 +37,7 @@ public class BlackJackPageServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+			
 		req.setAttribute("username", "user");
 		
 		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);

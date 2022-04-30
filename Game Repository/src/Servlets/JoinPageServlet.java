@@ -42,11 +42,6 @@ public class JoinPageServlet extends HttpServlet {
 					int p = db.createPlayer(player);
 					Game d = db.getGameFromGameId(g);
 					
-					if (d.getNumOfPlayers() >= 3 && gameCode == "BLJ") {
-						resp.sendRedirect("../gamerepo/join");
-						return;
-					}
-					
 					d.addPlayer(p);
 					db.updateGame(g, d);
 					req.getSession().setAttribute("gameId", g);
