@@ -20,7 +20,6 @@ private IDatabase db;
 		
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
-			players.getPile().setVisibleIndex(players.getPile().getIndexOfTopCard());
 		}
 		int gameID = db.createGame(model);
 		db.updateGame(gameID, model);
