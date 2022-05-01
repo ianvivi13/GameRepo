@@ -20,6 +20,7 @@ public class Game {
 	private String wildColor;
 	private IDatabase db;
 	private int MaxPlayers;
+	private int AuxInt;
 	
 	public Game(String gameKey){
 		InitDatabase.init();
@@ -34,6 +35,7 @@ public class Game {
 		wildColor = "B";
 		tko = new TurnOrder();
 		MaxPlayers = 2;
+		AuxInt = 0;
 		
 		while(db.gameCodeValid(gameCode) > 0) {
 			gameCode = generateGameCode();
@@ -51,6 +53,23 @@ public class Game {
 		wildColor = "B";
 		MaxPlayers = 2;
 		tko = new TurnOrder();
+		AuxInt = 0;
+	}
+	
+	public int getAuxInt() {
+		return AuxInt;
+	}
+	
+	public void setAuxInt(int Aux) {
+		AuxInt = Aux;
+	}
+	
+	public void incrementAuxInt() {
+		AuxInt ++;
+	}
+	
+	public void resetAuxInt() {
+		AuxInt = 0;
 	}
 	
 	public void flip() {
