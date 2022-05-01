@@ -63,7 +63,6 @@ public class DatabaseTest{
 	
 	private static Game gameOne;
 	private static Game gameTwo;
-	private static Game gameThree;
 	
 	private static StatisticsBlackjack blackjackStat = new StatisticsBlackjack();
 	private static StatisticsUno unoStat = new StatisticsUno();
@@ -148,8 +147,7 @@ public class DatabaseTest{
 		// Game Creation
 		
 		gameOne = new Game("BLJ");
-		gameTwo = new Game("EXP");
-		gameThree = new Game("UNO");
+		gameTwo = new Game("UNO");
 		
 		// Setting Statistics
 		
@@ -283,15 +281,8 @@ public class DatabaseTest{
 		pileOne.shuffle();
 		db.updatePile(pileId, pileOne);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileOne));
-		
-		boolean flag = false;
 		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -301,15 +292,8 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileTwo);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileTwo));
-		
-		boolean flag = false;
 		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -319,15 +303,8 @@ public class DatabaseTest{
 		pileTwo.shuffle();
 		db.updatePile(pileId, pileThree);
 		assertTrue(db.getPileFromPileId(pileId).equals(pileThree));
-		
-		boolean flag = false;
 		db.deletePile(pileId);
-		try {
-			db.getPileFromPileId(pileId);
-		} catch (Exception PersistenceException) {
-			flag = true;
-		}
-		assertTrue(flag);
+		assertTrue(isPileDeleted(pileId));
 	}
 	
 	@Test
@@ -350,7 +327,7 @@ public class DatabaseTest{
 		assertEquals(db.getNameFromPlayerId(playerId), botOne.getName());
 		
 		db.deletePlayer(playerId);
-		assertEquals(db.getPlayerFromPlayerId(playerId), null);
+		assertTrue(isPlayerDeleted(playerId));
 		
 		boolean flag = false;
 		try {
@@ -467,7 +444,56 @@ public class DatabaseTest{
 	public void testGame() {
 		int gameOneId = db.createGame(gameOne);
 		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
+		assertTrue(gameOne.getGameCode().length() == 11);
+		assertTrue(gameOneId == db.getGameIdFromGame(gameOne));
+		gameOne.addPlayer(db.createPlayer(playerOne));
+		gameOne.addPlayer(db.createPlayer(playerTwo));
+		gameOne.getMainPile().populate();
+		gameOne.getMainPile().shuffle();
+		gameOne.getAltPile().populate();
+		gameOne.getAltPile().shuffle();
+		gameOne.flip();
+		db.updateGame(gameOneId, gameOne);
+		assertTrue(db.getGameFromGameId(gameOneId).equals(gameOne));
+		
+		db.deleteGame(gameOneId);
+		assertEquals(db.getGameFromGameId(gameOneId), null);
+		
+		int gameTwoId = db.createGame(gameTwo);
+		assertTrue(db.getGameFromGameId(gameTwoId).equals(gameTwo));
+		assertTrue(gameTwo.getGameCode().length() == 11);
+		assertTrue(gameTwoId == db.getGameIdFromGame(gameTwo));
+		gameTwo.addPlayer(db.createPlayer(playerTwo));
+		gameTwo.addPlayer(db.createPlayer(playerOne));
+		gameTwo.getMainPile().populateUno();
+		gameTwo.getMainPile().shuffle();
+		gameTwo.flip();
+		
+		db.updateGame(gameTwoId, gameTwo);
+		assertTrue(db.getGameFromGameId(gameTwoId).equals(gameTwo));
+		
+		db.deleteGame(gameTwoId);
+		assertEquals(db.getGameFromGameId(gameTwoId), null);
 	}
+	
+	boolean isPileDeleted(int pileId) {
+	    try {
+	        db.getPileFromPileId(pileId);
+	        return false;
+	    } catch (Exception PersistanceException) {
+	        return true;
 
+	    }
+	}
+	
+	boolean isPlayerDeleted(int playerId) {
+        try {
+        	db.getPlayerFromPlayerId(playerId);
+        	System.out.println("Fuck");
+        	return false;
+        } catch (Exception PersistanceException) {
+	        return true;
+	    }
+	}
 	
 }

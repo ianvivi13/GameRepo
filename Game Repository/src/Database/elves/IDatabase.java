@@ -32,6 +32,8 @@ public interface IDatabase {
 	public void deletePlayer(int playerId);
 	public void deletePlayer(Player player);
 	public boolean isHuman(int PlayerId);
+	public int getPileIdFromPlayerId(int playerId); //Test
+	public int getAltPileIdFromPlayerId(int playerId); //Test
 	public String getNameFromPlayerId(int PlayerId);
 	
 	// User
@@ -89,6 +91,9 @@ public interface IDatabase {
 	public Game getGameFromGameId(int gameId); //Test
 	public void updateGame(int gameId, Game game); //Test
 	public int gameCodeValid(String gameCode); //Test
+	public void deleteGame(int gameId); //Test
+	public int getPileIdFromGameId(int gameId); //Test
+	public int getAltPileIdFromGameId(int gameId); //Test
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);
