@@ -35,13 +35,22 @@
             <%int gId = (int) session.getAttribute("gameId"); %>
             <%Game game = db.getGameFromGameId(gId); %>
             <%String us = (String) session.getAttribute("user"); %>
-            <%int currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
+            <%try {
+            	
+            	int currentPlayerId = game.getTurnOrder().CurrentPlayer(); 
+  
+            } catch (Exception e) {
+            	System.out.println("There is no players in the turn order... Calculating game statistics");
+            	System.out.println(e);
+            }%>
+            
 
             function timeRefresh(time) {
             	setTimeout("location.reload(false);", time);
           	} 
-        	timeRefresh(1000)
+        	timeRefresh(1000);
         </script>
+        
         <div id="left"><a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
     </div>
@@ -64,10 +73,20 @@
     <%playerLeft = game.getIndexPlayer(1);%>
     <% } %>
     
+    <%BlackJackController controller = new BlackJackController();
+    
+    if (controller.checkWin() || controller.checkBust()) {
+    	if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+    		<div id="foreground" src="_view/css/Win"></div>
+    <% } else { %>
+    		<div id="foreground" src="_view/css/Lose"></div>
+      <% }
+    }%>
+    
     <div id="players">
         <div class="split" id="player1">
         	
-        	<div id="centers">${user}</div>
+        	<div id="centers"> Player: ${user}</div>
                 
                 <div class="cards">  
 	                <% for (Object o : playerLeft.getPile().getPile()) { %>
@@ -79,7 +98,7 @@
 	                %>
                 </div>
             
-            <% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+            <% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft) || controller.checkWin() || CheckBust) { %>
             <form class="center" id="Hit" method="post">
             	<button class="ButtonStyle" id="blend" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
                 <button class="ButtonStyle" id="blend" name="Hold" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
@@ -90,7 +109,7 @@
         </div>
         <div class="split" id="player2">
         	
-        	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
+        	<div id="centers"> Player: <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
         	
 	        	<div class="cards">
 	        		<% boolean firstFlag = true; %>

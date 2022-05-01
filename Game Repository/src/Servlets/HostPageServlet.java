@@ -44,13 +44,7 @@ public class HostPageServlet extends HttpServlet {
             
             req.getSession().setAttribute("gameId", newGame);
             resp.sendRedirect("../gamerepo/hostextend");
-            return;
-            //String hit = req.getParameter("hit");
-            //String hold = req.getParameter("hold");
-            //String freeze = req.getParameter("freeze");
-            //BlackJackController controller = new BlackJackController();
-            //controller.(model);
-            
+            return;   
 
         } catch (Exception PlayerAlreadyExistsException) {
             resp.sendRedirect("../gamerepo/home");

@@ -21,13 +21,11 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 		
-		HttpSession session = req.getSession(false);
-		
 		System.out.println("HeHeHe");
 		if (req.getParameter("logout") != null) {
 			System.out.println("HAHAHA");
 			resp.sendRedirect("../gamerepo/login");
-			session.invalidate();
+			req.getSession().removeAttribute("user");
 			return;
 		}
 		

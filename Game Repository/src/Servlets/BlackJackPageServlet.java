@@ -49,7 +49,7 @@ public class BlackJackPageServlet extends HttpServlet {
             	BlackJackController.checkWin(gId);
             }
         } catch (Exception e) {
-            System.out.println("There is an error with:" + e);
+            System.out.println("There is an error with: " + e);
         }
 
 		resp.sendRedirect("../gamerepo/blackjack");
