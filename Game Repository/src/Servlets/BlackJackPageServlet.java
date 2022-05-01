@@ -40,13 +40,10 @@ public class BlackJackPageServlet extends HttpServlet {
             if (req.getParameter("Hit") != null) {
                 //Set....
             	BlackJackController.hit(gId);
-            	BlackJackController.checkBust(gId);
-            	
             } else if (req.getParameter("Hold") != null) {
             	BlackJackController.hold(gId);
             } else if (req.getParameter("Freeze") != null) {
             	BlackJackController.freeze(gId);
-            	BlackJackController.checkWin(gId);
             }
         } catch (Exception e) {
             System.out.println("There is an error with:" + e);

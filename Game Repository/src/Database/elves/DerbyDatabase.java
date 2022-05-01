@@ -289,7 +289,8 @@ public class DerbyDatabase implements IDatabase {
 						+ "	alt_pile_id INTEGER, FOREIGN KEY (pile_id) REFERENCES Pile(pile_id) ,"
 						+ "	cardSideA BOOLEAN ,"
 						+ "	wildColor VARCHAR(1) ,"
-						+ " MaxPlayers INTEGER)"
+						+ " MaxPlayers INTEGER ,"
+						+ " AuxInt INTEGER )"
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -627,8 +628,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers)"
-							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers, AuxInt)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 						);
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
@@ -639,6 +640,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setBoolean(7, game.getCardSideA());
 					stmt.setString(8, game.getWildColor());
 					stmt.setInt(9, game.getMaxPlayers());
+					stmt.setInt(10, game.getAuxInt());
 					stmt.executeUpdate();
 					stmt.close();
 					
@@ -1555,6 +1557,7 @@ public class DerbyDatabase implements IDatabase {
 				boolean cardSideA;
 				String wildColor;
 				int MaxPlayers;
+				int AuxInt;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -1577,6 +1580,7 @@ public class DerbyDatabase implements IDatabase {
 						 cardSideA = resultSet.getBoolean("cardSideA");
 						 wildColor = resultSet.getString("wildColor");
 						 MaxPlayers = resultSet.getInt("MaxPlayers");
+						 AuxInt = resultSet.getInt("AuxInt");
 						 
 						 game = new Game(gameCode, gameKey);
 						 game.setWildColor(wildColor);
@@ -1585,6 +1589,7 @@ public class DerbyDatabase implements IDatabase {
 						 game.setTurnOrder(getTurnOrderFromTurnOrderId(turnId));
 						 game.setPlayerIds(sqlTranscoder.decode(playerIds));
 						 game.setMaxPlayers(MaxPlayers);
+						 game.setAuxInt(AuxInt);
 						 ArrayList<Player> players = new ArrayList<>();
 						 for(int id : sqlTranscoder.decode(playerIds)) {
 							 Player player = getPlayerFromPlayerId(id);
@@ -1646,7 +1651,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						stmt = conn.prepareStatement(
 								"UPDATE Game"
-								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?, AuxInt = ?"
 								+ "	WHERE game_id = ?"
 						);
 						
@@ -1654,7 +1659,8 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setBoolean(2, game.getCardSideA());
 						stmt.setString(3, game.getWildColor());
 						stmt.setInt(4, game.getMaxPlayers());
-						stmt.setInt(5, gameId);
+						stmt.setInt(5, game.getAuxInt());
+						stmt.setInt(6, gameId);
 						stmt.executeUpdate();
 					}
 					
