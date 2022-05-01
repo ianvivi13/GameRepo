@@ -94,6 +94,7 @@ public interface IDatabase {
 	public void deleteGame(int gameId); //Test
 	public int getPileIdFromGameId(int gameId); //Test
 	public int getAltPileIdFromGameId(int gameId); //Test
+	public boolean gameIdValid(int gameId);
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);

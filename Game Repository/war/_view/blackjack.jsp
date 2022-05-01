@@ -40,13 +40,11 @@
             	<%currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
             <% } catch (Exception e) {}%>
             function timeRefresh(time) {
-            	setTimeout("location.reload(false);", time);
+            	<% if (currentPlayerId != null) { %>
+            		setTimeout("location.reload(false);", time);
+            	<% } %>
           	} 
         	timeRefresh(1000);
-        	
-        	function byebye() {
-        		console.log("byebye()");
-        	}
         	
         </script>
         <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
@@ -116,7 +114,7 @@
            	<% String s = db.getNameFromPlayerId(q); %>
            	<% boolean b = BlackJackController.checkWin(gId); %>
            	<% boolean z = s.equals(us); %>
-           	<a href="../gamerepo/home" onclick="byebye();">
+           	<a href="../gamerepo/home">
            	<% if (b == z) {%>
            		<img id = "foreground" src="_view/images/Win.png">
            	<% } else { %>

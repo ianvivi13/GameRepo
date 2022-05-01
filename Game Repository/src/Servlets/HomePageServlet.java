@@ -3,14 +3,19 @@ package Servlets;
 import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
 import Models.User;
 
 public class HomePageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		IDatabase db;
+        db = DatabaseProvider.getInstance();
+		
 		
 		String user = (String) req.getSession().getAttribute("user");
 		if (user == null) {
@@ -21,9 +26,17 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 		
-		HttpSession session = req.getSession(false);
+		if (req.getSession().getAttribute("gameId") != null) {
+			int gId = (int) req.getSession().getAttribute("gameId");
+			if (db.gameIdValid(gId)) {
+				db.deleteGame(gId);
+			}
+			
+			req.getSession().setAttribute("gameId", null);
+		}
 		
-		System.out.println("HeHeHe");
+		
+		
 		if (req.getParameter("logout") != null) {
 			req.getSession().removeAttribute("user");
 			resp.sendRedirect("../gamerepo/login");

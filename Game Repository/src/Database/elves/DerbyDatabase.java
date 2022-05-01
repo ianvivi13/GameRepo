@@ -748,6 +748,39 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Checks if the gameId is already in the database
+	public boolean gameIdValid(int gameId) {
+			return executeTransaction(new Transaction<Boolean>() {
+				@Override
+				public Boolean execute(Connection conn) throws SQLException {
+					PreparedStatement stmt = null;
+					ResultSet resultSet = null;
+
+					try {
+						stmt = conn.prepareStatement(
+							"SELECT Game.code" +
+							" FROM Game"
+							+ " WHERE Game.game_id = ?"
+						);
+						
+						stmt.setInt(1, gameId);
+						resultSet = stmt.executeQuery();
+						
+						if(resultSet.next()) {
+							return true;
+						}
+										
+						stmt.close();
+						
+						return false;
+					} finally {
+						DBUtil.closeQuietly(resultSet);
+						DBUtil.closeQuietly(stmt);
+					}
+				}
+			});
+		}
+	
 	// populates the BlackJackCards table with cards
 	private void initializeBlackJackCards() {
 		executeTransaction(new Transaction<Void>() {
@@ -2259,7 +2292,6 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
-		
 		deletePile(pileId);
 		deletePile(altPileId);
 		if(isHuman) {
@@ -2318,6 +2350,10 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Deletes a game and its "children" given a game id
 	public void deleteGame(int gameId) {
+		System.out.println("deleting game: " + gameId);
+		int pileId = getPileIdFromGameId(gameId);
+		int alt_pile_id = getAltPileIdFromGameId(gameId);
+		int turn_id = getTurnIdFromGameId(gameId);
 		executeTransaction(new Transaction<Void>() {
 			@Override
 			public Void execute(Connection conn) throws SQLException {
@@ -2334,25 +2370,14 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, gameId);
 					stmt.executeUpdate();
 					
-					stmt.close();
-					
-					stmt = conn.prepareStatement(
-							"SELECT pile_id, alt_pile_id, turn_id"
-							+ " FROM Game" +
-							"	WHERE Game.game_id = ?"
-							);
-					stmt.setInt(1, gameId);
-					resultSet = stmt.executeQuery();
-					if(resultSet.next()) {
-						deletePile(resultSet.getInt("pile_id"));
-						deletePile(resultSet.getInt("alt_pile_id"));
-						deleteTurnOrder(resultSet.getInt("turn_id"));
+					try {
 						for(int playerId : game.getPlayerIds()) {
 							deletePlayer(playerId);
-							if(!isHuman(playerId)) {
-								deleteBot(getUserBotIdFromPlayerId(playerId));
-							}
 						}
+						
+						
+					} catch (Exception e) {
+						System.out.println(e);
 					}
 					
 					return null;
@@ -2362,6 +2387,9 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
+		deletePile(pileId);
+		deletePile(alt_pile_id);
+		deleteTurnOrder(turn_id);
 	}
 	
 	// return boolean if User exists from username and password
