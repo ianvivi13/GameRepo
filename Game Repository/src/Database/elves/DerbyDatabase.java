@@ -1631,6 +1631,7 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setString(1, sqlTranscoder.encode(game.getPlayerIds()));
 						stmt.setBoolean(2, game.getCardSideA());
 						stmt.setString(3, game.getWildColor());
+						stmt.setInt(4,  gameId);
 						
 						stmt.executeUpdate();
 					}
@@ -1883,17 +1884,28 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				String encodedIds = encodeCardIds(pile.getPile());
+				String gameKey = IDatabase.Key_Blackjack;
+				if(pile.getType() == "UnoCard") {
+					gameKey = IDatabase.Key_Uno;
+				}
+				else if(pile.getType() == "UnoFlipCard") {
+					gameKey = IDatabase.Key_UnoFlip;
+				}
+				else if(pile.getType() == "ExplodingKittensCard") {
+					gameKey = IDatabase.Key_ExplodingKittens;
+				}
 				
 				try {
 					stmt = conn.prepareStatement(
 							"UPDATE Pile"
-							+ " SET exposeIndex = ?, cards = ?"
+							+ " SET gameKey = ?, exposeIndex = ?, cards = ?"
 							+ "	WHERE pile_id = ?"
 							);
 					
-					stmt.setInt(1, pile.getVisibleIndex());
-					stmt.setString(2, encodedIds);
-					stmt.setInt(3, pile_id);
+					stmt.setString(1, gameKey);
+					stmt.setInt(2, pile.getVisibleIndex());
+					stmt.setString(3, encodedIds);
+					stmt.setInt(4, pile_id);
 					stmt.executeUpdate();
 					stmt.close();
 					

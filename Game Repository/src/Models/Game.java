@@ -140,6 +140,7 @@ public class Game {
 		db = DatabaseProvider.getInstance();
 		tko.RemovePlayer(playerId);
 		players.remove(db.getPlayerFromPlayerId(playerId));
+		playerIds.remove(playerId);
 	}
 	
 	public String generateGameCode() {
