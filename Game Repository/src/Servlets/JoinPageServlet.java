@@ -25,7 +25,7 @@ public class JoinPageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Join Servlet: doGet");
+		System.out.println("Join Servlet: doGet: " + user);
 		
 		IDatabase db;
         db = DatabaseProvider.getInstance();
@@ -44,15 +44,6 @@ public class JoinPageServlet extends HttpServlet {
 						Player player = new Player(true, i);
 						int p = db.createPlayer(player);
 						d.addPlayer(p);
-						/*
-						 temp
-						 */
-						//d.getMainPile().populate();
-						//d.getMainPile().shuffle();
-						//d.getIndexPlayer(0).getPile().addCards(d.getMainPile().removeCards(4));
-						//d.getIndexPlayer(1).getPile().addCards(d.getMainPile().removeCards(5));
-						
-						//------------
 						db.updateGame(g, d);
 						req.getSession().setAttribute("gameId", g);
 			            resp.sendRedirect("../gamerepo/joinextended");

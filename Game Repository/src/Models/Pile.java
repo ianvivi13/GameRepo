@@ -35,7 +35,6 @@ public class Pile{
 	if(val <= 11 && isAce) {
 		val+= 10;
 	}
-	System.out.println(val);
 	return val;
 }
 	

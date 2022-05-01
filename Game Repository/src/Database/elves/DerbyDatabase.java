@@ -2350,7 +2350,6 @@ public class DerbyDatabase implements IDatabase {
 	
 	// Deletes a game and its "children" given a game id
 	public void deleteGame(int gameId) {
-		System.out.println("deleting game: " + gameId);
 		int pileId = getPileIdFromGameId(gameId);
 		int alt_pile_id = getAltPileIdFromGameId(gameId);
 		int turn_id = getTurnIdFromGameId(gameId);

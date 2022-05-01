@@ -24,13 +24,12 @@ public class HostPageServlet extends HttpServlet {
             resp.sendRedirect("../gamerepo/login");
             return;
         }
-        System.out.println("Host Servlet: doGet");
+        System.out.println("Host Servlet: doGet: " + user);
         
         
         IDatabase db;
         db = DatabaseProvider.getInstance();
         int i = db.getUserIDfromUsername(user);
-        System.out.println("UserId:" + i);
         try {
             
             Player player1 = new Player(true, i);

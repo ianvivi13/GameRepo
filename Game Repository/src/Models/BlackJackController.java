@@ -98,19 +98,6 @@ public class BlackJackController {
 		if (Val0 > Val1) {return true;}
 		if (Val0 < Val1) {return false;}
 		return true;
-		
-		/*
-		if(Player0.getPile().getValueStandard() == Player1.getPile().getValueStandard() && Player0.getPile().getNumCards() < Player1.getPile().getNumCards()) {
-			return true;
-		}
-		else if(Player0.getPile().getValueStandard() < 21 && Player1.getPile().getValueStandard() < Player0.getPile().getValueStandard()) {
-			return true;
-		}
-		else if(Player0.getPile().getValueStandard() == 21) {
-			return true;
-		}
-		return false;
-		*/
 	}
 	
 	public static boolean checkBust(int gameId) {

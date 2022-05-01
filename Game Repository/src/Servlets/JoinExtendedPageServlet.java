@@ -47,7 +47,7 @@ public class JoinExtendedPageServlet extends HttpServlet {
 			resp.sendRedirect("../gamerepo/home");
 		}
 		
-		System.out.println("Join Extended Servlet: doGet");
+		System.out.println("Join Extended Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/joinextended.jsp").forward(req, resp);
 	}

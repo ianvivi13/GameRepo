@@ -22,7 +22,7 @@ public class SingleplayerPageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Singleplayer Servlet: doGet");
+		System.out.println("Singleplayer Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/singleplayerpage.jsp").forward(req, resp);
 	}

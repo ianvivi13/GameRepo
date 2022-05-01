@@ -133,7 +133,7 @@
 		</div>
 
 		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/stats">
+			<a href="../gamerepo/stats">
             	<button class="ButtonStyle" type="submit">Stats</button>
             </a>
 		</div>

@@ -26,7 +26,7 @@ public class HostPageExtendServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Host Extended Servlet: doGet");
+		System.out.println("Host Extended Servlet: doGet: " + user);
 		
 		IDatabase db;
         db = DatabaseProvider.getInstance();
@@ -52,8 +52,6 @@ public class HostPageExtendServlet extends HttpServlet {
 			System.out.println(e);
 			resp.sendRedirect("../gamerepo/home");
 		}
-        
-		System.out.println("GC: " + game.getGameCode());
 		
 		if (req.getParameter("leave") != null) {
 			

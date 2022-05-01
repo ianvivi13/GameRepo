@@ -13,8 +13,7 @@ public class HomePageServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IDatabase db;
-        db = DatabaseProvider.getInstance();
+		
 		
 		
 		String user = (String) req.getSession().getAttribute("user");
@@ -25,7 +24,8 @@ public class HomePageServlet extends HttpServlet {
 			resp.sendRedirect("../gamerepo/login");
 			return;
 		}
-		
+		IDatabase db;
+        db = DatabaseProvider.getInstance();
 		if (req.getSession().getAttribute("gameId") != null) {
 			int gId = (int) req.getSession().getAttribute("gameId");
 			if (db.gameIdValid(gId)) {
@@ -44,7 +44,7 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Home Servlet: doGet");
+		System.out.println("Home Servlet: doGet: " + user);
 		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
 	}
 	

@@ -22,7 +22,7 @@ public class MultiplayerServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Multiplayer Servlet: doGet");
+		System.out.println("Multiplayer Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/multiplayer.jsp").forward(req, resp);
 	}
