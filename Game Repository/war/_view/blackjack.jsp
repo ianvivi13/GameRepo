@@ -39,15 +39,19 @@
             <% try { %>
             	<%currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
             <% } catch (Exception e) {}%>
-
             function timeRefresh(time) {
             	setTimeout("location.reload(false);", time);
           	} 
-        	timeRefresh(1000)
+        	timeRefresh(1000);
+        	
+        	function byebye() {
+        		console.log("byebye()");
+        	}
+        	
         </script>
         <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
-    	</div>w
+    	</div>
 		<div id="imgCenter">
 	    	<img id="pili" src="_view/images/StandardCards/back-sm.png" style="width: 12%;">
 	    </div>
@@ -106,16 +110,19 @@
 	            </div>
             </div>
         </div>
+        
         <% if (currentPlayerId == null) { %>
         	<% int q = game.getPlayerIds().get(0); %>
-        	<% String s = db.getNameFromPlayerId(q); %>
-        	<% boolean b = BlackJackController.checkWin(gId); %>
-        	<% boolean z = s.equals(us); %>
-        	<% if (b == z) {%>
-        		<img id = "foreground" src="_view/images/Win.png">
-        	<% } else { %>
-        		<img id = "foreground" src="_view/images/Lose.png">
-        	<% } %>
+           	<% String s = db.getNameFromPlayerId(q); %>
+           	<% boolean b = BlackJackController.checkWin(gId); %>
+           	<% boolean z = s.equals(us); %>
+           	<a href="../gamerepo/home" onclick="byebye();">
+           	<% if (b == z) {%>
+           		<img id = "foreground" src="_view/images/Win.png">
+           	<% } else { %>
+           		<img id = "foreground" src="_view/images/Lose.png">
+           	<% } %>
+           	</a>
         <% } %>
     </body>
 

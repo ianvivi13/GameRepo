@@ -23,7 +23,6 @@ public interface IDatabase {
 	public static final String Key_UnoFlip = "UNF";
 	public static final String Key_Blackjack = "BLJ";
 	
-	
 	// Player
 	public int createPlayer(Player player);
 	public Player getPlayerFromPlayerId(int playerId);
