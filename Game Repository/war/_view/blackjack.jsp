@@ -35,33 +35,30 @@
             <%int gId = (int) session.getAttribute("gameId"); %>
             <%Game game = db.getGameFromGameId(gId); %>
             <%String us = (String) session.getAttribute("user"); %>
-            <%int currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
+            <% Integer currentPlayerId = null;%>
+            <% try { %>
+            	<%currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
+            <% } catch (Exception e) {}%>
 
             function timeRefresh(time) {
             	setTimeout("location.reload(false);", time);
           	} 
         	timeRefresh(1000)
         </script>
-        <div id="left"><a href="http://localhost:8080/gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
+        <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
-    </div>
-    <div id="deck">
-	<div id="imgCenter">
-    <% for (int i = 0; i < 1; i++) { %>
-    	<img id="pili" src="_view/images/StandardCards/back-sm.png">
-  <%  }
-    	%>
-    	</div>
-    
-    </div>
+    	</div>w
+		<div id="imgCenter">
+	    	<img id="pili" src="_view/images/StandardCards/back-sm.png" style="width: 12%;">
+	    </div>
     <%Player playerLeft = null; %>
     <%Player playerRight = null; %>
     <%if (db.getUserBotIdFromPlayerId(game.getPlayerIds().get(0)) == db.getUserIDfromUsername(us)) { %>
-    <%playerLeft = game.getIndexPlayer(0);%>
-    <%playerRight = game.getIndexPlayer(1);%>
+	    <%playerLeft = game.getIndexPlayer(0);%>
+	    <%playerRight = game.getIndexPlayer(1);%>
     <% } else { %>
-    <%playerRight = game.getIndexPlayer(0);%>
-    <%playerLeft = game.getIndexPlayer(1);%>
+	    <%playerRight = game.getIndexPlayer(0);%>
+	    <%playerLeft = game.getIndexPlayer(1);%>
     <% } %>
     
     <div id="players">
@@ -78,14 +75,15 @@
 	               }
 	                %>
                 </div>
-            
-            <% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
-            <form class="center" id="Hit" method="post">
-            	<button class="ButtonStyle" id="blend" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
-                <button class="ButtonStyle" id="blend" name="Hold" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
-                <button class="ButtonStyle" id="blend" name="Freeze" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
-            </form>
-            <% } %>
+            <% try { %>
+	            <% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+	            <form class="center" id="Hit" method="post">
+	            	<button class="ButtonStyle" id="blend" name="Hit" type="submit" onClick="hit(game)" value="Hit">Hit</button> 
+	                <button class="ButtonStyle" id="blend" name="Hold" type="submit" onClick="hold(game)" value="Hold">Hold</button> 
+	                <button class="ButtonStyle" id="blend" name="Freeze" type="submit" onClick="freeze(game)" value="Freeze">Freeze</button> 
+	            </form>
+	            <% } %>
+            <% } catch (Exception e) {}%>
             
         </div>
         <div class="split" id="player2">
@@ -94,9 +92,10 @@
         	
 	        	<div class="cards">
 	        		<% boolean firstFlag = true; %>
+	        		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	            	<% for (Object o : playerRight.getPile().getPile()) { %>
 		            	<% if (firstFlag) { %>
-		            		<img id="pili" src="_view/images/StandardCards/back-sm.png">
+		            		<img id="pili" src="_view/images/StandardCards/back-sm.png" >
 		            		<% firstFlag = false; %>
 		            	<% } else { %>
 			            	<% StandardCard c = ((StandardCard) o); %>
@@ -107,6 +106,17 @@
 	            </div>
             </div>
         </div>
+        <% if (currentPlayerId == null) { %>
+        	<% int q = game.getPlayerIds().get(0); %>
+        	<% String s = db.getNameFromPlayerId(q); %>
+        	<% boolean b = BlackJackController.checkWin(gId); %>
+        	<% boolean z = s.equals(us); %>
+        	<% if (b == z) {%>
+        		<img id = "foreground" src="_view/images/Win.png">
+        	<% } else { %>
+        		<img id = "foreground" src="_view/images/Lose.png">
+        	<% } %>
+        <% } %>
     </body>
 
 </html>

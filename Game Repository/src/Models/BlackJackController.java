@@ -84,28 +84,41 @@ public class BlackJackController {
 	
 	public static boolean checkWin(int gameId) {
 		Game model = db.getGameFromGameId(gameId);
-		Player current = db.getPlayerFromPlayerId(model.getPlayerIds().get(0));
-		Player next = db.getPlayerFromPlayerId(model.getPlayerIds().get(1));
-		if(current.getPile().getValueStandard() == next.getPile().getValueStandard() && current.getPile().getNumCards() < next.getPile().getNumCards()) {
+		Player Player0 = db.getPlayerFromPlayerId(model.getPlayerIds().get(0));
+		Player Player1 = db.getPlayerFromPlayerId(model.getPlayerIds().get(1));
+		int Val0 = Player0.getPile().getValueStandard();
+		int Val1 = Player1.getPile().getValueStandard();
+		if ((Val0 > 21) && (Val1 > 21)) {return true;}
+		if (Val0 > 21) {return false;}
+		if (Val1 > 21) {return true;}
+		if (Val0 > Val1) {return true;}
+		if (Val0 < Val1) {return false;}
+		Val0 = Player0.getPile().getNumCards();
+		Val1 = Player1.getPile().getNumCards();
+		if (Val0 > Val1) {return true;}
+		if (Val0 < Val1) {return false;}
+		return true;
+		
+		/*
+		if(Player0.getPile().getValueStandard() == Player1.getPile().getValueStandard() && Player0.getPile().getNumCards() < Player1.getPile().getNumCards()) {
 			return true;
 		}
-		else if(current.getPile().getValueStandard() < 21 && next.getPile().getValueStandard() < current.getPile().getValueStandard()) {
+		else if(Player0.getPile().getValueStandard() < 21 && Player1.getPile().getValueStandard() < Player0.getPile().getValueStandard()) {
 			return true;
 		}
-		else if(current.getPile().getValueStandard() == 21) {
+		else if(Player0.getPile().getValueStandard() == 21) {
 			return true;
 		}
 		return false;
+		*/
 	}
 	
 	public static boolean checkBust(int gameId) {
-		System.out.println("checking bust");
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		
 		if(current.getPile().getValueStandard() >  21) {
 			endGame(gameId);
-			System.out.println("ending game");
 			return true;
 		}
 		return false;

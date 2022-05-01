@@ -323,10 +323,9 @@ public class DerbyDatabase implements IDatabase {
 					/*
 					Temp users for quick login
 					 */
-					db.createUser("1", "1");
-					db.createUser("2", "2");
-					db.createUser("3", "3");
-					db.createUser("4", "4");
+					for (int i = 1 ; i < 30 ; i++) {
+						db.createUser(String.valueOf(i), String.valueOf(i));
+					}
 				
 					db.createAllStats(userOne);
 					db.createAllStats(userTwo);
