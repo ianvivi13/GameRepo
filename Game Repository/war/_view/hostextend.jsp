@@ -2,6 +2,12 @@
 
 <%! int i; %>
 
+<%@page import="Models.Game" %>
+<%@page import= "Database.elves.DatabaseProvider" %>
+<%@page import= "Database.elves.DerbyDatabase" %>
+<%@page import= "Database.elves.IDatabase" %>
+<%@page import= "Database.elves.InitDatabase" %>
+
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
@@ -53,30 +59,41 @@
 						document.body.style.color = "white";
 			  			document.body.style.backgroundImage = "url('_view/css/Back.png')";
 					}
+					<%InitDatabase.init(); %>
+					<%IDatabase db = DatabaseProvider.getInstance(); %>
+					<%int gId = (int) session.getAttribute("gameId"); %>
+					<%Game game = db.getGameFromGameId(gId); %>
+				    
+					function timeRefresh(time) {
+			        	setTimeout("location.reload(false);", time);
+			      	} 
+			    	timeRefresh(1000)
+					
 		  </script>
 
     	<div class="HeaderStyle">
-    		<a href="http://localhost:8080/gamerepo/hostextend"><button class="ButtonStyle" id="game" type="submit">Host</button>
+    		<a href="../gamerepo/hostextend"><button class="ButtonStyle" id="game" type="submit">Host</button></a>
     	</div>
     	<div class="BackButton">
-    		<a href="http://localhost:8080/gamerepo/home">
-            	<button class="ButtonStyle" type="submit">Disband Lobby</button>
+    		<a href="../gamerepo/home">
+            	<button class="ButtonStyle" name="leave" type="submit">Disband Lobby</button>
             </a>
     	</div>
         <div class="AccountCreation">
-        	<div class="title">Game ID: XXXX-YYYYY</div>
+        	
+        	<div class="title">Game ID: <%out.print(game.getGameCode());%></div>
         </div>
        	<div class="leftside">
-       		<%for ( i = 1; i <= 9; i++){ %>
+       		<%for (int p : game.getPlayerIds()) { %>
        			<div class="player">
        				<div class="stat">
-       					<% out.println(i); %>
+       					<% out.println(p); %>
        				</div>
        				<div class="usertitle">
        					This is my master title
        				</div>
        				<div class="name">
-       					MMMMMMMMMMMMMMMMMMMM
+       					<% out.println(db.getNameFromPlayerId(p)); %>
        				</div>
        			</div>
        		<%}%>

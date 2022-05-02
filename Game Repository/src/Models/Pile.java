@@ -16,8 +16,8 @@ public class Pile{
 	}
 	
   public int getValueStandard() {
-	   boolean isAce = false;
-	   int val = 0;
+   boolean isAce = false;
+   int val = 0;
 	  
 	for(Object card : pile) {
 		Rank r = ((StandardCard) card).getRank();
@@ -25,8 +25,8 @@ public class Pile{
 			isAce = true;
 			val++;
 		} else {
-				try {
-					val+= Integer.valueOf(r.toString());
+			try {
+				val+= Integer.valueOf(r.toString());
 			} catch (Exception e){
 				val+=10;
 			}

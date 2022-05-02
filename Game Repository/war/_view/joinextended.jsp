@@ -2,6 +2,12 @@
 
 <%! int i; %>
 
+<%@page import="Models.Game" %>
+<%@page import= "Database.elves.DatabaseProvider" %>
+<%@page import= " Database.elves.DerbyDatabase" %>
+<%@page import= "Database.elves.IDatabase" %>
+<%@page import= "Database.elves.InitDatabase" %>
+
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
@@ -10,7 +16,7 @@
         <title>Join Extended</title>
     </head>
     
-    <body class=StaticBackground>
+    <body class=StaticBackground onLoad="timeRefresh(1000);">
 		<script>
 			let value = localStorage.getItem("buttonValue");
         console.log(value);
@@ -24,7 +30,7 @@
             localStorage.setItem("buttonValue", 'blackjack');
             console.log("buttonValue");
             break;
-
+			
         case 'uno':
             document.body.style.color = "black";
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
@@ -53,29 +59,40 @@
             document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/Back.png')";
         }
+        
+        <%InitDatabase.init(); %>
+		<%IDatabase db = DatabaseProvider.getInstance(); %>
+		<%int gId = (int) session.getAttribute("gameId"); %>
+		<%Game game = db.getGameFromGameId(gId); %>
+        
+    	function timeRefresh(time) {
+        	setTimeout("location.reload(false);", time);
+      	} 
+    	timeRefresh(1000)
+    	
 		</script>
     	<div class="HeaderStyle">
     		Join Lobby
     	</div>
     	<div class="BackButton">
-    		<a href="http://localhost:8080/gamerepo/home">
-            	<button class="ButtonStyle" type="submit">Leave Lobby</button>
+    		<a href="../gamerepo/home">
+            	<button class="ButtonStyle" name="leave" type="submit">Leave Lobby</button>
             </a>
     	</div>
         <div class="AccountCreation">
-        	<div class="title">Game ID: XXXX-YYYYY</div>
+        	<div class="title">Game ID: <%out.print(game.getGameCode());%></div>
         </div>
        	<div class="leftside">
-       		<%for ( i = 1; i <= 9; i++){ %>
+       		<%for (int p : game.getPlayerIds()) { %>
        			<div class="player">
        				<div class="stat">
-       					<% out.println(i); %>
+       					<% out.println(p); %>
        				</div>
        				<div class="usertitle">
        					This is my master title
        				</div>
        				<div class="name">
-       					MMMMMMMMMMMMMMMMMMMM
+       					<% out.println(db.getNameFromPlayerId(p)); %>
        				</div>
        			</div>
        		<%}%>

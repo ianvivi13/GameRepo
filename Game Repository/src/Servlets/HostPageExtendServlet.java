@@ -4,6 +4,12 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import Database.elves.DatabaseProvider;
+import Database.elves.IDatabase;
+import Models.BlackJackController;
+import Models.Game;
+
+
 public class HostPageExtendServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -16,11 +22,42 @@ public class HostPageExtendServlet extends HttpServlet {
 			System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			resp.sendRedirect("../gamerepo/login");
 			return;
 		}
 		
-		System.out.println("Join Servlet: doGet");
+		System.out.println("Host Extended Servlet: doGet: " + user);
+		
+		IDatabase db;
+        db = DatabaseProvider.getInstance();
+        int gId = (int) req.getSession().getAttribute("gameId");
+        Game game = db.getGameFromGameId(gId);
+		
+        try {
+	        if (game.lobbyFull()) {
+	        	switch (game.getGameCode()) {
+	        		case IDatabase.Key_ExplodingKittens:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		case IDatabase.Key_Uno:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		case IDatabase.Key_UnoFlip:
+	        			resp.sendRedirect("../gamerepo/home");
+	        		default:
+	        			BlackJackController.initialize(gId);
+	        			resp.sendRedirect("../gamerepo/blackjack");
+	        	}
+	        	
+	        }
+		} catch (Exception e) {
+			System.out.println(e);
+			resp.sendRedirect("../gamerepo/home");
+		}
+		
+		if (req.getParameter("leave") != null) {
+			
+			//Will delete the game and relocate the host... In join extended, if there no longer exists a game with the same id, exit to home
+			resp.sendRedirect("../gamerepo/home");
+		}
 		
 		req.getRequestDispatcher("_view/hostextend.jsp").forward(req, resp);
 	}
@@ -28,6 +65,7 @@ public class HostPageExtendServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
 		
 		req.getRequestDispatcher("_view/hostextend.jsp").forward(req, resp);
 	}

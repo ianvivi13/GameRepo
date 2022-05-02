@@ -5,12 +5,12 @@
     z-index: 1;
     overflow-x: hidden;
     padding-top: 5px;
+    display: inline-block;
 }
 
 #players {
     bottom: 0;
-    border: 2px solid green;
-
+    flex-wrap: wrap;
     position: fixed;
     left: 0;
     right: 0;
@@ -18,7 +18,6 @@
 }
 
 #player1 {
-    border: 2px solid red;
     left: 0;
     width: 49.7%;
     float: left;
@@ -27,9 +26,9 @@
 }
 
 #playermain {
-    border: 2px solid coral;
+    
     left: 0;
-    width: 49.4%;
+    width: 49.7%;
     float: left;
     height: 96%;
 }
@@ -37,23 +36,70 @@
 #playeralt {
     right: 0;
     width: 49.4%;
-    height: 96%;
-    border: 2px solid pink;
+    height: 98%;
+    
 }
 
 #player2 {
     right: 0;
     width: 49.7%;
     height: 98%;
-    border: 2px solid orange;
 }
 
 #deck {
     top: -10;
-    border: 2px solid turquoise;
     position: fixed;
     left: 0;
     right: 0;
     height: 42%;
-
 }
+
+button.ButtonStyle {
+    width: 190px;
+    padding: 12px 10px;
+    font-size: 18px;
+    color: #ffffff;
+    border-radius: 15px;
+    background-color: #3b3b3b;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+#centers {
+    text-align: center;
+    font-size: 200%; 
+    color: #ffffff; 
+    background-color: #3b3b3bb4;
+    border-radius: 150px;
+    width: 64%; 
+    margin: auto 18% auto 18%;
+}
+
+#Hit {	
+    text-align: center;
+}
+
+#pili {
+	width: 20%;
+	max-width: 20%;
+	height: auto;
+    margin-left: -8%;
+}
+
+#pili:nth-child(1) {
+    margin-left: 2.5%;
+    align-items: center;
+}
+
+#imgCenter {
+    text-align: center;
+}
+
+.cards {
+	margin: auto;
+	text-align: center;
+}
+

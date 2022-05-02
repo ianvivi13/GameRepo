@@ -23,8 +23,17 @@
     opacity: 1;
 }
 
+#foreground {
+	width:100%;
+	max-height: 100%;
+	position:absolute; /*You may also use fixed depending on your needs.*/
+	left:0;
+	top:0; /*If you want it at the bottom you probably want bottom:0 instead*/
+	z-index: 999;
+}
+
 .BlackJack {
-    background-image: url(Back.png);
+    background-image: url(images/BlackJack_Back.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;

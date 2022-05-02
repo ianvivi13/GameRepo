@@ -19,6 +19,8 @@ public class Game {
 	private boolean cardSideA;
 	private String wildColor;
 	private IDatabase db;
+	private int MaxPlayers;
+	private int AuxInt;
 	
 	public Game(String gameKey){
 		InitDatabase.init();
@@ -32,6 +34,8 @@ public class Game {
 		cardSideA = true;
 		wildColor = "B";
 		tko = new TurnOrder();
+		MaxPlayers = 2;
+		AuxInt = 0;
 		
 		while(db.gameCodeValid(gameCode) > 0) {
 			gameCode = generateGameCode();
@@ -47,7 +51,25 @@ public class Game {
 		altPile = new Pile();
 		cardSideA = true;
 		wildColor = "B";
+		MaxPlayers = 2;
 		tko = new TurnOrder();
+		AuxInt = 0;
+	}
+	
+	public int getAuxInt() {
+		return AuxInt;
+	}
+	
+	public void setAuxInt(int Aux) {
+		AuxInt = Aux;
+	}
+	
+	public void incrementAuxInt() {
+		AuxInt ++;
+	}
+	
+	public void resetAuxInt() {
+		AuxInt = 0;
 	}
 	
 	public void flip() {
@@ -63,6 +85,10 @@ public class Game {
 		wildColor = color;
 	}
 	
+	public Player getIndexPlayer(int index) {
+		return players.get(index);
+	}
+	
 	public void setGameCode(String code) {
 		gameCode = code;
 	}
@@ -73,6 +99,14 @@ public class Game {
 	
 	public void setAltPile(Pile pile) {
 		altPile = pile;
+	}
+	
+	public void setMaxPlayers(int val) {
+		MaxPlayers = val;
+	}
+	
+	public int getMaxPlayers() {
+		return MaxPlayers;
 	}
 	
 	public void setTurnOrder(TurnOrder turn) {
@@ -111,6 +145,10 @@ public class Game {
 		return players;
 	}
 	
+	public int getNumOfPlayers() {
+		return players.size();
+	}
+	
 	public TurnOrder getTurnOrder() {
 		return tko;
 	}
@@ -131,7 +169,12 @@ public class Game {
 		db = DatabaseProvider.getInstance();
 		tko.AddPlayer(playerId);
 		playerIds.add(playerId);
+
 		players.add(db.getPlayerFromPlayerId(playerId));	
+
+		
+		
+
 	}
 	
 	public void removePlayerFromTurn(int playerId) {
@@ -141,6 +184,7 @@ public class Game {
 	public void removePlayerFromGame(int playerId) {
 		db = DatabaseProvider.getInstance();
 		tko.RemovePlayer(playerId);
+		playerIds.remove(playerId);
 		players.remove(db.getPlayerFromPlayerId(playerId));
 	}
 	
@@ -210,6 +254,10 @@ public class Game {
 		}
 		
 		return true;
+	}
+	
+	public boolean lobbyFull() {
+		return (MaxPlayers == playerIds.size());
 	}
 	
 	public void reverseTurnOrder() {

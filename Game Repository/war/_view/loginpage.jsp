@@ -27,7 +27,7 @@
 		
 						<button class="ButtonStyle" type="submit">Sign In</button>
 					
-					<a href="http://localhost:8080/gamerepo/new">
+					<a href="../gamerepo/new">
 						<button class="ButtonStyle" form="false">Create New Account</button>
 					</a>
 					

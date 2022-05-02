@@ -108,32 +108,32 @@
     		Welcome: ${user}
     	</div>
 
-        <div class = "BackButton">
-			<a href="http://localhost:8080/gamerepo/login">
-            	<button class="ButtonStyle" type="submit">Log Out</button>
+        <form class = "BackButton">
+			<a href="../gamerepo/login">
+            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
             </a>
-        </div>
+        </form>
 
 		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/instructions">
+			<a href="../gamerepo/instructions">
             	<button class="ButtonStyle" type="submit">Instructions</button>
             </a>
         </div>
 
 		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/singleplayer">
+			<a href="../gamerepo/singleplayer">
             	<button class="ButtonStyle" type="submit">Singleplayer</button>
             </a>
 		</div>
 
 		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/multiplayer">
+			<a href="../gamerepo/multiplayer">
             	<button class="ButtonStyle" type="submit">Multiplayer</button>
             </a>
 		</div>
 
 		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/stats">
+			<a href="../gamerepo/stats">
             	<button class="ButtonStyle" type="submit">Stats</button>
             </a>
 		</div>

@@ -24,7 +24,7 @@
     </head>
     <body class=StaticBackground>
     	<div class="BackButton">
-    		<a href="http://localhost:8080/gamerepo/login">
+    		<a href="../gamerepo/login">
             	<button class="ButtonStyle" type="submit">Back to Login</button>
             </a>
     	</div>
