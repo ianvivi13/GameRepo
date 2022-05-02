@@ -2,6 +2,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import = "java.io.*,java.util.*" %>
 
 <html>
     <head>
@@ -26,6 +27,7 @@
         
     </head>
     <body class="BlackJack">
+    	<% response.setIntHeader("Refresh", 1); %>
         <script>
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
             document.body.style.color = "black";
@@ -39,12 +41,6 @@
             <% try { %>
             	<%currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
             <% } catch (Exception e) {}%>
-            function timeRefresh(time) {
-            	<% if (currentPlayerId != null) { %>
-            		setTimeout("location.reload(false);", time);
-            	<% } %>
-          	} 
-        	timeRefresh(1000);
         	
         </script>
         <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 

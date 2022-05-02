@@ -7,7 +7,7 @@
 <%@page import= " Database.elves.DerbyDatabase" %>
 <%@page import= "Database.elves.IDatabase" %>
 <%@page import= "Database.elves.InitDatabase" %>
-
+<%@ page import = "java.io.*,java.util.*" %>
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
@@ -16,7 +16,8 @@
         <title>Join Extended</title>
     </head>
     
-    <body class=StaticBackground onLoad="timeRefresh(1000);">
+    <body class=StaticBackground>
+    	<% response.setIntHeader("Refresh", 1); %>
 		<script>
 			let value = localStorage.getItem("buttonValue");
         console.log(value);
@@ -64,12 +65,7 @@
 		<%IDatabase db = DatabaseProvider.getInstance(); %>
 		<%int gId = (int) session.getAttribute("gameId"); %>
 		<%Game game = db.getGameFromGameId(gId); %>
-        
-    	function timeRefresh(time) {
-        	setTimeout("location.reload(false);", time);
-      	} 
-    	timeRefresh(1000)
-    	
+
 		</script>
     	<div class="HeaderStyle">
     		Join Lobby

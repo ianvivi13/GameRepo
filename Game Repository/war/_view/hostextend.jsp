@@ -7,6 +7,7 @@
 <%@page import= "Database.elves.DerbyDatabase" %>
 <%@page import= "Database.elves.IDatabase" %>
 <%@page import= "Database.elves.InitDatabase" %>
+<%@ page import = "java.io.*,java.util.*" %>
 
 <html>
     <head>
@@ -17,6 +18,7 @@
     </head>
     
     <body class=StaticBackground>
+    	<% response.setIntHeader("Refresh", 1); %>
 		<script>
 			let value = localStorage.getItem("buttonValue");
 				console.log(value);
@@ -63,11 +65,6 @@
 					<%IDatabase db = DatabaseProvider.getInstance(); %>
 					<%int gId = (int) session.getAttribute("gameId"); %>
 					<%Game game = db.getGameFromGameId(gId); %>
-				    
-					function timeRefresh(time) {
-			        	setTimeout("location.reload(false);", time);
-			      	} 
-			    	timeRefresh(1000)
 					
 		  </script>
 
