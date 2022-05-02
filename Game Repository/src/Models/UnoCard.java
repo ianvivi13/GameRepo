@@ -22,6 +22,10 @@ public class UnoCard implements Comparable<UnoCard>{
 		return values;
 	}
 	
+	public void setWildColor(Color col) {
+		color = col;
+	}
+	
 	@Override
 	public String toString() {
 		return values.toString() + color.toString(); 
