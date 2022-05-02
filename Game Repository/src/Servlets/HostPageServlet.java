@@ -32,6 +32,7 @@ public class HostPageServlet extends HttpServlet {
         IDatabase db;
         db = DatabaseProvider.getInstance();
         int i = db.getUserIDfromUsername(user);
+        
         int created;
         try {
         	Player player1 = new Player(true, i);
@@ -42,6 +43,7 @@ public class HostPageServlet extends HttpServlet {
         }
         String m = "me"; // replace this with the correct req.get -------------------------------------------------------------
         Game model;
+        /*
         switch (m) {
         	case "ExplodingKittens": 
         		model = new Game(IDatabase.Key_ExplodingKittens);
@@ -55,19 +57,20 @@ public class HostPageServlet extends HttpServlet {
         	default:
         		model = new Game(IDatabase.Key_Blackjack);
         }
-        
+        */
+        model = new Game(IDatabase.Key_Blackjack);
         model.addPlayer(created);
         int newGame = db.createGame(model);
         req.getSession().setAttribute("gameId", newGame);
         resp.sendRedirect("../gamerepo/hostextend");
         return;
         // else
-         
+        
         
         
   
         
-        req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
+        //req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
         // end if statement
     }
     

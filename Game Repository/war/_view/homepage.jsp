@@ -9,7 +9,9 @@
 	</head>
 	
 	<body class = "StaticBackground">
-
+		<audio id="audioplayer" loop="false" autoplay="true" preload="auto" src="_view/background.mp3"></audio>
+    
+    	<script src="_view/audio.js"></script>
 		<script>
 		let value = localStorage.getItem("buttonValue");
 		console.log(value);

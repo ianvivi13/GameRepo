@@ -336,7 +336,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					
 					
-					
+					/*
 					// create piles
 					Pile empty = new Pile();
 					Pile main = new Pile();
@@ -366,16 +366,16 @@ public class DerbyDatabase implements IDatabase {
 					game.setAltPile(empty);
 					game.addPlayer(p1);
 					game.addPlayer(p2);
+					game.setMaxPlayers(3);
 					game2.setMainPile(main);
 					game2.setAltPile(empty);
 					game2.addPlayer(p1);
 					game2.addPlayer(p2);
-					
+					game2.setMaxPlayers(7);
 					// initialize game in database
 					db.createGame(game);
 					db.createGame(game2);
-					
-					getGameIdListFromGameKey("BLJ");
+					*/
 				
 					 
 					
@@ -1543,8 +1543,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	// Returns 10 max length ArrayList of gamesIds - most recently created
-	private ArrayList<Integer> getGameIdListFromGameKey(String gameKey) {
+	// Returns 20 max length ArrayList of gamesIds - most recently created
+	private ArrayList<Integer> getGameIdListFromGameKey() {
 		return executeTransaction(new Transaction<ArrayList<Integer>>() {
 			@Override
 			public ArrayList<Integer> execute(Connection conn) throws SQLException {
@@ -1556,20 +1556,14 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"SELECT game_id "
 							+ "	FROM Game "
-							+ " WHERE gameKey = ? "
-							//+ "	ORDER BY game_id DESC"
-							+ " FETCH SECOND 1 ROWS ONLY "
+							+ "	ORDER BY game_id DESC"
 							);
-					
-					stmt.setString(1, gameKey);
-					
+
 					resultSet = stmt.executeQuery();
 					
-					
-					while(resultSet.next()) {
+					while(resultSet.next() && Ids.size() < 20) {
 						Ids.add(resultSet.getInt("game_id"));
 					}
-					System.out.println(Ids);
 					return Ids;
 					
 				} finally {
@@ -1578,6 +1572,26 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
+	}
+	
+	// Returns at max an AL of 5 game objects - most recently created
+	public ArrayList<Game> getGameListFromGameKey() {
+		ArrayList<Game> games = new ArrayList<Game>();
+		ArrayList<Integer> gIds = getGameIdListFromGameKey();
+		int s = 0;
+		for (int i : gIds) {
+			Game g = getGameFromGameId(i);
+			if (g != null) {
+				if (!g.lobbyFull()) {
+					games.add(g);
+					s ++;
+				}
+			}
+			if (s >= 5) {
+				break;
+			}
+		}
+		return games;
 	}
 
 	// Returns a game id given a game object

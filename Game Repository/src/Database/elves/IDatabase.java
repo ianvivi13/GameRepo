@@ -1,5 +1,7 @@
 package Database.elves;
 
+import java.util.ArrayList;
+
 import Models.Bot;
 import Models.ExplodingKittensCard;
 import Models.Game;
@@ -95,6 +97,7 @@ public interface IDatabase {
 	public int getPileIdFromGameId(int gameId); //Test
 	public int getAltPileIdFromGameId(int gameId); //Test
 	public boolean gameIdValid(int gameId);
+	public ArrayList<Game> getGameListFromGameKey();
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);
