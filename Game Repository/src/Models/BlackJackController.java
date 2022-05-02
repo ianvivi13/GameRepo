@@ -1,7 +1,5 @@
 package  Models;
 
-import java.util.ArrayList;
-
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
@@ -32,7 +30,6 @@ public class BlackJackController {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
-		Game model = db.getGameFromGameId(gameId);
 		model.incrementAuxInt();
 		if (model.getAuxInt() >= 2) {
 			endGame(gameId);
@@ -61,18 +58,18 @@ public class BlackJackController {
 	} 
 	
 	// for stay/freeze we want to skip a players turn until the other player calls stay
-	public static void freeze(int gameId) {
-		InitDatabase.init();
-		db = DatabaseProvider.getInstance();
-		Game model = db.getGameFromGameId(gameId);
-		model.incrementAuxInt();
-		if (model.getAuxInt() >= 2) {
-			endGame(gameId);
-			return;
+		public static void freeze(int gameId) {
+			InitDatabase.init();
+			db = DatabaseProvider.getInstance();
+			Game model = db.getGameFromGameId(gameId);
+			model.incrementAuxInt();
+			if (model.getAuxInt() >= 2) {
+				endGame(gameId);
+				return;
+			}
+			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
+			db.updateGame(gameId, model);
 		}
-		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
-		db.updateGame(gameId, model);
-	}
 	
 	private static void endGame(int gameId) {
 		InitDatabase.init();
@@ -106,8 +103,6 @@ public class BlackJackController {
 	public static boolean checkBust(int gameId) {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		
-
 		if(current.getPile().getValueStandard() >  21) {
 			endGame(gameId);
 			return true;
