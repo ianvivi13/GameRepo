@@ -30,18 +30,16 @@ public class NewAccountPageServlet extends HttpServlet {
 		String username = req.getParameter("Username");
 		String password = req.getParameter("Password");
 		
-		System.out.println("Verify User");
-		System.out.println(username);
-		System.out.println(password);
+		System.out.println("Attempting to create new user: " + username);
 		
 		InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
 		try {
 			db.createUser(username, password);
-			//req.setAttribute("user", username);
+			System.out.println("User created succesfully: " + username);
 			resp.sendRedirect("../gamerepo/login");
 		} catch (Exception e) {
-			System.out.println("Woops you're a dumb");
+			System.out.println("User could not be created - possible duplicate username: " + username);
 			resp.sendRedirect("../gamerepo/new");
 			
 			PrintWriter out = resp.getWriter(); 

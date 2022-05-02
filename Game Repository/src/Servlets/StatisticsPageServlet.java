@@ -22,7 +22,7 @@ public class StatisticsPageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Statistics Servlet: doGet");
+		System.out.println("Statistics Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/statpage.jsp").forward(req, resp);
 	}

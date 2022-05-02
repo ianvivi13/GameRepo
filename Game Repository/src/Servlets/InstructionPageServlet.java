@@ -22,7 +22,7 @@ public class InstructionPageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("Instructions Servlet: doGet");
+		System.out.println("Instructions Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/instructions.jsp").forward(req, resp);
 	}

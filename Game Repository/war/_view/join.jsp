@@ -64,10 +64,16 @@
             <div class="title">Enter Game ID</div>
             <form class="FormStyle">
                 <div class="InputStyle">
-                    <input type="text" name="GameId" placeholder="ID: XXXXX-XXXXX" maxlength=11 pattern="[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]-[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]" title="GAME ID: 5 alphanumerics followed by a dash and 5 more" required>
+                    <input type="text" id="autoFill" name="GameId" placeholder="ID: XXXXX-XXXXX" maxlength=11 pattern="[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]-[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]" title="GAME ID: 5 alphanumerics followed by a dash and 5 more" required>
                 </div>
                 <button class="ButtonStyle" type="submit">Join Game</button>
             </form>
+            <p>_______________________________________________________</p>
+            
+            
+            <div>
+            	<button class="ButtonStyle" style="width: 90%;" onclick="document.getElementById('autoFill').value='YYYYY-DDDDD';"> wwwwwwwwwwwwwwwwwwww&ensp;&ensp;&ensp;9 / 9 </button><p></p>
+        	</div>
         </div>
     </body>
 </html>

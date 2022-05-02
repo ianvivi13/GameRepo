@@ -169,7 +169,12 @@ public class Game {
 		db = DatabaseProvider.getInstance();
 		tko.AddPlayer(playerId);
 		playerIds.add(playerId);
+
 		players.add(db.getPlayerFromPlayerId(playerId));	
+
+		
+		
+
 	}
 	
 	public void removePlayerFromTurn(int playerId) {
@@ -179,6 +184,7 @@ public class Game {
 	public void removePlayerFromGame(int playerId) {
 		db = DatabaseProvider.getInstance();
 		tko.RemovePlayer(playerId);
+		playerIds.remove(playerId);
 		players.remove(db.getPlayerFromPlayerId(playerId));
 	}
 	

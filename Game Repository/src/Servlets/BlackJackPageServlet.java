@@ -27,7 +27,7 @@ public class BlackJackPageServlet extends HttpServlet {
 			return;
 		}
 
-		System.out.println("BlackJack Servlet: doGet");
+		System.out.println("BlackJack Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
 	}
@@ -38,7 +38,6 @@ public class BlackJackPageServlet extends HttpServlet {
         
         try {
             if (req.getParameter("Hit") != null) {
-                //Set....
             	BlackJackController.hit(gId);
             } else if (req.getParameter("Hold") != null) {
             	BlackJackController.hold(gId);
