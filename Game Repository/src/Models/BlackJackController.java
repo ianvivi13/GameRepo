@@ -82,7 +82,7 @@ public class BlackJackController {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		db.updateGame(gameId, model);
-		if(current.getPile().getValueStandard() >  21) {
+		if(current.getPile().getValueStandard() > 21) {
 			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
 			return true;
 		}
