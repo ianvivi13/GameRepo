@@ -79,7 +79,8 @@
 
                     }
             }
-        </script>
+                
+        </script> 
         
         <div class="HeaderStyle">Singleplayer: ${user}</div>
         

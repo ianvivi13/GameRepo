@@ -52,8 +52,9 @@
             document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/css/Back.png')";
         }
+            
 		  </script>
-        
+		  
         <div class="HeaderStyle">Multiplayer: ${user}</div>
         
         <div class="BackButton">

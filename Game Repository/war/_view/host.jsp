@@ -56,9 +56,9 @@
           document.body.style.backgroundImage = "url('_view/css/Back.png')";
 				}
       </script>
-
-      <div id="left"><a href="../gamerepo/hostextend"><button class="ButtonStyle" type="submit">Host</button> 
-      </a>
+      <form method="post">
+      <div id="left"><button class="ButtonStyle" name="play" value="play" type="submit">Host</button> 
+      </form>
     </div>
     <div class="BackButton">
       <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>

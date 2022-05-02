@@ -1,3 +1,4 @@
+
 package Servlets;
 
 import java.io.IOException;
@@ -9,60 +10,57 @@ import Database.elves.IDatabase;
 import Models.User;
 
 public class HomePageServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		
-		
-		String user = (String) req.getSession().getAttribute("user");
-		if (user == null) {
-			System.out.println("User is not logged in");
-			
-			// user is not logged in, or the session expired
-			resp.sendRedirect("../gamerepo/login");
-			return;
-		}
-		IDatabase db;
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String user = (String) req.getSession().getAttribute("user");
+        if (user == null) {
+            System.out.println("User is not logged in");
+
+            // user is not logged in, or the session expired
+            resp.sendRedirect("../gamerepo/login");
+            return;
+        }
+        IDatabase db;
         db = DatabaseProvider.getInstance();
-		if (req.getSession().getAttribute("gameId") != null) {
-			int gId = (int) req.getSession().getAttribute("gameId");
-			if (db.gameIdValid(gId)) {
-				db.deleteGame(gId);
-			}
-			
-			req.getSession().setAttribute("gameId", null);
-		}
-		
-		
-		
-		if (req.getParameter("logout") != null) {
-			req.getSession().removeAttribute("user");
-			resp.sendRedirect("../gamerepo/login");
+        if (req.getSession().getAttribute("gameId") != null) {
+            int gId = (int) req.getSession().getAttribute("gameId");
+            if (db.gameIdValid(gId)) {
+                db.deleteGame(gId);
+            }
 
-			return;
-		}
-		
-		System.out.println("Home Servlet: doGet: " + user);
-		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		User model = new User(null, null);
-		
-		String username = getString(resp, "username");
-		model.setUsername(username);
-		
-		req.setAttribute("user", model);
-		
-		req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
-	}
+            req.getSession().setAttribute("gameId", null);
+        }
 
-	private String getString(HttpServletResponse req, String name) {
-		return ((ServletRequest) req).getParameter(name);
-	}
+        if (req.getParameter("logout") != null) {
+            req.getSession().removeAttribute("user");
+            resp.sendRedirect("../gamerepo/login");
+
+            return;
+        }
+
+        System.out.println("Home Servlet: doGet: " + user);
+        req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+    	System.out.println("posting");
+       String chosen = req.getParameter("butt");
+       
+       System.out.println(chosen);
+       req.getSession().setAttribute("happy", chosen);
+       
+       resp.sendRedirect("../gamerepo/" + req.getParameter("mode"));
+       req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
+    }
+
+    private String getString(HttpServletResponse req, String name) {
+        return ((ServletRequest) req).getParameter(name);
+
+    }
 }

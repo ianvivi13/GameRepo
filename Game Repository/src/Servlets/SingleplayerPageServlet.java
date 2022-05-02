@@ -13,6 +13,9 @@ public class SingleplayerPageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		String game = (String) req.getSession().getAttribute("gameChoice");
+		System.out.println(game);
+		
 		String user = (String) req.getSession().getAttribute("user");
 		if (user == null) {
 			System.out.println("User is not logged in");
