@@ -27,37 +27,48 @@ public class HostPageServlet extends HttpServlet {
         System.out.println("Host Servlet: doGet: " + user);
         
         
+        // if play button was pressed :
+        
         IDatabase db;
         db = DatabaseProvider.getInstance();
         int i = db.getUserIDfromUsername(user);
+        int created;
         try {
-            
-            Player player1 = new Player(true, i);
-            
-            int created = db.createPlayer(player1);
-            
-            Game model = new Game("BLJ");
-            model.addPlayer(created);
-
-            int newGame = db.createGame(model);
-            
-            req.getSession().setAttribute("gameId", newGame);
-            resp.sendRedirect("../gamerepo/hostextend");
-            return;
-            //String hit = req.getParameter("hit");
-            //String hold = req.getParameter("hold");
-            //String freeze = req.getParameter("freeze");
-            //BlackJackController controller = new BlackJackController();
-            //controller.(model);
-            
-
+        	Player player1 = new Player(true, i);
+            created = db.createPlayer(player1);
         } catch (Exception PlayerAlreadyExistsException) {
             resp.sendRedirect("../gamerepo/home");
             return;
         }
-            
+        String m = "me"; // replace this with the correct req.get -------------------------------------------------------------
+        Game model;
+        switch (m) {
+        	case "ExplodingKittens": 
+        		model = new Game(IDatabase.Key_ExplodingKittens);
+        		break;
+        	case "Uno":
+        		model = new Game(IDatabase.Key_Uno);
+        		break;
+        	case "UnoFlip":
+        		model = new Game(IDatabase.Key_UnoFlip);
+        		break;
+        	default:
+        		model = new Game(IDatabase.Key_Blackjack);
+        }
         
-       
+        model.addPlayer(created);
+        int newGame = db.createGame(model);
+        req.getSession().setAttribute("gameId", newGame);
+        resp.sendRedirect("../gamerepo/hostextend");
+        return;
+        // else
+         
+        
+        
+  
+        
+        req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
+        // end if statement
     }
     
     @Override

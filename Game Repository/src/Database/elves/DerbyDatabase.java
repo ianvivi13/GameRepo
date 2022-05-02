@@ -334,8 +334,7 @@ public class DerbyDatabase implements IDatabase {
 					initializeExplodingKittensCards();
 					initializeUnoCards();
 					
-					/*
-					 create game with game stuffs in it to test display
+					
 					
 					
 					// create piles
@@ -362,18 +361,23 @@ public class DerbyDatabase implements IDatabase {
 					
 					// create game
 					Game game = new Game("BLJ");
+					Game game2 = new Game("BLJ");
 					game.setMainPile(main);
 					game.setAltPile(empty);
 					game.addPlayer(p1);
 					game.addPlayer(p2);
+					game2.setMainPile(main);
+					game2.setAltPile(empty);
+					game2.addPlayer(p1);
+					game2.addPlayer(p2);
 					
 					// initialize game in database
-					int g = db.createGame(game);
-					System.out.println(g);
+					db.createGame(game);
+					db.createGame(game2);
 					
-					
-					end fake game creation
-					 */
+					getGameIdListFromGameKey("BLJ");
+				
+					 
 					
 					return true;
 				} catch (UserExistsException e) {
@@ -1539,6 +1543,43 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns 10 max length ArrayList of gamesIds - most recently created
+	private ArrayList<Integer> getGameIdListFromGameKey(String gameKey) {
+		return executeTransaction(new Transaction<ArrayList<Integer>>() {
+			@Override
+			public ArrayList<Integer> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				ArrayList<Integer> Ids = new ArrayList<Integer>();
+
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT game_id "
+							+ "	FROM Game "
+							+ " WHERE gameKey = ? "
+							//+ "	ORDER BY game_id DESC"
+							+ " FETCH SECOND 1 ROWS ONLY "
+							);
+					
+					stmt.setString(1, gameKey);
+					
+					resultSet = stmt.executeQuery();
+					
+					
+					while(resultSet.next()) {
+						Ids.add(resultSet.getInt("game_id"));
+					}
+					System.out.println(Ids);
+					return Ids;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
 	// Returns a game id given a game object
 	public int getGameIdFromGame(Game game) {
 		return executeTransaction(new Transaction<Integer>() {

@@ -72,7 +72,7 @@
         <input id="difficultyEasy" type="radio" name="difficulty">
         <label for="difficultyEasy">Easy</label>
         <input id="difficultyMedium" type="radio" name="difficulty" checked>
-        <label for="difficultyMedium">Meduim</label>
+        <label for="difficultyMedium">Medium</label>
         <input id="difficultyHard" type="radio" name="difficulty">
         <label for="difficultyHard">Hard</label>
        
@@ -95,7 +95,7 @@
       </div>
 
         <label class="ckb" id="slider"><span class="underline"> Doubling</span>: &nbsp;
-            <input type="checkbox" name="ckb1" value="a" unchecked>
+            <input type="checkbox" name="ckb1" value="a"  unchecked>
             <i></i>
           </label>
           <br><br>
