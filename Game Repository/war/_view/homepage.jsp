@@ -102,41 +102,45 @@
 				}
 			};
 					radioClicked();
+					
+					function gameChoice() {
 			</script>
-
-		<div class="HeaderStyle">
-    		Welcome: ${user}
-    	</div>
-
-        <form class = "BackButton">
-			<a href="../gamerepo/login">
-            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
-            </a>
-        </form>
-
-		<div class = "buttons">
-			<a href="../gamerepo/instructions">
-            	<button class="ButtonStyle" type="submit">Instructions</button>
-            </a>
-        </div>
-
-		<div class = "buttons">
-			<a href="../gamerepo/singleplayer">
-            	<button class="ButtonStyle" type="submit">Singleplayer</button>
-            </a>
-		</div>
-
-		<div class = "buttons">
-			<a href="../gamerepo/multiplayer">
-            	<button class="ButtonStyle" type="submit">Multiplayer</button>
-            </a>
-		</div>
-
-		<div class = "buttons">
-			<a href="http://localhost:8080/gamerepo/stats">
-            	<button class="ButtonStyle" type="submit">Stats</button>
-            </a>
-		</div>
+		
+			<div class="HeaderStyle">
+	    		Welcome: ${user}
+	    	</div>
+	
+	        <form class = "BackButton">
+				<a href="../gamerepo/login">
+	            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
+	            </a>
+	        </form>
+	
+	        <form>
+				<div class = "buttons">
+					<a href="../gamerepo/instructions">
+		            	<button class="ButtonStyle" type="submit">Instructions</button>
+		            </a>
+		        </div>
+		
+				<div class = "buttons">
+					<a href="../gamerepo/singleplayer">
+		            	<button class="ButtonStyle" name="return gameChoice()" type="submit">Singleplayer</button>
+		            </a>
+				</div>
+		
+				<div class = "buttons">
+					<a href="../gamerepo/multiplayer">
+		            	<button class="ButtonStyle" name="return gameChoice()" type="submit">Multiplayer</button>
+		            </a>
+				</div>
+		
+				<div class = "buttons">
+					<a href="http://localhost:8080/gamerepo/stats">
+		            	<button class="ButtonStyle" type="submit">Stats</button>
+		            </a>
+				</div>
+			</form>
 		
 		<div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
 			<label class = "buttspace">

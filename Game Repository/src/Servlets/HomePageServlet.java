@@ -21,9 +21,7 @@ public class HomePageServlet extends HttpServlet {
 			return;
 		}
 		
-		System.out.println("HeHeHe");
 		if (req.getParameter("logout") != null) {
-			System.out.println("HAHAHA");
 			resp.sendRedirect("../gamerepo/login");
 			req.getSession().removeAttribute("user");
 			return;
