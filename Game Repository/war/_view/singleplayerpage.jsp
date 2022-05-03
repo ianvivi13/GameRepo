@@ -79,9 +79,10 @@
 
                     }
             }
-        </script>
+                
+        </script> 
         
-        <div class="HeaderStyle">Singleplayer: ${user}</div>
+        <div class="HeaderStyle">${user}</div>
         
         <div class="BackButton">
             <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>

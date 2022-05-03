@@ -15,52 +15,7 @@
     	<script src="_view/audio.js"></script>
         <script>
             
-            let value = localStorage.getItem("buttonValue");
-
-            switch (value) {
-            case 'blackjack':
-                
-                document.body.style.color = "white";
-                document.getElementById("topic").innerText = "BlackJack";
-                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-
-                localStorage.setItem("buttonValue", 'blackjack');
-                console.log(value);
-
-                break;
-
-            case 'uno':
-                    
-                document.body.style.color = "white";
-                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-                localStorage.setItem("buttonValue", 'uno');
-                console.log(value);
-
-                break;    
-
-            case 'unoflip':
-                    
-                document.body.style.color = "white";
-                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-                localStorage.setItem("buttonValue", 'unoflip');
-                console.log(value);
-                    
-                break;
-
-            case 'expoldingkittens':
-
-            document.body.style.color = "white";
-                document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-                localStorage.setItem("buttonValue", 'expoldingkittens');
-                console.log(value);
-
-                break;
-
-            default:
         
-            document.body.style.color = "white";
-            document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-        }
     
         function radioClicked(){
             let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
@@ -165,7 +120,7 @@
         </script>
         
 
-        <div class="HeaderStyle">Instructions: ${user}</div>
+        <div class="HeaderStyle">${user}</div>
         
         <div class="BackButton">
             <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
@@ -181,7 +136,7 @@
 	        <li>Choosing "Hold" makes the player skip their turn and wait until the turn-order comes back around</li>
 	        <li>Choosing "Hit" makes the player take a card from the deck</li>
 	        <li>You will be given a card from a 52-standard card deck</li>
-	        <li>Each card equals thier value but Kings, Queens, and Jacks are 10 points</li>
+	        <li>Each card equals their value but Kings, Queens, and Jacks are 10 points</li>
 	        <li>Aces allow the user to choose between the card's values of 11 or 1</li>
 	        <li>If the player goes over this limit of 21, they are removed from the game</li>
 	        <li>No other player will know the amount of points you have or what card you have</li>
@@ -191,7 +146,7 @@
     <div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
         
         <label class = "buttspace">
-            <input type="radio" name="butt" value="blackjack" onclick="">
+            <input type="radio" name="butt" value="blackjack" onclick="" checked>
             <img src="_view/images/StandardCards/back-sm.png">
         </label>
 
@@ -210,5 +165,42 @@
             <img src="_view/images/ExplodingKittens/back.jpg">
         </label>
     </div>
+    
+    <script>
+	    let value = localStorage.getItem("buttonValue");
+	    switch (value) {
+		    case 'blackjack':
+		        document.body.style.color = "white";
+		        document.getElementById("topic").innerText = "BlackJack";
+		        document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+		        localStorage.setItem("buttonValue", 'blackjack');
+		        console.log(value);
+		        break;
+		    case 'uno':
+		        document.body.style.color = "white";
+		        document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+		        localStorage.setItem("buttonValue", 'uno');
+		        console.log(value);
+		        break;
+		    case 'unoflip':
+		        document.body.style.color = "white";
+		        document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+		        localStorage.setItem("buttonValue", 'unoflip');
+		        console.log(value);
+		        break;
+		    case 'expoldingkittens':
+		    	document.body.style.color = "white";
+		        document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+		        localStorage.setItem("buttonValue", 'expoldingkittens');
+		        console.log(value);
+		        break;
+		    default:
+			    document.body.style.color = "white";
+			    document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
+		}
+    </script>
+    
+    
+    
     </body>
 </html>

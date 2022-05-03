@@ -12,6 +12,60 @@
 		<audio id="audioplayer" loop="false" autoplay="true" preload="auto" src="_view/background.mp3"></audio>
     
     	<script src="_view/audio.js"></script>
+		
+
+		<div class="HeaderStyle">
+    		Welcome: ${user}
+    	</div>
+
+        <form class = "BackButton">
+			<a href="../gamerepo/login">
+            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
+            </a>
+        </form>
+
+        
+		<div class = "buttons">
+			<a href="../gamerepo/instructions">
+            	<button class="ButtonStyle">Instructions</button>
+            </a>
+        </div>
+        
+        <div class = "buttons">
+			<a href="../gamerepo/stats">
+        		<button class="ButtonStyle">Stats</button>
+        	</a>
+        </div>
+        
+        <form method="post">
+			<div class = "buttons">
+	            <button class="ButtonStyle" name="mode" value="singleplayer" type="submit">Singleplayer</button>
+			</div>
+			<div class = "buttons">
+	            <button class="ButtonStyle" name="mode" value="multiplayer" type="submit">Multiplayer</button>
+			</div>
+			<div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
+				<label class = "buttspace">
+					<input type="radio" name="butt" value="blackjack" checked>
+					<img src="_view/images/StandardCards/back-sm.png">
+				</label>
+	
+				<label class = "buttspace">
+					<input type="radio" name="butt" value="uno" >
+					<img src="_view/images/UnoCards/back.png">
+				</label>
+	
+				<label class = "buttspace">
+					<input type="radio" name="butt" value="unoflip" >
+					<img src="_view/images/UnoFlipCards/FlipDark/v_f.jpg">
+				</label>
+	
+				<label class = "buttspace">
+					<input type="radio" name="butt" value="expoldingkittens">
+					<img src="_view/images/ExplodingKittens/back.jpg">
+				</label>
+			</div>
+		</form>
 		<script>
 		let value = localStorage.getItem("buttonValue");
 		console.log(value);
@@ -59,7 +113,6 @@
 			document.body.style.color = "white";
 			document.body.style.backgroundImage = "url('_view/css/Back.png')";
 		}
-	
 
 			function radioClicked(){
 				var shapeChoice = document.querySelector('input[name="butt"]:checked').value;
@@ -69,16 +122,19 @@
 					
 					document.body.style.color = "black";
 					document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-
 					localStorage.setItem("buttonValue", 'blackjack');
+					element.setAttribute("gameChoice", "BLJ");
 					console.log("buttonValue");
+					
 					break;
 	
 				case 'uno':
 						
 					document.body.style.color = "black";
 					document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
+					
 					localStorage.setItem("buttonValue", 'uno');
+					element.setAttribute("gameChoice", "UNO");
 					console.log("buttonValue");
 					break;    
 	
@@ -86,7 +142,9 @@
 					  
 					document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/UnoFlip_Back.jpg')";
+					
 					localStorage.setItem("buttonValue", 'unoflip');
+					element.setAttribute("gameChoice", "UNF");
 					console.log("buttonValue");
 					break;
 	
@@ -94,7 +152,9 @@
 	
 					document.body.style.color = "white";
 					document.body.style.backgroundImage = "url('_view/images/Exploding_Back.jpg')";
+				
 					localStorage.setItem("buttonValue", 'expoldingkittens');
+					element.setAttribute("gameChoice", "EXP");
 					console.log("buttonValue");
 					break;
 
@@ -102,64 +162,10 @@
 					document.body.style.color = "white";
                     document.body.style.backgroundImage = "url('_view/css/Back.png')";
 				}
+				console.log(element.getAttribute("gameChoice"));
 			};
 					radioClicked();
+					
 			</script>
-
-		<div class="HeaderStyle">
-    		Welcome: ${user}
-    	</div>
-
-        <form class = "BackButton">
-			<a href="../gamerepo/login">
-            	<button class="ButtonStyle" name="logout" type="submit">Log Out</button>
-            </a>
-        </form>
-
-		<div class = "buttons">
-			<a href="../gamerepo/instructions">
-            	<button class="ButtonStyle" type="submit">Instructions</button>
-            </a>
-        </div>
-
-		<div class = "buttons">
-			<a href="../gamerepo/singleplayer">
-            	<button class="ButtonStyle" type="submit">Singleplayer</button>
-            </a>
-		</div>
-
-		<div class = "buttons">
-			<a href="../gamerepo/multiplayer">
-            	<button class="ButtonStyle" type="submit">Multiplayer</button>
-            </a>
-		</div>
-
-		<div class = "buttons">
-			<a href="../gamerepo/stats">
-            	<button class="ButtonStyle" type="submit">Stats</button>
-            </a>
-		</div>
-		
-		<div id = "bootybutt" onload="radioClicked()" onclick="radioClicked()">
-			<label class = "buttspace">
-				<input type="radio" name="butt" value="blackjack">
-				<img src="_view/images/StandardCards/back-sm.png">
-			</label>
-
-			<label class = "buttspace">
-				<input type="radio" name="butt" value="uno">
-				<img src="_view/images/UnoCards/back.png">
-			</label>
-
-			<label class = "buttspace">
-				<input type="radio" name="butt" value="unoflip">
-				<img src="_view/images/UnoFlipCards/FlipDark/v_f.jpg">
-			</label>
-
-			<label class = "buttspace">
-				<input type="radio" name="butt" value="expoldingkittens">
-				<img src="_view/images/ExplodingKittens/back.jpg">
-			</label>
-		</div>
 	</body>
 </html>

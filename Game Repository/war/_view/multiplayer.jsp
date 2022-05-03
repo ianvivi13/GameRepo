@@ -55,20 +55,21 @@
             document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/css/Back.png')";
         }
+            
 		  </script>
-        
-        <div class="HeaderStyle">Multiplayer: ${user}</div>
+		  
+        <div class="HeaderStyle">${user}</div>
         
         <div class="BackButton">
             <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
-
-    <h2 id="topic"><u>Card Game Desired</u></h2>
+	
+	<p></p>
     
     <a href="../gamerepo/host"><button class="branch" type="submit">Host</button><br>
     </a>
-    
+    <p></p>
     <a href="../gamerepo/join"><button class="branch" type="submit">Join</button>
     </a>
 

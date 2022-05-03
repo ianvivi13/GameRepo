@@ -46,7 +46,7 @@ public class JoinPageServlet extends HttpServlet {
 						d.addPlayer(p);
 						db.updateGame(g, d);
 						req.getSession().setAttribute("gameId", g);
-			            resp.sendRedirect("../gamerepo/joinextended");
+			            resp.sendRedirect("../gamerepo/hostextend");
 					} catch (Exception PlayerAlreadyExistsException) {
 			        	resp.sendRedirect("../gamerepo/home");
 			        	return;

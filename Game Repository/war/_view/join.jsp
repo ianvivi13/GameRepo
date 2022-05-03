@@ -6,9 +6,7 @@
         <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
         <link rel="stylesheet" type="text/css" href="_view/css/join.css"/>
         <title>Join Lobby</title>
-        
-        
-        
+
         <%@page import="Models.Game" %>
         <%@page import= "Database.elves.DatabaseProvider" %>
         <%@page import= " Database.elves.DerbyDatabase" %>
@@ -65,7 +63,7 @@
 
         </script>
     	<div class="HeaderStyle">
-    		Join Lobby
+    		${user}
     	</div>
     	<div class="BackButton">
     		<a href="../gamerepo/home">

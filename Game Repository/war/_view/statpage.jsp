@@ -167,7 +167,7 @@
 
 
         <div class = "HeaderStyle">
-            Stats: ${user}
+            ${user}
         </div>
     
         <div class = "BackButton">

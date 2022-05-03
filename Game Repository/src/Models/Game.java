@@ -34,7 +34,7 @@ public class Game {
 		cardSideA = true;
 		wildColor = "B";
 		tko = new TurnOrder();
-		MaxPlayers = 2;
+		MaxPlayers = 3; 
 		AuxInt = 0;
 		
 		while(db.gameCodeValid(gameCode) > 0) {
