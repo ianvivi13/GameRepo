@@ -1310,9 +1310,7 @@ public class DerbyDatabase implements IDatabase {
 							+ "	FROM ExplodingKittensCards AS e "
 							+ "	WHERE e.type = ?"
 							);
-					
-					stmt.setString(1, card.getType().getSymbol());
-					
+					stmt.setString(1, card.getType().toString());
 					resultSet = stmt.executeQuery();
 					
 					if(resultSet.next()) {
@@ -1607,7 +1605,6 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, gameId);
 					
 					resultSet = stmt.executeQuery();
-					
 					if(resultSet.next()) {
 						turnId = resultSet.getInt("turn_id");
 						pileId = resultSet.getInt("pile_id");

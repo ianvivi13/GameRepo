@@ -19,25 +19,29 @@ public class ExplodingKittensController {
 	public static void initialize(int gameId) throws Exception {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		
-		db.getGameFromGameId(gameId).getMainPile().populateExplodingKittens(db.getGameFromGameId(gameId).getPlayers().size());
-		db.getGameFromGameId(gameId).getMainPile().shuffle();
-		db.getGameFromGameId(gameId).getMainPile().setVisibleIndex(1000000000);
-		
-		for(Player p : db.getGameFromGameId(gameId).getPlayers()) {
+		game.getMainPile().populateExplodingKittens(game.getPlayers().size());
+		game.getMainPile().shuffle();
+		game.getMainPile().setVisibleIndex(1000000000);
+		for(Player p : game.getPlayers()) {
 			p.getPile().addCard(new ExplodingKittensCard(Type.Defuse));
-			p.getPile().addCards(db.getGameFromGameId(gameId).getMainPile().removeCards(7));
+			p.getPile().addCards(game.getMainPile().removeCards(7));
 			p.getPile().setVisibleIndex(p.getPile().getIndexOfTopCard());;
-			db.updatePlayer(db.getPlayerIdFromPlayer(p), p);
 		}
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		
+		game.getMainPile().addExplodingKittens(game.getPlayers().size());
+		game.getMainPile().shuffle();
+		
+		db.updateGame(gameId, game);
 	}
 	
 	public static boolean checkKitten(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		ExplodingKittensCard ek = new ExplodingKittensCard(Type.ExplodingKitten);
-		if(db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer()).getPile().contains(ek)) {
+		if(db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().contains(ek)) {
 			return true;
 		}
 		return false;
@@ -46,8 +50,9 @@ public class ExplodingKittensController {
 	public static boolean checkDefuse(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		ExplodingKittensCard d = new ExplodingKittensCard(Type.Defuse);
-		if(db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer()).getPile().contains(d)) {
+		if(db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().contains(d)) {
 			return true;
 		}
 		return false;
@@ -56,36 +61,38 @@ public class ExplodingKittensController {
 	public static void defuse(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		Random rand = new Random();
-		Player player = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
+		Player player = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
 		ExplodingKittensCard d = new ExplodingKittensCard(Type.Defuse);
 		ExplodingKittensCard ek = new ExplodingKittensCard(Type.ExplodingKitten);
 		if(checkDefuse(gameId)) {
-			db.getGameFromGameId(gameId).getAltPile().addCard(player.getPile().removeCard(d));
-			db.getGameFromGameId(gameId).getMainPile().getPile().add(rand.nextInt(db.getGameFromGameId(gameId).getMainPile().getNumCards()), ek);
+			game.getAltPile().addCard(player.getPile().removeCard(d));
+			game.getMainPile().getPile().add(rand.nextInt(game.getMainPile().getNumCards()), ek);
 			player.getPile().removeCard(ek);
-			db.updateGame(gameId, db.getGameFromGameId(gameId));
+			db.updateGame(gameId, game);
 			db.updatePlayer(db.getPlayerIdFromPlayer(player), player);
-			db.getGameFromGameId(gameId).nextTurn();
+			game.nextTurn();
 		}
 		
 		
 		else {
 			player.getAltPile().removeCard(ek);
-			db.getGameFromGameId(gameId).getAltPile().addCards(player.getPile().removeCards(player.getPile().getNumCards()));
-			db.getGameFromGameId(gameId).removePlayerFromTurn(db.getPlayerIdFromPlayer(player));
-			db.updateGame(gameId, db.getGameFromGameId(gameId));
+			game.getAltPile().addCards(player.getPile().removeCards(player.getPile().getNumCards()));
+			game.removePlayerFromTurn(db.getPlayerIdFromPlayer(player));
+			db.updateGame(gameId, game);
 		}
 	}
 	
 	public static boolean allowMove(int gameId, ArrayList<Object> selection, Player player) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		ExplodingKittensCard nope = new ExplodingKittensCard(Type.Nope);
-		if((twoCardRule(selection) || threeCardRule(selection) || fiveCardRule(selection)) && db.getPlayerIdFromPlayer(player) == db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer()) {
+		if((twoCardRule(selection) || threeCardRule(selection) || fiveCardRule(selection)) && db.getPlayerIdFromPlayer(player) == game.getTurnOrder().CurrentPlayer()) {
 			return true;
 		}
-		else if(selection.size() == 1 && db.getPlayerIdFromPlayer(player) == db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer()) {
+		else if(selection.size() == 1 && db.getPlayerIdFromPlayer(player) == game.getTurnOrder().CurrentPlayer()) {
 			return true;
 		}
 		else if(selection.size() == 1 && ((ExplodingKittensCard)selection.get(0)).equals(nope)) {
@@ -149,9 +156,10 @@ public class ExplodingKittensController {
 	public static void favor(int gameId, Player player, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		Player current  = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
+		Game game = db.getGameFromGameId(gameId);
+		Player current  = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
 		current.getPile().addCard(player.getPile().removeCard(index));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(player), player);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
@@ -160,10 +168,11 @@ public class ExplodingKittensController {
 	public static void stealCard(int gameId, Player player) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		Random rand = new Random();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		current.getPile().addCard(player.getPile().removeCard(rand.nextInt(db.getGameFromGameId(gameId).getMainPile().getNumCards())));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		current.getPile().addCard(player.getPile().removeCard(rand.nextInt(player.getPile().getNumCards())));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(player), player);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
@@ -171,26 +180,29 @@ public class ExplodingKittensController {
 	public static void chooseCard(int gameId, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		current.getPile().addCard(db.getGameFromGameId(gameId).getAltPile().removeCard(index));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		current.getPile().addCard(game.getAltPile().removeCard(index));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
 	public static void skip(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		db.getGameFromGameId(gameId).nextTurn();
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		game.nextTurn();
+		db.updateGame(gameId, game);
 	}
 	
 	public static boolean nope(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
 		ExplodingKittensCard nope = new ExplodingKittensCard(Type.Nope);
 		int nopeCount = 0;
-		for(Object card : db.getGameFromGameId(gameId).getMainPile().getPile()) {
-			if(((ExplodingKittensCard)card).equals(nope)) {
+		for(int i = game.getMainPile().getNumCards() - 1; i >= 0; i--) {
+			if(((ExplodingKittensCard)game.getMainPile().getCard(i)).equals(nope)) {
 				nopeCount += 1;
 			}
 			
@@ -219,9 +231,10 @@ public class ExplodingKittensController {
 	public static void seeFuture(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		current.getAltPile().addCards(db.getGameFromGameId(gameId).getMainPile().removeCards(3));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		current.getAltPile().addCards(game.getMainPile().removeCards(3));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 		/*
 		 * Starts See the future and Alter the future
@@ -232,36 +245,59 @@ public class ExplodingKittensController {
 	public static void seeFutureExit(int gameId) {
 		InitDatabase.init(); 
 		db = DatabaseProvider.getInstance();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		db.getGameFromGameId(gameId).getMainPile().addCards(current.getAltPile().removeCards(3));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		game.getMainPile().addCards(current.getAltPile().removeCards(3));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
 	public static void alterFuture(int gameId, ArrayList<Integer> order) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		db.getGameFromGameId(gameId).getMainPile().addCard(current.getAltPile().removeCard(order.get(0)));
-		db.getGameFromGameId(gameId).getMainPile().addCard(current.getAltPile().removeCard(order.get(1)));
-		db.getGameFromGameId(gameId).getMainPile().addCard(current.getAltPile().removeCard(order.get(2)));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		int indexOne = order.get(0);
+		int indexTwo = order.get(1);
+		int indexThree = order.get(2);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		game.getMainPile().addCard(current.getAltPile().removeCard(indexOne));
+		if(indexOne == 0) {
+			indexTwo -= 1;
+			indexThree -= 1;
+		}
+		if(indexOne == 1) {
+			if(indexTwo == 2) {
+				indexTwo -= 1;
+			}
+			else {
+				indexThree -= 1;
+			}
+		}
+		game.getMainPile().addCard(current.getAltPile().removeCard(indexTwo));
+		if(indexTwo == 0) {
+			indexThree -= 1;
+		}
+		game.getMainPile().addCard(current.getAltPile().removeCard(indexThree));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
 	public static void drawFromBottom(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		Player current = db.getPlayerFromPlayerId(db.getGameFromGameId(gameId).getTurnOrder().CurrentPlayer());
-		current.getPile().addCard(db.getGameFromGameId(gameId).getMainPile().removeCard(0));
-		db.updateGame(gameId, db.getGameFromGameId(gameId));
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		current.getPile().addCard(game.getMainPile().removeCard(0));
+		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		game.nextTurn();
 	}
 	
 	public static boolean checkWin(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
-		if(db.getGameFromGameId(gameId).getTurnOrder().getTurnList().size() <= 1) {
+		Game game = db.getGameFromGameId(gameId);
+		if(game.getTurnOrder().getTurnList().size() <= 1) {
 			return true;
 		}
 		
