@@ -107,6 +107,8 @@ public class UnoControllerTest {
 	
 	@Test
 	public void testDrawFour() throws Exception{
+		for(Player p : model.getPlayers()) {
+		}
 		String choice = Color.BLUE.toString();
 		UnoCard plus = new UnoCard(Color.BLACK, Value.Wild_Four);
 		UnoController.playSpecialCard(modelId, plus, choice);
