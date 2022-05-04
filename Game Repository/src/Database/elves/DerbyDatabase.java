@@ -291,7 +291,8 @@ public class DerbyDatabase implements IDatabase {
 						+ "	cardSideA BOOLEAN ,"
 						+ "	wildColor VARCHAR(1) ,"
 						+ " MaxPlayers INTEGER ,"
-						+ " AuxInt INTEGER )"
+						+ " AuxInt INTEGER ,"
+						+ " updateCount INTEGER )"
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -318,6 +319,7 @@ public class DerbyDatabase implements IDatabase {
 					db.createUser("SixIVs","Admin*69");
 					db.createUser("Willy","Admin*69");
 					db.createUser("pjnines","Admin*69");
+					
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
@@ -575,8 +577,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers, AuxInt)"
-							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers, AuxInt, updateCount)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)"
 						);
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
@@ -1571,6 +1573,38 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns an updateCount from a GameId "updateCount"
+	public int getUpdateCountFromGameId(int gameId) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT updateCount "
+							+ "	FROM Game "
+							+ "	WHERE game_id = ?"
+							);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						 return resultSet.getInt("updateCount");
+					}
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// Returns a game id given a game object
 	public Game getGameFromGameId(int gameId) {
 		return executeTransaction(new Transaction<Game>() {
@@ -1589,6 +1623,7 @@ public class DerbyDatabase implements IDatabase {
 				String wildColor;
 				int MaxPlayers;
 				int AuxInt;
+				int Update;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -1612,6 +1647,7 @@ public class DerbyDatabase implements IDatabase {
 						 wildColor = resultSet.getString("wildColor");
 						 MaxPlayers = resultSet.getInt("MaxPlayers");
 						 AuxInt = resultSet.getInt("AuxInt");
+						 Update = resultSet.getInt("updateCount");
 						 
 						 game = new Game(gameCode, gameKey);
 						 game.setWildColor(wildColor);
@@ -1630,6 +1666,7 @@ public class DerbyDatabase implements IDatabase {
 						 if(cardSideA != game.getCardSideA()) {
 							 game.flip();
 						 }
+						 game.setUpdate(Update);
 						 
 						 return game;
 					}
@@ -1853,7 +1890,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						stmt = conn.prepareStatement(
 								"UPDATE Game"
-								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?, AuxInt = ?"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?, AuxInt = ?, updateCount = ?"
 								+ "	WHERE game_id = ?"
 						);
 						
@@ -1862,7 +1899,9 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setString(3, game.getWildColor());
 						stmt.setInt(4, game.getMaxPlayers());
 						stmt.setInt(5, game.getAuxInt());
-						stmt.setInt(6, gameId);
+						stmt.setInt(6, game.getUpdate()+1);
+						stmt.setInt(7, gameId);
+						
 						stmt.executeUpdate();
 					}
 					

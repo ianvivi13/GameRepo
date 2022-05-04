@@ -98,6 +98,7 @@ public interface IDatabase {
 	public int getAltPileIdFromGameId(int gameId); //Test
 	public boolean gameIdValid(int gameId);
 	public ArrayList<Game> getGameListFromGameKey();
+	public int getUpdateCountFromGameId(int gameId);
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);
