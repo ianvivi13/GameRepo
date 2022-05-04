@@ -22,8 +22,8 @@ public class UnoCard implements Comparable<UnoCard>{
 		return values;
 	}
 	
-	public void setWildColor(Color col, String symbol) {
-		color = Color.fromString(symbol);
+	public void setWild(String colorChoice) {
+		color = Color.fromString(colorChoice);
 	}
 	
 	@Override

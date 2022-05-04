@@ -51,12 +51,11 @@ private static IDatabase db;
 			int loopLength = model.getAltPile().getNumCards();
 			for(int i=0;i<loopLength;i++){
 				model.getMainPile().addCard(model.getAltPile().removeCards(model.getAltPile().getTopCard()));
+				model.getMainPile().shuffle();
 			}
-			//model.getMainPile().setVisibleIndex(model.getMainPile().getNumCards()-1);
 		}
 		else{
 			current.getPile().addCard(model.getMainPile().drawCard());
-			//model.getMainPile().setVisibleIndex(model.getMainPile().getVisibleIndex()-1);
 		}
 		db.updateGame(gameId, model);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
@@ -92,17 +91,17 @@ private static IDatabase db;
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		
-		if(colorChoice.equals(Color.BLUE.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.BLUE, Color.BLUE.toString());
+		if(colorChoice.equals(Color.BLUE.getSymbol())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.BLUE.getSymbol());
 		}
 		else if(colorChoice.equals(Color.RED.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.RED, Color.RED.toString());
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.RED.getSymbol());
 		}
 		else if(colorChoice.equals(Color.GREEN.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.GREEN, Color.GREEN.toString());
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.GREEN.getSymbol());
 		}
-		else if(colorChoice.equals(Color.GREEN.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.YELLOW, Color.YELLOW.toString());
+		else if(colorChoice.equals(Color.YELLOW.toString())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.YELLOW.getSymbol());
 		}
 		db.updateGame(gameId, model);
 	}
@@ -137,7 +136,10 @@ private static IDatabase db;
 		Game model = db.getGameFromGameId(gameId);
 		Color selectColor = card.getColor();
 		Value selectValue = card.getValues();
-			if ((selectColor == ((UnoCard) model.getMainPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getMainPile().getTopCard()).getValues())) {
+			if ((selectColor == ((UnoCard) model.getAltPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getAltPile().getTopCard()).getValues())) {
+				return true;
+			}
+			else if(selectColor == Color.BLACK) {
 				return true;
 			}
 		return false;
@@ -178,6 +180,8 @@ private static IDatabase db;
 			model.getAltPile().addCards(current.getPile().removeCards(selected));
 			wildColor(gameId, color);
 		}
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 
 }

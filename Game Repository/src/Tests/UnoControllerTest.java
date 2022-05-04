@@ -69,6 +69,7 @@ public class UnoControllerTest {
 		assertEquals(79, model.getMainPile().getNumCards());
 		
 		assertEquals(1, model.getAltPile().getNumCards());
+		System.out.println(model.getAltPile().getTopCard());
 		
 		assertEquals(7, model.getPlayers().get(0).getPile().getNumCards());
 		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
@@ -106,10 +107,12 @@ public class UnoControllerTest {
 	
 	@Test
 	public void testDrawFour() throws Exception{
-		String color = "B";
-		UnoController.playSpecialCard(modelId, new UnoCard(Color.BLACK, Value.Wild_Four), color);
+		String choice = Color.BLUE.toString();
+		UnoCard plus = new UnoCard(Color.BLACK, Value.Wild_Four);
+		UnoController.playSpecialCard(modelId, plus, choice);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(2, model.getAltPile().getNumCards());
+		System.out.println(model.getAltPile().getTopCard());
 		assertEquals(11, model.getPlayers().get(3).getPile().getNumCards());
 		assertEquals("B", ((UnoCard) model.getAltPile().getTopCard()).getColor());
 	}
