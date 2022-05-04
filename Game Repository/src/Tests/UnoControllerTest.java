@@ -2,7 +2,6 @@ package Tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import org.junit.BeforeClass;
@@ -13,11 +12,12 @@ import Database.elves.DerbyDatabase;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
 import Database.elves.PlayerAlreadyExistsException;
-import Models.BlackJackController;
+import Models.Color;
 import Models.Game;
 import Models.Player;
 import Models.UnoCard;
 import Models.UnoController;
+import Models.Value;
 
 public class UnoControllerTest {
 
@@ -66,7 +66,10 @@ public class UnoControllerTest {
 		//Test if initialize method works
 		model = db.getGameFromGameId(modelId);
 		// main deck should have 48 cards
-		assertEquals(80, model.getMainPile().getNumCards());
+		assertEquals(79, model.getMainPile().getNumCards());
+		
+		assertEquals(1, model.getAltPile().getNumCards());
+		
 		assertEquals(7, model.getPlayers().get(0).getPile().getNumCards());
 		//assertEquals(1, model.getPlayers().get(0).getPile().getVisibleIndex());
 		assertEquals(7, model.getPlayers().get(1).getPile().getNumCards());
@@ -75,6 +78,7 @@ public class UnoControllerTest {
 		assertEquals(7, model.getPlayers().get(3).getPile().getNumCards());
 	}
 	
+
 	@Test
 	public void testSkip() throws Exception{
 		UnoController.skip(modelId);
@@ -102,10 +106,11 @@ public class UnoControllerTest {
 	
 	@Test
 	public void testDrawFour() throws Exception{
-		String color = "Blue";
-		UnoController.drawFour(modelId, color);
+		String color = "B";
+		UnoController.playSpecialCard(modelId, new UnoCard(Color.BLACK, Value.Wild_Four), color);
 		model = db.getGameFromGameId(modelId);
-		assertEquals(11, model.getPlayers().get(1).getPile().getNumCards());
-		assertEquals(Color.BLUE, ((UnoCard) model.getAltPile().getTopCard()).getColor());
+		assertEquals(2, model.getAltPile().getNumCards());
+		assertEquals(11, model.getPlayers().get(3).getPile().getNumCards());
+		assertEquals("B", ((UnoCard) model.getAltPile().getTopCard()).getColor());
 	}
 }
