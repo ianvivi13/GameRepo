@@ -315,7 +315,7 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					// create the creators
 					db.createUser("UnicycleUnicorn","Admin*69");
-					db.createUser("SixIvs","Admin*69");
+					db.createUser("SixIVs","Admin*69");
 					db.createUser("Willy","Admin*69");
 					db.createUser("pjnines","Admin*69");
 					initializeBlackJackCards();
@@ -350,6 +350,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				try {
+					@SuppressWarnings("unused")
 					int i = getUserIDfromUsername(username);
 					return null;
 				} catch (Exception e) {
@@ -2400,7 +2401,7 @@ public class DerbyDatabase implements IDatabase {
                     stmt = conn.prepareStatement(
                             "SELECT Users.User_id" +
                             "    FROM Users" +
-                            "        WHERE LOWER(Users.username) = LOWER(?)" +
+                            "        WHERE Users.username = ?" +
                             "        AND Users.password = ?"
                     );
                     stmt.setString(1, username);

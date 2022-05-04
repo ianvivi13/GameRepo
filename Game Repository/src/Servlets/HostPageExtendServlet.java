@@ -1,7 +1,6 @@
 package Servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -31,7 +30,7 @@ public class HostPageExtendServlet extends HttpServlet {
         Game game = db.getGameFromGameId(gId);
         try {
 	        if (game.lobbyFull()) {
-	        	switch (game.getGameCode()) {
+	        	switch (game.getGameKey()) {
 	        		case IDatabase.Key_ExplodingKittens:
 	        			resp.sendRedirect("../gamerepo/home");
 	        			return;
@@ -42,7 +41,9 @@ public class HostPageExtendServlet extends HttpServlet {
 	        			resp.sendRedirect("../gamerepo/home");
 	        			return;
 	        		default:
-	        			BlackJackController.initialize(gId);
+	        			if (db.getNameFromPlayerId(game.getPlayerIds().get(0)).contentEquals(user)) {
+	        				BlackJackController.initialize(gId);
+	        			}
 	        			resp.sendRedirect("../gamerepo/blackjack");
 	        			return;
 	        	}

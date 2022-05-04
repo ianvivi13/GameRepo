@@ -9,8 +9,6 @@ import javax.servlet.http.*;
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
-import Database.elves.UserExistsException;
-import Models.User;
 
 public class NewAccountPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -2,14 +2,10 @@ package Servlets;
 
 import java.io.IOException;
 
-import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import Database.elves.DatabaseProvider;
-import Database.elves.IDatabase;
 import Models.BlackJackController;
-import Models.Game;
 
 public class BlackJackPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
