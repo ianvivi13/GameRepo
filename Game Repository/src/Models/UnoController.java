@@ -1,6 +1,5 @@
 package Models;
 
-import java.util.ArrayList;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
@@ -23,6 +22,7 @@ private static IDatabase db;
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
 		}
+		model.getAltPile().addCards(model.getMainPile().removeCards(1));
 		db.updateGame(gameId, model);
 	}
 	
@@ -42,6 +42,24 @@ private static IDatabase db;
 		model.reverseOrder();
 		model.nextTurn();
 		db.updateGame(gameId, model);
+	}
+	
+	public void drawCardOrRecycleWaste(int gameId) {
+		Game model = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(model.getMainPile().isEmpty()){
+			int loopLength = model.getAltPile().getNumCards();
+			for(int i=0;i<loopLength;i++){
+				model.getMainPile().addCard(model.getAltPile().removeCards(model.getAltPile().getTopCard()));
+			}
+			//model.getMainPile().setVisibleIndex(model.getMainPile().getNumCards()-1);
+		}
+		else{
+			current.getPile().addCard(model.getMainPile().drawCard());
+			//model.getMainPile().setVisibleIndex(model.getMainPile().getVisibleIndex()-1);
+		}
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
 	public static void drawTwo(int gameId) {
@@ -75,21 +93,23 @@ private static IDatabase db;
 		Game model = db.getGameFromGameId(gameId);
 		
 		if(colorChoice.equals(Color.BLUE.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.BLUE);
+			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.BLUE, Color.BLUE.toString());
 		}
 		else if(colorChoice.equals(Color.RED.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.RED);
+			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.RED, Color.RED.toString());
 		}
 		else if(colorChoice.equals(Color.GREEN.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.GREEN);
+			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.GREEN, Color.GREEN.toString());
 		}
 		else if(colorChoice.equals(Color.GREEN.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.YELLOW);
+			((UnoCard) model.getAltPile().getTopCard()).setWildColor(Color.YELLOW, Color.YELLOW.toString());
 		}
 		db.updateGame(gameId, model);
 	}
 	
 	public static boolean checkUno(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		db.updateGame(gameId, model);
@@ -100,6 +120,8 @@ private static IDatabase db;
 	}
 	
 	public boolean checkWin(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		db.updateGame(gameId, model);
@@ -109,79 +131,52 @@ private static IDatabase db;
 		return false;
 	}
 	
-	public Selection select(int gameId, Location location) {
+	public static boolean allowMove(int gameId, UnoCard card) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
-		ArrayList<Object> removed;
-		if (location.getLocationType() == LocationType.MAIN_DECK) {
-			Pile main = model.getMainPile();
-			if (!main.isEmpty() && location.getCardIndex() == main.getIndexOfTopCard()) {
-				removed = main.removeCards(1);
-				return new Selection(location, removed);
-			}
-		}
-		 else if (location.getLocationType() == LocationType.PILE) {
-			Pile hand = model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile();
-			int cardIndex = location.getCardIndex();
-			if (cardIndex <= model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().getIndexOfTopCard() && cardIndex >= model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().getVisibleIndex()) {
-				removed = hand.removeCards(hand.getNumCards()-cardIndex);
-				return new Selection(location, removed);
-			}
-		}
-		return null;
-	}
-	
-	public void unselect(int gameId, Selection selection) {
-		Game model = db.getGameFromGameId(gameId);
-		Location originLoc=selection.getOrigin();
-		if(originLoc.getLocationType()==LocationType.PILE){
-			model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().addCards(selection.getCards());
-		}
-		if(originLoc.getLocationType()==LocationType.MAIN_DECK){
-			model.getMainPile().addCards(selection.getCards());
-		}
-	}
-	
-	public boolean allowMove(int gameId, Selection selection, Location dest) {
-		Game model = db.getGameFromGameId(gameId);
-		if (dest.getLocationType() == LocationType.WASTEPILE) {
-			Color selectColor = ((UnoCard) selection.getCards().get(0)).getColor();
-			Value selectValue = ((UnoCard) selection.getCards().get(0)).getValues();
-			if (selection.getNumCards() == 1) {
-				if ((selectColor == ((UnoCard) model.getMainPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getMainPile().getTopCard()).getValues())) {
-					return true;
-					}
-				}
+		Color selectColor = card.getColor();
+		Value selectValue = card.getValues();
+			if ((selectColor == ((UnoCard) model.getMainPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getMainPile().getTopCard()).getValues())) {
+				return true;
 			}
 		return false;
 	}
 	
-	public void moveCards(int gameId, Selection selection, Location dest) {
+	public static void playCard(int gameId, UnoCard selected) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
-		if (dest.getLocationType() == LocationType.PILE) {
-			model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().addCards(selection.getCards());
-			if (selection.getOrigin().getLocationType() == LocationType.MAIN_DECK) {
-				model.getMainPile().setVisibleIndex(model.getMainPile().getIndexOfTopCard());
-			} else if (selection.getOrigin().getLocationType() == LocationType.PILE) {
-				Pile tab3 =model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile();
-				if (tab3.getVisibleIndex() > tab3.getIndexOfTopCard()) {
-					tab3.setVisibleIndex(tab3.getIndexOfTopCard());
-					}
-				}
-			}
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(allowMove(gameId, selected) && selected.getValues().equals(Value.DrawTwo)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			drawTwo(gameId);
 		}
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Skip)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			skip(gameId);
+		}
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Reverse)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			reverse(gameId);
+		}
+		model.getAltPile().addCards(current.getPile().removeCards(selected));
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
 	
-	public void drawCardOrRecycleWaste(int gameId) {
+	public static void playSpecialCard(int gameId, UnoCard selected, String color) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
-		if(model.getMainPile().isEmpty()){
-			int loopLength = model.getAltPile().getNumCards();
-			for(int i=0;i<loopLength;i++){
-				model.getMainPile().addCard(model.getAltPile().drawCard());
-			}
-			model.getMainPile().setVisibleIndex(model.getMainPile().getNumCards()-1);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild_Four)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			drawFour(gameId, color);
 		}
-		else{
-			model.getAltPile().addCard(model.getMainPile().drawCard());
-			model.getMainPile().setVisibleIndex(model.getMainPile().getVisibleIndex()-1);
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			wildColor(gameId, color);
 		}
 	}
 
