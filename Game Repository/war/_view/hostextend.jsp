@@ -18,7 +18,7 @@
     </head>
     
     <body class=StaticBackground>
-    	<%// response.setIntHeader("Refresh", 1); %>
+    	<% response.setIntHeader("Refresh", 1); %>
     	<div class="HeaderStyle">${user}</div>
 		<script>
 			<%

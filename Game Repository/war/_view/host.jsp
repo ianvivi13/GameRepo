@@ -70,7 +70,7 @@
           <br><br>
           	<div>
           		<form method="post">
-	          		<select style="text-align: center; font-size: 180%; border-radius: 13px; width: 30%; background-color: #3b3b3b; color: #ffffff; border-color: #000000;">
+	          		<select name="MaxP" style="text-align: center; font-size: 180%; border-radius: 13px; width: 30%; background-color: #3b3b3b; color: #ffffff; border-color: #000000;">
 	          			<%
 	          			int t = 2;
 	          			switch ((String) session.getAttribute("happy")) {
@@ -80,7 +80,7 @@
 	          			}
 	          			%>
 	          			<% for (int i = 2 ; i <= t ; i ++) { %>
-							<option style="" value = <% out.print(i); %>> <% out.print(i); %> </option>  
+							<option name="MaxP" value = <% out.print(i); %>> <% out.print(i); %> </option>  
 						<% } %> 
 					</select> 
 					<br><br>

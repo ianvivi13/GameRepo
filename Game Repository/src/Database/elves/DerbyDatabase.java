@@ -312,78 +312,15 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				InitDatabase.init();
 				IDatabase db = DatabaseProvider.getInstance();
-				StatisticsBlackjack statOne = new StatisticsBlackjack();
-				StatisticsUno statTwo = new StatisticsUno();
-				StatisticsUnoFlip statThree = new StatisticsUnoFlip();
-				StatisticsExplodingKittens statFour = new StatisticsExplodingKittens();
-				StatisticsGlobal statFive = new StatisticsGlobal();
 				try {
-					int userOne = db.createUser("NewUser","password still");
-					int userTwo = db.createUser("User","password still");
-					
 					// create the creators
 					db.createUser("UnicycleUnicorn","Admin*69");
 					db.createUser("SixIvs","Admin*69");
 					db.createUser("Willy","Admin*69");
 					db.createUser("pjnines","Admin*69");
-					/*
-					Temp users for quick login
-					 */
-					for (int i = 1 ; i < 10 ; i++) {
-						db.createUser(String.valueOf(i), String.valueOf(i));
-					}
-				
-					db.createAllStats(userOne);
-					db.createAllStats(userTwo);
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
-					
-					
-					
-					/*
-					// create piles
-					Pile empty = new Pile();
-					Pile main = new Pile();
-					main.populate();
-					main.shuffle();
-					Pile pileOne = new Pile();
-					Pile pileTwo = new Pile();
-					pileOne.addCards(main.removeCards(2));
-					pileTwo.addCards(main.removeCards(3));
-					
-					// create players
-					Player playOne = new Player(true, userOne);
-					Player playTwo = new Player(true, userTwo);
-					playOne.setAltPile(empty);
-					playTwo.setAltPile(empty);
-					playOne.setPile(pileOne);
-					playTwo.setPile(pileTwo);
-					
-					// initialize players in database
-					int p1 = db.createPlayer(playOne);
-					int p2 = db.createPlayer(playTwo);
-					
-					// create game
-					Game game = new Game("BLJ");
-					Game game2 = new Game("BLJ");
-					game.setMainPile(main);
-					game.setAltPile(empty);
-					game.addPlayer(p1);
-					game.addPlayer(p2);
-					game.setMaxPlayers(3);
-					game2.setMainPile(main);
-					game2.setAltPile(empty);
-					game2.addPlayer(p1);
-					game2.addPlayer(p2);
-					game2.setMaxPlayers(7);
-					// initialize game in database
-					db.createGame(game);
-					db.createGame(game2);
-					*/
-				
-					 
-					
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
