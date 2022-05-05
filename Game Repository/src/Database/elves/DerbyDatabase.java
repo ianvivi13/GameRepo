@@ -291,7 +291,8 @@ public class DerbyDatabase implements IDatabase {
 						+ "	cardSideA BOOLEAN ,"
 						+ "	wildColor VARCHAR(1) ,"
 						+ " MaxPlayers INTEGER ,"
-						+ " AuxInt INTEGER )"
+						+ " AuxInt INTEGER ,"
+						+ " updateCount INTEGER )"
 					);
 					stmt.executeUpdate();
 					stmt.close();
@@ -312,73 +313,16 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				InitDatabase.init();
 				IDatabase db = DatabaseProvider.getInstance();
-				StatisticsBlackjack statOne = new StatisticsBlackjack();
-				StatisticsUno statTwo = new StatisticsUno();
-				StatisticsUnoFlip statThree = new StatisticsUnoFlip();
-				StatisticsExplodingKittens statFour = new StatisticsExplodingKittens();
-				StatisticsGlobal statFive = new StatisticsGlobal();
 				try {
-					int userOne = db.createUser("NewUser","password still");
-					int userTwo = db.createUser("User","password still");
+					// create the creators
+					db.createUser("UnicycleUnicorn","Admin*69");
+					db.createUser("SixIVs","Admin*69");
+					db.createUser("Willy","Admin*69");
+					db.createUser("pjnines","Admin*69");
 					
-					/*
-					Temp users for quick login
-					 */
-					for (int i = 1 ; i < 30 ; i++) {
-						db.createUser(String.valueOf(i), String.valueOf(i));
-					}
-				
-					db.createAllStats(userOne);
-					db.createAllStats(userTwo);
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
-					
-					
-					
-					
-					// create piles
-					Pile empty = new Pile();
-					Pile main = new Pile();
-					main.populate();
-					main.shuffle();
-					Pile pileOne = new Pile();
-					Pile pileTwo = new Pile();
-					pileOne.addCards(main.removeCards(2));
-					pileTwo.addCards(main.removeCards(3));
-					
-					// create players
-					Player playOne = new Player(true, userOne);
-					Player playTwo = new Player(true, userTwo);
-					playOne.setAltPile(empty);
-					playTwo.setAltPile(empty);
-					playOne.setPile(pileOne);
-					playTwo.setPile(pileTwo);
-					
-					// initialize players in database
-					int p1 = db.createPlayer(playOne);
-					int p2 = db.createPlayer(playTwo);
-					
-					// create game
-					Game game = new Game("BLJ");
-					Game game2 = new Game("BLJ");
-					game.setMainPile(main);
-					game.setAltPile(empty);
-					game.addPlayer(p1);
-					game.addPlayer(p2);
-					game2.setMainPile(main);
-					game2.setAltPile(empty);
-					game2.addPlayer(p1);
-					game2.addPlayer(p2);
-					
-					// initialize game in database
-					db.createGame(game);
-					db.createGame(game2);
-					
-					getGameIdListFromGameKey("BLJ");
-				
-					 
-					
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -408,6 +352,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				try {
+					@SuppressWarnings("unused")
 					int i = getUserIDfromUsername(username);
 					return null;
 				} catch (Exception e) {
@@ -632,8 +577,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers, AuxInt)"
-							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+							"INSERT INTO Game(gameKey, turn_id, players, code, pile_id, alt_pile_id, cardSideA, wildColor, MaxPlayers, AuxInt, updateCount)"
+							+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)"
 						);
 					stmt.setString(1, game.getGameKey());
 					stmt.setInt(2, turnId);
@@ -1543,8 +1488,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	// Returns 10 max length ArrayList of gamesIds - most recently created
-	private ArrayList<Integer> getGameIdListFromGameKey(String gameKey) {
+	// Returns 20 max length ArrayList of gamesIds - most recently created
+	private ArrayList<Integer> getGameIdListFromGameKey() {
 		return executeTransaction(new Transaction<ArrayList<Integer>>() {
 			@Override
 			public ArrayList<Integer> execute(Connection conn) throws SQLException {
@@ -1556,20 +1501,14 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"SELECT game_id "
 							+ "	FROM Game "
-							+ " WHERE gameKey = ? "
-							//+ "	ORDER BY game_id DESC"
-							+ " FETCH SECOND 1 ROWS ONLY "
+							+ "	ORDER BY game_id DESC"
 							);
-					
-					stmt.setString(1, gameKey);
-					
+
 					resultSet = stmt.executeQuery();
 					
-					
-					while(resultSet.next()) {
+					while(resultSet.next() && Ids.size() < 20) {
 						Ids.add(resultSet.getInt("game_id"));
 					}
-					System.out.println(Ids);
 					return Ids;
 					
 				} finally {
@@ -1578,6 +1517,26 @@ public class DerbyDatabase implements IDatabase {
 				}
 			}
 		});
+	}
+	
+	// Returns at max an AL of 5 game objects - most recently created
+	public ArrayList<Game> getGameListFromGameKey() {
+		ArrayList<Game> games = new ArrayList<Game>();
+		ArrayList<Integer> gIds = getGameIdListFromGameKey();
+		int s = 0;
+		for (int i : gIds) {
+			Game g = getGameFromGameId(i);
+			if (g != null) {
+				if (!g.lobbyFull()) {
+					games.add(g);
+					s ++;
+				}
+			}
+			if (s >= 5) {
+				break;
+			}
+		}
+		return games;
 	}
 
 	// Returns a game id given a game object
@@ -1614,6 +1573,38 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// Returns an updateCount from a GameId "updateCount"
+	public int getUpdateCountFromGameId(int gameId) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"SELECT updateCount "
+							+ "	FROM Game "
+							+ "	WHERE game_id = ?"
+							);
+					
+					stmt.setInt(1, gameId);
+					
+					resultSet = stmt.executeQuery();
+					
+					if(resultSet.next()) {
+						 return resultSet.getInt("updateCount");
+					}
+					return null;
+					
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	
 	// Returns a game id given a game object
 	public Game getGameFromGameId(int gameId) {
 		return executeTransaction(new Transaction<Game>() {
@@ -1632,6 +1623,7 @@ public class DerbyDatabase implements IDatabase {
 				String wildColor;
 				int MaxPlayers;
 				int AuxInt;
+				int Update;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -1655,6 +1647,7 @@ public class DerbyDatabase implements IDatabase {
 						 wildColor = resultSet.getString("wildColor");
 						 MaxPlayers = resultSet.getInt("MaxPlayers");
 						 AuxInt = resultSet.getInt("AuxInt");
+						 Update = resultSet.getInt("updateCount");
 						 
 						 game = new Game(gameCode, gameKey);
 						 game.setWildColor(wildColor);
@@ -1673,6 +1666,7 @@ public class DerbyDatabase implements IDatabase {
 						 if(cardSideA != game.getCardSideA()) {
 							 game.flip();
 						 }
+						 game.setUpdate(Update);
 						 
 						 return game;
 					}
@@ -1896,7 +1890,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						stmt = conn.prepareStatement(
 								"UPDATE Game"
-								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?, AuxInt = ?"
+								+ " SET players = ?, cardSideA = ?, wildColor = ?, MaxPlayers = ?, AuxInt = ?, updateCount = ?"
 								+ "	WHERE game_id = ?"
 						);
 						
@@ -1905,7 +1899,9 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setString(3, game.getWildColor());
 						stmt.setInt(4, game.getMaxPlayers());
 						stmt.setInt(5, game.getAuxInt());
-						stmt.setInt(6, gameId);
+						stmt.setInt(6, game.getUpdate()+1);
+						stmt.setInt(7, gameId);
+						
 						stmt.executeUpdate();
 					}
 					
@@ -2444,7 +2440,7 @@ public class DerbyDatabase implements IDatabase {
                     stmt = conn.prepareStatement(
                             "SELECT Users.User_id" +
                             "    FROM Users" +
-                            "        WHERE LOWER(Users.username) = LOWER(?)" +
+                            "        WHERE Users.username = ?" +
                             "        AND Users.password = ?"
                     );
                     stmt.setString(1, username);

@@ -2,6 +2,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import = "java.io.*,java.util.*" %>
 
 <html>
     <head>
@@ -26,26 +27,21 @@
         
     </head>
     <body class="BlackJack">
+    	<% response.setIntHeader("Refresh", 1); %>
         <script>
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
             document.body.style.color = "black";
-            
-            <%InitDatabase.init(); %>
-            <%IDatabase db = DatabaseProvider.getInstance(); %>
-            <%int gId = (int) session.getAttribute("gameId"); %>
-            <%Game game = db.getGameFromGameId(gId); %>
-            <%String us = (String) session.getAttribute("user"); %>
-            <% Integer currentPlayerId = null;%>
-            <% try { %>
-            	<%currentPlayerId = game.getTurnOrder().CurrentPlayer(); %>
-            <% } catch (Exception e) {}%>
-            function timeRefresh(time) {
-            	<% if (currentPlayerId != null) { %>
-            		setTimeout("location.reload(false);", time);
-            	<% } %>
-          	} 
-        	timeRefresh(1000);
-        	
+            <%  
+            InitDatabase.init();
+            IDatabase db = DatabaseProvider.getInstance();
+            int gId = (int) session.getAttribute("gameId");
+            Game game = db.getGameFromGameId(gId);
+            String us = (String) session.getAttribute("user");
+            Integer currentPlayerId = null;
+             try { 
+            	currentPlayerId = game.getTurnOrder().CurrentPlayer();
+             } catch (Exception e) {}
+        	%>
         </script>
         <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button> 
         </a>
@@ -53,21 +49,25 @@
 		<div id="imgCenter">
 	    	<img id="pili" src="_view/images/StandardCards/back-sm.png" style="width: 12%;">
 	    </div>
-    <%Player playerLeft = null; %>
-    <%Player playerRight = null; %>
-    <%if (db.getUserBotIdFromPlayerId(game.getPlayerIds().get(0)) == db.getUserIDfromUsername(us)) { %>
-	    <%playerLeft = game.getIndexPlayer(0);%>
-	    <%playerRight = game.getIndexPlayer(1);%>
-    <% } else { %>
-	    <%playerRight = game.getIndexPlayer(0);%>
-	    <%playerLeft = game.getIndexPlayer(1);%>
-    <% } %>
+	<%
+    Player playerLeft = null;
+    Player playerRight = null;
+    try {
+	    if (db.getUserBotIdFromPlayerId(game.getPlayerIds().get(0)) == db.getUserIDfromUsername(us)) {
+		    playerLeft = game.getIndexPlayer(0);
+		    playerRight = game.getIndexPlayer(1);
+	    } else {
+		    playerRight = game.getIndexPlayer(0);
+	    	playerLeft = game.getIndexPlayer(1);
+	    }
+    } catch (Exception e) {
+    	response.sendRedirect("../home");
+    }
+    %>
     
     <div id="players">
         <div class="split" id="player1">
-        	
         	<div id="centers">${user}</div>
-                
                 <div class="cards">  
 	                <% for (Object o : playerLeft.getPile().getPile()) { %>
 	                <% StandardCard c = ((StandardCard) o); %>

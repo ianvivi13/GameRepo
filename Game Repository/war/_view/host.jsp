@@ -10,6 +10,7 @@
         </title>
     </head>
     <body class="StaticBackground">
+    	<div class="HeaderStyle">${user}</div>
       <script>
         let value = localStorage.getItem("buttonValue");
             console.log(value);
@@ -19,7 +20,6 @@
 					
 					document.body.style.color = "black";
 					document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
-
 					localStorage.setItem("buttonValue", 'blackjack');
 					console.log("buttonValue");
 					break;
@@ -56,63 +56,37 @@
           document.body.style.backgroundImage = "url('_view/css/Back.png')";
 				}
       </script>
-      <form method="post">
-      <div id="left"><button class="ButtonStyle" name="play" value="play" type="submit">Host</button> 
-      </form>
-    </div>
+      
+    
     <div class="BackButton">
       <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
       </a>
     </div>
-    
-    <h2 id="topic">Card Game Desired</h2>
-    
-    <div class="topics"><span class="underline">Difficulty Level</span>
-    <div class="difficulty-slider">
-        <input id="difficultyEasy" type="radio" name="difficulty">
-        <label for="difficultyEasy">Easy</label>
-        <input id="difficultyMedium" type="radio" name="difficulty" checked>
-        <label for="difficultyMedium">Medium</label>
-        <input id="difficultyHard" type="radio" name="difficulty">
-        <label for="difficultyHard">Hard</label>
-       
-      </div>
-      </div>
 
-      <div class="topics"><span class="underline">Bot Count</span>
-      <div class="bot-slider">
-        <input id="bot1" type="radio" name="bot">
-        <label for="bot1">1</label>
-        <input id="bot2" type="radio" name="bot">
-        <label for="bot2">2</label>
-        <input id="bot3" type="radio" name="bot" checked>
-        <label for="bot3">3</label>
-        <input id="bot4" type="radio" name="bot">
-        <label for="bot4">4</label>
-        <input id="bot5" type="radio" name="bot">
-        <label for="bot5">5</label>
-      </div>
-      </div>
+          <br><br><br><br>
 
-        <label class="ckb" id="slider"><span class="underline"> Doubling</span>: &nbsp;
-            <input type="checkbox" name="ckb1" value="a"  unchecked>
-            <i></i>
-          </label>
+          <div class="topics">
+    <span  style="font-size: 150%; color: #ffffffff; background-color: #3b3b3bb4; border-radius: 13px; ">Set Player Count</span>
           <br><br>
-
-          <div class="topics"><span class="underline">Player Count</span>
-          <div class="player-slider">
-            <input id="player1" type="radio" name="player">
-            <label for="player1">1</label>
-            <input id="player2" type="radio" name="player">
-            <label for="player2">2</label>
-            <input id="player3" type="radio" name="player" checked>
-            <label for="player3">3</label>
-            <input id="player4" type="radio" name="player">
-            <label for="player4">4</label>
-            <input id="player5" type="radio" name="player">
-            <label for="player5">5</label>
-          </div>
+          	<div>
+          		<form method="post">
+	          		<select name="MaxP" style="text-align: center; font-size: 180%; border-radius: 13px; width: 30%; background-color: #3b3b3b; color: #ffffff; border-color: #000000;">
+	          			<%
+	          			int t = 2;
+	          			switch ((String) session.getAttribute("happy")) {
+	          				case ("uno"): t = 4; break;
+	          				case ("unoflip"): t = 4; break;
+	          				case ("expoldingkittens"): t = 6; break;
+	          			}
+	          			%>
+	          			<% for (int i = 2 ; i <= t ; i ++) { %>
+							<option name="MaxP" value = <% out.print(i); %>> <% out.print(i); %> </option>  
+						<% } %> 
+					</select> 
+					<br><br>
+			    	<div id=""><button class="ButtonStyle" name="play" value="play" type="submit">Host Lobby</button> </div>
+			    </form> 
+          	</div>
           </div>
     </body>
 </html>

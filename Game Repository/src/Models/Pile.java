@@ -1,8 +1,6 @@
 package Models;
 
 import java.util.*;
-import Database.elves.IDatabase;
-import Models.StandardCard;
 
 public class Pile{
 	
@@ -118,7 +116,6 @@ public class Pile{
 	}
 	
 	public void populateExplodingKittens(int numPlayers) {
-		Type[] allTypes = Type.values();
 		for(int i = 0; i < numPlayers - 1; i++) {
 			pile.add(new ExplodingKittensCard(Type.ExplodingKitten));
 		}

@@ -6,7 +6,6 @@ import javax.servlet.http.*;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
-import Models.BlackJackController;
 import Models.Game;
 import Models.Player;
 
@@ -25,8 +24,7 @@ public class HostPageServlet extends HttpServlet {
             return;
         }
         System.out.println("Host Servlet: doGet: " + user);
-        
-        
+
 	    req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
 	        
 	      
@@ -41,6 +39,9 @@ public class HostPageServlet extends HttpServlet {
 	       
         String m = (String) req.getSession().getAttribute("happy"); 
         Game model;
+        int players = Integer.parseInt((String) req.getParameter("MaxP"));
+        System.out.println(players);
+        
         if (m != null) {
 	        switch (m) {
 	        	case "expoldingkittens": 
@@ -59,7 +60,7 @@ public class HostPageServlet extends HttpServlet {
 	        		model = new Game(IDatabase.Key_Blackjack);
 	        		System.out.println(model.getGameKey());
 	        }
-	        
+	        model.setMaxPlayers(players);
 	        System.out.println(model.getGameKey());
 	        String user = (String) req.getSession().getAttribute("user");
 	        int i = db.getUserIDfromUsername(user);
@@ -85,5 +86,7 @@ public class HostPageServlet extends HttpServlet {
         	//resp.sendRedirect("../gamerepo/multiplayer");
          
         	//req.getRequestDispatcher("_view/host.jsp").forward(req, resp);
+        
     }
+    
 }

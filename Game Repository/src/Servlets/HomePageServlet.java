@@ -7,7 +7,6 @@ import javax.servlet.http.*;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
-import Models.User;
 
 public class HomePageServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -53,14 +52,12 @@ public class HomePageServlet extends HttpServlet {
        String chosen = req.getParameter("butt");
        
        System.out.println(chosen);
-       req.getSession().setAttribute("happy", chosen);
+       if (chosen != null) {
+    	   req.getSession().setAttribute("happy", chosen);
+       }
        
        resp.sendRedirect("../gamerepo/" + req.getParameter("mode"));
-       req.getRequestDispatcher("_view/homepage.jsp").forward(req, resp);
+       return;
     }
 
-    private String getString(HttpServletResponse req, String name) {
-        return ((ServletRequest) req).getParameter(name);
-
-    }
 }

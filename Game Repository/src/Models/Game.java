@@ -21,6 +21,7 @@ public class Game {
 	private IDatabase db;
 	private int MaxPlayers;
 	private int AuxInt;
+	private int Update;
 	
 	public Game(String gameKey){
 		InitDatabase.init();
@@ -34,8 +35,9 @@ public class Game {
 		cardSideA = true;
 		wildColor = "B";
 		tko = new TurnOrder();
-		MaxPlayers = 2;
+		MaxPlayers = 2; 
 		AuxInt = 0;
+		Update = 0;
 		
 		while(db.gameCodeValid(gameCode) > 0) {
 			gameCode = generateGameCode();
@@ -54,6 +56,15 @@ public class Game {
 		MaxPlayers = 2;
 		tko = new TurnOrder();
 		AuxInt = 0;
+		Update = 0;
+	}
+	
+	public int getUpdate() {
+		return Update;
+	}
+	
+	public void setUpdate(int count) {
+		Update = count;
 	}
 	
 	public int getAuxInt() {

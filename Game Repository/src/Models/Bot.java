@@ -1,7 +1,5 @@
 package Models;
 
-import Models.BotNameGenerator;
-
 public class Bot {
     private int difficulty;
     private String gameKey;

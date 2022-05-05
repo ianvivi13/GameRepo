@@ -31,10 +31,6 @@
     <servlet-class>Servlets.JoinPageServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>JoinExtendedPageServlet</servlet-name>
-    <servlet-class>Servlets.JoinExtendedPageServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>SingleplayerPageServlet</servlet-name>
     <servlet-class>Servlets.SingleplayerPageServlet</servlet-class>
   </servlet>
@@ -83,10 +79,6 @@
   <servlet-mapping>
     <servlet-name>JoinPageServlet</servlet-name>
     <url-pattern>/join</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>JoinExtendedPageServlet</servlet-name>
-    <url-pattern>/joinextended</url-pattern>
   </servlet-mapping>
     <servlet-mapping>
   <servlet-name>SingleplayerPageServlet</servlet-name>

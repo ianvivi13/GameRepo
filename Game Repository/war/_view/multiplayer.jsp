@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
     <head>
     	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"/>
@@ -10,6 +11,8 @@
     </head>
 
     <body class="StaticBackground">
+    	<audio id="audioplayer" loop="false" autoplay="true" preload="auto" src="_view/background.mp3"></audio>
+    	<script src="_view/audio.js"></script>
         <script>
 			let value = localStorage.getItem("buttonValue");
 		    console.log(value);
@@ -55,18 +58,18 @@
             
 		  </script>
 		  
-        <div class="HeaderStyle">Multiplayer: ${user}</div>
+        <div class="HeaderStyle">${user}</div>
         
         <div class="BackButton">
             <a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
     </div>
-
-    <h2 id="topic"><u>Card Game Desired</u></h2>
+	
+	<p></p>
     
     <a href="../gamerepo/host"><button class="branch" type="submit">Host</button><br>
     </a>
-    
+    <p></p>
     <a href="../gamerepo/join"><button class="branch" type="submit">Join</button>
     </a>
 

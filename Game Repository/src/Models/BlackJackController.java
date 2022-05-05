@@ -1,7 +1,5 @@
 package  Models;
 
-import java.util.ArrayList;
-
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;

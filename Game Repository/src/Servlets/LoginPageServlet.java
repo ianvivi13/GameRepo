@@ -51,7 +51,7 @@ public class LoginPageServlet extends HttpServlet {
 			req.getSession().setAttribute("user", username);
 			System.out.println("Authenticated user: " + username);
 			resp.sendRedirect("../gamerepo/home");
-			
+			return;
 		} else {
 			System.out.println("Failed to authenticate user: " + username);
 			
