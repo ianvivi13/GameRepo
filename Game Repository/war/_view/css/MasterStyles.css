@@ -43,6 +43,17 @@
     margin: 0;
 }
 
+.Uno {
+    background-image: url(images/Uno.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #151019;
+    color: #ffffff;
+    margin: 0;
+}
+
 /* create the back button position - top right */
 .BackButton {
 	position: absolute;

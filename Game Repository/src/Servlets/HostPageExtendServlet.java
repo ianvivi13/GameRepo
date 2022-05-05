@@ -35,7 +35,7 @@ public class HostPageExtendServlet extends HttpServlet {
 	        			resp.sendRedirect("../gamerepo/home");
 	        			return;
 	        		case IDatabase.Key_Uno:
-	        			resp.sendRedirect("../gamerepo/home");
+	        			resp.sendRedirect("../gamerepo/uno");
 	        			return;
 	        		case IDatabase.Key_UnoFlip:
 	        			resp.sendRedirect("../gamerepo/home");
