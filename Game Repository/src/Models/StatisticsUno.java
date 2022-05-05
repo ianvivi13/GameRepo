@@ -3,12 +3,12 @@ package Models;
 public class StatisticsUno extends StatisticsParent{
 	private int WildCards;
 	private int PlusFours;
-	private int Swaps;
+	private int Reverses;
 	
 	public StatisticsUno() {
 		this.WildCards = 0;
 		this.PlusFours = 0;
-		this.Swaps = 0;
+		this.Reverses = 0;
 	}
 	
 	// Setters
@@ -20,8 +20,8 @@ public class StatisticsUno extends StatisticsParent{
 		this.PlusFours = PlusFours;
 	}
 	
-	public void SetSwaps(int Swaps) {
-		this.Swaps = Swaps;
+	public void SetReverses(int Reverses) {
+		this.Reverses = Reverses;
 	}
 	
 	// Getters
@@ -33,8 +33,8 @@ public class StatisticsUno extends StatisticsParent{
 		return PlusFours;
 	}
 	
-	public int GetSwaps() {
-		return Swaps;
+	public int GetReverses() {
+		return Reverses;
 	}
 	
 	// Setters - called when a stat should be updated
@@ -46,14 +46,14 @@ public class StatisticsUno extends StatisticsParent{
 		PlusFours ++;
 	}
 	
-	public void Swaped() {
-		Swaps ++;
+	public void Reversed() {
+		Reverses ++;
 	}
 	
 	public void print() {
 		System.out.println(WildCards);
 		System.out.println(PlusFours);
-		System.out.println(Swaps);
+		System.out.println(Reverses);
 		System.out.println(GamesPlayed);
 		System.out.println(GamesWon);
 		System.out.println(GamesLost);

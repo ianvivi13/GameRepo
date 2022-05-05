@@ -29,7 +29,7 @@ public class StatisticsUnoTest {
 			stats.PlusFour();
 		}
 		for (int x = 0 ; x < 7 ; x++) {
-			stats.Swaped();
+			stats.Reversed();
 		}
 	}
 	
@@ -62,6 +62,6 @@ public class StatisticsUnoTest {
 	
 	@Test
 	public void testCheckFiveCardWins() {
-		assertEquals(stats.GetSwaps(),7);
+		assertEquals(stats.GetReverses(),7);
 	}
 }

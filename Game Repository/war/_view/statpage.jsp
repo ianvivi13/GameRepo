@@ -25,10 +25,9 @@
 
             document.getElementById("stats").innerHTML = 
             `<span id = "tit"><h3>Blackjack Stats</h3></span>
-            <p>Games Played:&nbsp; 12</p>
-            <p>Games Won:&nbsp; 6</p>
-            <p>Games Loss:&nbsp; 6</p>
-            <p>Win/Loss Ratio:&nbsp; 0.50</p>  `
+            <p>BlackJacks:&nbsp; ${stats.blackjacks}</p>
+            <p>Hits Taken:&nbsp; ${stats.hits}</p>
+            <p>Times Froze:&nbsp; ${stats.froze}</p>`
             break;
 
         case 'uno':
@@ -40,10 +39,9 @@
 
             document.getElementById("stats").innerHTML = 
             `<span id = "tit"><h3>Uno Stats</h3></span>
-            <p>Games Played:&nbsp; 33</p>
-            <p>Games Won:&nbsp; 11</p>
-            <p>Games Loss:&nbsp; 22</p>
-            <p>Win/Loss Ratio:&nbsp; 0.33</p>  `
+            <p>WildCardsPlayed:&nbsp; ${stats.wild}</p>
+            <p>DrawFoursPlayed:&nbsp; ${stats.plusFour}</p>
+            <p>ReversesPlayed:&nbsp; ${stats.reverse}</p>`
             break;    
 
         case 'unoflip':
@@ -55,10 +53,9 @@
 
             document.getElementById("stats").innerHTML = 
             `<span id = "tit"><h3>Uno-Flip Stats</h3></span>
-            <p>Games Played:&nbsp; 45</p>
-            <p>Games Won:&nbsp; 40</p>
-            <p>Games Loss:&nbsp; 5</p>
-            <p>Win/Loss Ratio:&nbsp; 9.0</p>  `
+            <p>FlipsPlayed:&nbsp; ${stats.flip}</p>
+            <p>DrawFivesPlayed:&nbsp; ${stats.plusFive}</p>
+            <p>SkipAllsPlayed:&nbsp; ${stats.skips}</p>`
             break;
 
         case 'expoldingkittens':
@@ -70,10 +67,9 @@
 
             document.getElementById("stats").innerHTML = 
             `<span id = "tit"><h3>Exploding Kittens Stats</h3></span>
-            <p>Games Played:&nbsp; 10</p>
-            <p>Games Won:&nbsp; 1</p>
-            <p>Games Loss:&nbsp; 9</p>
-            <p>Win/Loss Ratio:&nbsp; 0.11</p>  `
+            <p>DefusesPlayed:&nbsp; ${stats.defuse}</p>
+            <p>FavorsAsked:&nbsp; ${stats.favor}</p>
+            <p>FuturesSeen:&nbsp; ${stats.future}</p>`
             break;
 
         default:
@@ -96,10 +92,9 @@
 
                 document.getElementById("stats").innerHTML = 
                 `<span id = "tit"><h3>Blackjack Stats</h3></span>
-                <p>Games Played:&nbsp; 12</p>
-                <p>Games Won:&nbsp; 6</p>
-                <p>Games Loss:&nbsp; 6</p>
-                <p>Win/Loss Ratio:&nbsp; 0.50</p>  `
+                <p>BlackJacks:&nbsp; ${stats.blackjacks}</p>
+                <p>Hits Taken:&nbsp; ${stats.hits}</p>
+                <p>Times Froze:&nbsp; ${stats.froze}</p>`
                 break;
 
             case 'uno':
@@ -112,10 +107,9 @@
 
                 document.getElementById("stats").innerHTML = 
                 `<span id = "tit"><h3>Uno Stats</h3></span>
-                <p>Games Played:&nbsp; 33</p>
-                <p>Games Won:&nbsp; 11</p>
-                <p>Games Loss:&nbsp; 22</p>
-                <p>Win/Loss Ratio:&nbsp; 0.33</p>  `
+                <p>WildCardsPlayed:&nbsp; ${stats.wild}</p>
+                <p>DrawFoursPlayed:&nbsp; ${stats.plusFour}</p>
+                <p>ReversesPlayed:&nbsp; ${stats.reverse}</p>`
                 break;
 
             case 'unoflip':
@@ -128,10 +122,9 @@
                 
                 document.getElementById("stats").innerHTML = 
                 `<span id = "tit"><h3>Uno-Flip Stats</h3></span>
-                <p>Games Played:&nbsp; 45</p>
-                <p>Games Won:&nbsp; 40</p>
-                <p>Games Loss:&nbsp; 5</p>
-                <p>Win/Loss Ratio:&nbsp; 9.0</p>  `
+                <p>FlipsPlayed:&nbsp; ${stats.flip}</p>
+                <p>DrawFivesPlayed:&nbsp; ${stats.plusFive}</p>
+                <p>SkipAllsPlayed:&nbsp; ${stats.skips}</p>`
                 break;
 
             case 'expoldingkittens':
@@ -144,10 +137,9 @@
                 
                 document.getElementById("stats").innerHTML = 
                 `<span id = "tit"><h3>Exploding Kittens Stats</h3></span>
-                <p>Games Played:&nbsp; 10</p>
-                <p>Games Won:&nbsp; 1</p>
-                <p>Games Loss:&nbsp; 9</p>
-                <p>Win/Loss Ratio:&nbsp; 0.11</p>  `
+                <p>DefusesPlayed:&nbsp; ${stats.defuse}</p>
+                <p>FavorsAsked:&nbsp; ${stats.favor}</p>
+                <p>FuturesSeen:&nbsp; ${stats.future}</p>`
                 break;
 
             default:

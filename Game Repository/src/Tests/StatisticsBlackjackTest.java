@@ -26,10 +26,10 @@ public class StatisticsBlackjackTest {
 			stats.Blackjack();
 		}
 		for (int x = 0 ; x < 12 ; x++) {
-			stats.Split();
+			stats.Hit();
 		}
 		for (int x = 0 ; x < 7 ; x++) {
-			stats.FiveCardWin();
+			stats.Froze();
 		}
 	}
 	
@@ -57,11 +57,11 @@ public class StatisticsBlackjackTest {
 	
 	@Test
 	public void testCheckSplits() {
-		assertEquals(stats.GetSplits(),12);
+		assertEquals(stats.GetHits(),12);
 	}
 	
 	@Test
 	public void testCheckFiveCardWins() {
-		assertEquals(stats.GetFiveCardWins(),7);
+		assertEquals(stats.GetFroze(),7);
 	}
 }
