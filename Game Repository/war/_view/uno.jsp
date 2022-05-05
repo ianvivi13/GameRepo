@@ -9,15 +9,13 @@
         <link rel="stylesheet" type="text/css" href="_view/css/MasterStyles.css"/>
         <link rel="stylesheet" type="text/css" href="_view/css/uno.css"/>
 
-        <%@page import="Models.StandardCard" %>
+        <%@page import="Models.UnoCard" %>
         <%@page import="Models.Pile" %>
         <%@page import="Models.Game" %>
         <%@page import="Models.UnoController" %>
         <%@page import="Models.Player" %>
         <%@page import="Models.Value" %>
         <%@page import="Models.Color" %>
-        
-        <%@page import="Models.StatisticsUno" %>
         
         <%@page import= "Database.elves.DatabaseProvider" %>
         <%@page import= " Database.elves.DerbyDatabase" %>
@@ -75,24 +73,39 @@
     	<div class="container">
         	<div class="top">
         		<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerTop))); %> </div>
-    		 	<% for (Object o : playerTop.getPile().getPile()) { %>
-    		 		<% StandardCard c = ((StandardCard) o); %>
-    		 		<% String pathTop = c.getImagePath(); %>
-    		 		<form method="post">
-    		 		<button id="pili" src="<%out.println(pathTop);%>">
-    		 		</form>
-    		 		<% } %>
+        		
+        		<div class="cards">
+	        		<% boolean firstFlag = true; %>
+	        		<% if (currentPlayerId == null) { firstFlag = false; } %>
+	            	<% for (Object o : playerTop.getPile().getPile()) { %>
+		            	<% if (firstFlag) { %>
+		            		<button id="pili" src="_view/images/UnoCards/back.png" >
+		            		<% firstFlag = false; %>
+		            	<% } else { %>
+			            	<% UnoCard c = ((UnoCard) o); %>
+			            	<% String pathTop = c.getImagePath(); %>
+			            	<img id="pili" src="<%out.println(pathTop);%>">
+		            	<% } %>
+	            	<% }%>
+	        	</div>
         	</div>
 
         <div class="left">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerLeft))); %> </div>
-    		<% for (Object o : playerLeft.getPile().getPile()) { %>
-    			<% StandardCard c = ((StandardCard) o); %>
-    			<% String pathLeft = c.getImagePath(); %>
-    			<form method="post">
-    			<button id="pili" src="<%out.println(pathLeft);%>">
-    			</form>
-    			<% } %>
+        	<div class="cards">
+	    		<% boolean firstFlag = true; %>
+	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
+	        	<% for (Object o : playerLeft.getPile().getPile()) { %>
+	            	<% if (firstFlag) { %>
+	            		<button id="pili" src="_view/images/UnoCards/back.png" >
+	            		<% firstFlag = false; %>
+	            	<% } else { %>
+		            	<% UnoCard c = ((UnoCard) o); %>
+		            	<% String pathLeft = c.getImagePath(); %>
+		            	<img id="pili" src="<%out.println(pathLeft);%>">
+	            	<% } %>
+	        	<% }%>
+	    	</div>
         </div>
 
         <div class="content">
@@ -104,41 +117,52 @@
 
         <div class="right">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
-        	<% for (Object o : playerRight.getPile().getPile()) { %>
-				<% StandardCard c = ((StandardCard) o); %>
-				<% String pathRight = c.getImagePath(); %>
-				<form method="post">
-				<button id="pili" src="<%out.println(pathRight);%>">
-				</form>
-				<% } %>
+        	
+        	<div class="cards">
+	    		<% boolean firstFlag = true; %>
+	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
+	        	<% for (Object o : playerRight.getPile().getPile()) { %>
+	            	<% if (firstFlag) { %>
+	            		<button id="pili" src="_view/images/UnoCards/back.png" >
+	            		<% firstFlag = false; %>
+	            	<% } else { %>
+		            	<% UnoCard c = ((UnoCard) o); %>
+		            	<% String pathRight = c.getImagePath(); %>
+		            	<img id="pili" src="<%out.println(pathRight);%>">
+	            	<% } %>
+	        	<% } %>
+	        </div>
         </div>
         
         <div class="bottom">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerBottom))); %> </div>
         	<% for (Object o : playerBottom.getPile().getPile()) { %>
-				<% StandardCard c = ((StandardCard) o); %>
+				<% UnoCard c = ((UnoCard) o); %>
 				<% String pathBottom = c.getImagePath(); %>
 				<form method="post">
+				<% if (playerBottom.getPile().getCard() == Color.Black /*Checking...*/) {%>
 				<button id="pili" src="<%out.println(pathBottom);%>">
+				<%} else { %>
+				<button id="pili" src="<%out.println(pathBottom);%>">
+				<% } %>
 				</form>
 				<% } %>
         </div>
     </div>           
 
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-        
-       
+    <% if (currentPlayerId == null) { %>
+	<% int q = game.getPlayerIds().get(0); %>
+   	<% String s = db.getNameFromPlayerId(q); %>
+   	<% boolean b = UnoController.checkWin(gId); %>
+   	<% boolean z = s.equals(us); %>
+   	<a href="../gamerepo/home">
+   	<% if (b == z) {%>
+   		<img id = "foreground" src="_view/images/Win.png">
+   	<% } else { %>
+   		<img id = "foreground" src="_view/images/Lose.png">
+   	<% } %>
+   	</a>
+<% } %>
+ 
     </body>
-
 </html>

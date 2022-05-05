@@ -104,7 +104,7 @@
 			            	<% String pathRight = c.getImagePath(); %>
 			            	<img id="pili" src="<%out.println(pathRight);%>">
 		            	<% } %>
-	            	<% }%>
+	            	<% } %>
 	            </div>
             </div>
         </div>
