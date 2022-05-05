@@ -24,7 +24,6 @@ public class BlackJackPageServlet extends HttpServlet {
 		}
 
 		System.out.println("BlackJack Servlet: doGet: " + user);
-		
 		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
 	}
 	
