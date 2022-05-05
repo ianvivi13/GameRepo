@@ -18,7 +18,7 @@
     </head>
     
     <body class=StaticBackground>
-    	<% response.setIntHeader("Refresh", 1); %>
+    	
     	<div class="HeaderStyle">${user}</div>
 		<script>
 			<%
@@ -62,7 +62,7 @@
 	  			<% break;
 			}
 			%>
-		  </script>
+		 </script>
 
     	<div class="BackButton">
     		<a href="../gamerepo/home">
@@ -77,5 +77,7 @@
        			<p style="margin-left: auto; margin-right: auto; margin-bottom: -20px; font-size: 300%; width: 90%; color: #ffffffff; background-color: #3b3b3bd8; border-radius: 13px; "><% out.println(db.getNameFromPlayerId(p));%></p>
        		<%}%>
        	</div>
+       	<script src="_view/callAjax.js"></script>
+		<script>setTimeout(callAjax, 1000, <% out.print(game.getUpdate()); %>);</script>
     </body>
 </html>

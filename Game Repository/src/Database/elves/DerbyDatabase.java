@@ -1595,7 +1595,7 @@ public class DerbyDatabase implements IDatabase {
 					if(resultSet.next()) {
 						 return resultSet.getInt("updateCount");
 					}
-					return null;
+					return -1;
 					
 				} finally {
 					DBUtil.closeQuietly(resultSet);

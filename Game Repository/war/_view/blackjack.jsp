@@ -27,7 +27,6 @@
         
     </head>
     <body class="BlackJack">
-    	<% response.setIntHeader("Refresh", 1); %>
         <script>
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
             document.body.style.color = "black";
@@ -122,6 +121,7 @@
            	<% } %>
            	</a>
         <% } %>
+    	<script src="_view/callAjax.js"></script>
+		<script>setTimeout(callAjax, 1000, <% out.print(game.getUpdate()); %>);</script>
     </body>
-
 </html>
