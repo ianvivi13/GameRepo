@@ -18,11 +18,15 @@ public class MultiplayerServlet extends HttpServlet {
 			System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			resp.sendRedirect("../gamerepo/login");
 			return;
 		}
 		
-		System.out.println("Multiplayer Servlet: doGet");
+		String button = (String) req.getSession().getAttribute("happy");
+		
+		System.out.println(button);
+		
+		System.out.println("Multiplayer Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/multiplayer.jsp").forward(req, resp);
 	}

@@ -2,9 +2,10 @@ package Servlets;
 
 import java.io.IOException;
 
-import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import Models.BlackJackController;
 
 public class BlackJackPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -18,21 +19,34 @@ public class BlackJackPageServlet extends HttpServlet {
 			System.out.println("User is not logged in");
 			
 			// user is not logged in, or the session expired
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			resp.sendRedirect("../gamerepo/login");
 			return;
 		}
-		
-		System.out.println("BlackJack Servlet: doGet");
-		
-		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+
+		System.out.println("BlackJack Servlet: doGet: " + user);
+		try {
+			req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+		} catch (Exception e) {
+			System.out.println("uh oh: " + e);
+		}
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		req.setAttribute("username", "user");
-		
-		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int gId = (int) req.getSession().getAttribute("gameId");
+        
+        try {
+            if (req.getParameter("Hit") != null) {
+            	BlackJackController.hit(gId);
+            } else if (req.getParameter("Hold") != null) {
+            	BlackJackController.hold(gId);
+            } else if (req.getParameter("Freeze") != null) {
+            	BlackJackController.freeze(gId);
+            }
+        } catch (Exception e) {
+            System.out.println("There is an error with: " + e);
+        }
+
+		resp.sendRedirect("../gamerepo/blackjack");
 	}
 }

@@ -7,6 +7,10 @@
 
   <!-- Servlets -->
   <servlet>
+  	<servlet-name>GameAjaxServlet</servlet-name>
+  	<servlet-class>Servlets.GameAjaxServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>LoginPageServlet</servlet-name>
     <servlet-class>Servlets.LoginPageServlet</servlet-class>
   </servlet>
@@ -31,10 +35,6 @@
     <servlet-class>Servlets.JoinPageServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>JoinExtendedPageServlet</servlet-name>
-    <servlet-class>Servlets.JoinExtendedPageServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>SingleplayerPageServlet</servlet-name>
     <servlet-class>Servlets.SingleplayerPageServlet</servlet-class>
   </servlet>
@@ -56,6 +56,10 @@
   </servlet>
 
   <!-- Servlet mappings -->
+  <servlet-mapping>
+    <servlet-name>GameAjaxServlet</servlet-name>
+    <url-pattern>/GameAjaxServlet</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LoginPageServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -79,10 +83,6 @@
   <servlet-mapping>
     <servlet-name>JoinPageServlet</servlet-name>
     <url-pattern>/join</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>JoinExtendedPageServlet</servlet-name>
-    <url-pattern>/joinextended</url-pattern>
   </servlet-mapping>
     <servlet-mapping>
   <servlet-name>SingleplayerPageServlet</servlet-name>

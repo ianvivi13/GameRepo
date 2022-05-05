@@ -1,5 +1,7 @@
 package Database.elves;
 
+import java.util.ArrayList;
+
 import Models.Bot;
 import Models.ExplodingKittensCard;
 import Models.Game;
@@ -23,7 +25,6 @@ public interface IDatabase {
 	public static final String Key_UnoFlip = "UNF";
 	public static final String Key_Blackjack = "BLJ";
 	
-	
 	// Player
 	public int createPlayer(Player player);
 	public Player getPlayerFromPlayerId(int playerId);
@@ -33,6 +34,8 @@ public interface IDatabase {
 	public void deletePlayer(int playerId);
 	public void deletePlayer(Player player);
 	public boolean isHuman(int PlayerId);
+	public int getPileIdFromPlayerId(int playerId); //Test
+	public int getAltPileIdFromPlayerId(int playerId); //Test
 	public String getNameFromPlayerId(int PlayerId);
 	
 	// User
@@ -90,6 +93,12 @@ public interface IDatabase {
 	public Game getGameFromGameId(int gameId); //Test
 	public void updateGame(int gameId, Game game); //Test
 	public int gameCodeValid(String gameCode); //Test
+	public void deleteGame(int gameId); //Test
+	public int getPileIdFromGameId(int gameId); //Test
+	public int getAltPileIdFromGameId(int gameId); //Test
+	public boolean gameIdValid(int gameId);
+	public ArrayList<Game> getGameListFromGameKey();
+	public int getUpdateCountFromGameId(int gameId);
 	
 	// Standard Card
 	public int getCardIdFromStandardCard(StandardCard card);

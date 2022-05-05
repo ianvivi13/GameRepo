@@ -9,13 +9,15 @@
 	</head>
 	
 	<body class="StaticBackground">
+		<audio id="audioplayer" loop="false" autoplay="true" preload="auto" src="_view/background.mp3"></audio>
+    	<script src="_view/audio.js"></script>
         <script>
         let value = localStorage.getItem("buttonValue");
 
         switch (value) {
         case 'blackjack':
             
-            document.body.style.color = "black";
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
 
             localStorage.setItem("buttonValue", 'blackjack');
@@ -31,7 +33,7 @@
 
         case 'uno':
                 
-            document.body.style.color = "black";
+            document.body.style.color = "white";
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
             localStorage.setItem("buttonValue", 'uno');
             console.log("buttonValue");
@@ -86,7 +88,7 @@
             switch (shapeChoice) {
             case 'blackjack':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'blackjack');
                 console.log("buttonValue");
             
@@ -102,7 +104,7 @@
 
             case 'uno':
 
-                document.body.style.color = "black";
+                document.body.style.color = "white";
                 localStorage.setItem("buttonValue", 'uno');
                 console.log("buttonValue");
                 
@@ -165,11 +167,11 @@
 
 
         <div class = "HeaderStyle">
-            Stats: ${user}
+            ${user}
         </div>
     
         <div class = "BackButton">
-            <a href="http://localhost:8080/gamerepo/home">
+            <a href="../gamerepo/home">
                 <button class="ButtonStyle" type="submit">Main Menu</button>
             </a>
         </div>    

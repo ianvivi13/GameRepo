@@ -9,8 +9,6 @@ import javax.servlet.http.*;
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
-import Database.elves.UserExistsException;
-import Models.Pair;
 import Models.User;
 
 public class LoginPageServlet extends HttpServlet {
@@ -19,6 +17,14 @@ public class LoginPageServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		HttpSession session = req.getSession(false);
+				
+			if(req.getParameter("logout") != null ){  
+				resp.sendRedirect("../gamerepo/login");
+		        session.invalidate();
+		        return;
+			}
 		
 		System.out.println("Login Servlet: doGet");
 		
@@ -32,9 +38,7 @@ public class LoginPageServlet extends HttpServlet {
 		String username = req.getParameter("Username");
 		String password = req.getParameter("Password");
 		
-		System.out.println("Verify User");
-		System.out.println(username);
-		System.out.println(password);
+		System.out.println("Verifying User: " + username);
 		
 		InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
@@ -45,35 +49,18 @@ public class LoginPageServlet extends HttpServlet {
 			//System.out.println(user.getUsername());
 			
 			req.getSession().setAttribute("user", username);
-			//req.setAttribute("user", username);
-			resp.sendRedirect("http://localhost:8080/gamerepo/home");
+			System.out.println("Authenticated user: " + username);
+			resp.sendRedirect("../gamerepo/home");
+			return;
 		} else {
-			System.out.println("Woops you're a dumb");
+			System.out.println("Failed to authenticate user: " + username);
 			
 			PrintWriter out = resp.getWriter(); 
 			out.println("<script type=\"text/javascript\">"); 
 			out.println("alert('There is an invalid entry for password or username');"); 
-			out.println("location='http://localhost:8080/gamerepo/login';"); 
+			out.println("location='../gamerepo/login';"); 
 			out.println("</script>");
 		}
-//		if(db.login(username, password)) {
-//			System.out.println("Does it print properlt");
-//			user.setPassword(password);
-//			user.setUsername(username);
-//			System.out.println("Does it print properlt");
-//			resp.sendRedirect("http://localhost:8080/gamerepo/home");
-//			
-//			return;
-//		}
-//		else {
-//			 
-//			PrintWriter out = resp.getWriter(); 
-//			out.println("<script type=\"text/javascript\">"); 
-//			out.println("alert('There is an invalid entry for password or username');"); 
-//			out.println("location='http://localhost:8080/gamerepo/login';"); 
-//			out.println("</script>");
-//			return;
-//		}
 	}
 	
 }

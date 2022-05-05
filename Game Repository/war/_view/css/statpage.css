@@ -6,7 +6,9 @@
     height: 600px;
     text-align: center;
     font-size: 50px;
-    border: 2px solid blue;
+	background-color: grey;
+	opacity: 0.9;
+	border-radius: 12%;
     color: white;
 }
 
@@ -18,7 +20,9 @@
     height: 600px;
     text-align: left;
     font-size: 50px;
-    border: 2px solid greenyellow;
+    background-color: grey;
+	opacity: 0.9;
+	border-radius: 12%;
     color: white;
 }
 

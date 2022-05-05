@@ -9,8 +9,6 @@ import javax.servlet.http.*;
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
-import Database.elves.UserExistsException;
-import Models.User;
 
 public class NewAccountPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -30,24 +28,22 @@ public class NewAccountPageServlet extends HttpServlet {
 		String username = req.getParameter("Username");
 		String password = req.getParameter("Password");
 		
-		System.out.println("Verify User");
-		System.out.println(username);
-		System.out.println(password);
+		System.out.println("Attempting to create new user: " + username);
 		
 		InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
 		try {
 			db.createUser(username, password);
-			//req.setAttribute("user", username);
-			resp.sendRedirect("http://localhost:8080/gamerepo/login");
+			System.out.println("User created succesfully: " + username);
+			resp.sendRedirect("../gamerepo/login");
 		} catch (Exception e) {
-			System.out.println("Woops you're a dumb");
-			resp.sendRedirect("http://localhost:8080/gamerepo/new");
+			System.out.println("User could not be created - possible duplicate username: " + username);
+			resp.sendRedirect("../gamerepo/new");
 			
 			PrintWriter out = resp.getWriter(); 
 			out.println("<script type=\"text/javascript\">"); 
 			out.println("alert('Username already exist');"); 
-			out.println("location=http://localhost:8080/gamerepo/new"); 
+			out.println("location=../gamerepo/new"); 
 			out.println("</script>");
 		} 
 	}
