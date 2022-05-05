@@ -15,8 +15,6 @@
     	<script src="_view/audio.js"></script>
         <script>
             
-        
-    
         function radioClicked(){
             let shapeChoice = document.querySelector('input[name="butt"]:checked').value;
 
@@ -199,8 +197,6 @@
 			    document.body.style.backgroundImage = "url('_view/images/BlackJack_Back.jpg')";
 		}
     </script>
-    
-    
-    
+ 
     </body>
 </html>

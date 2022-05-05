@@ -45,14 +45,64 @@ html, body {
    }
 
    #imgCenter {
-    margin: auto;
     text-align: center;
-
 }
 
 #pili {
-	width: 60%;
-	max-width: 60%;
+	width: 20%;
+	max-width: 20%;
 	height: auto;
     margin-left: -8%;
+}
+
+#piliTop {
+    transform: rotate(180deg);
+	width: 20%;
+	max-width: 20%;
+	height: auto;
+    margin-left: -8%;
+}
+
+#piliRight {
+    transform: rotate(-90deg);
+	width: 20%;
+	max-width: 20%;
+	height: auto;
+    margin-left: -8%;
+}
+
+#piliLeft {
+    transform: rotate(90deg);
+	width: 20%;
+	max-width: 20%;
+	height: auto;
+    margin-left: -8%;
+}
+
+#centers {
+    text-align: center;
+    font-size: 200%; 
+    color: #ffffff; 
+    background-color: #3b3b3bb4;
+    border-radius: 150px;
+    width: 64%; 
+    margin: auto 18% auto 18%;
+}
+
+.cards {
+	margin: auto;
+	text-align: center;
+}
+
+#pili:nth-child(1), #piliLeft:nth-child(1), #piliRight:nth-child(1), #piliTop:nth-child(1) {
+    margin-left: 2.5%;
+    align-items: center;
+}
+
+#imgCenter {
+    text-align: center;
+}
+
+#fourColors {
+    
 }

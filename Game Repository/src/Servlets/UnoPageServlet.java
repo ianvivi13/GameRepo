@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
-import Models.BlackJackController;
+import Models.UnoController;
 import Models.Game;
 
 public class UnoPageServlet extends HttpServlet {
@@ -36,20 +36,17 @@ public class UnoPageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int gId = (int) req.getSession().getAttribute("gameId");
 		
-		
-        
-        /*try {
-            if (req.getParameter("Hit") != null) {
-            	BlackJackController.hit(gId);
-            } else if (req.getParameter("Hold") != null) {
-            	BlackJackController.hold(gId);
-            } else if (req.getParameter("Freeze") != null) {
-            	BlackJackController.freeze(gId);
+		try {
+            if (req.getParameter("play") != null) {
+            	UnoController.play(gId);
+            } else if (req.getParameter("special") != null) {
+            	UnoController.special(gId);
             }
+            
         } catch (Exception e) {
             System.out.println("There is an error with: " + e);
-        }*/
+        }
 
-		resp.sendRedirect("../gamerepo/blackjack");
+		resp.sendRedirect("../gamerepo/uno");
 	}
 }
