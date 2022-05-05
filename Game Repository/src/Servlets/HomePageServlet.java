@@ -29,14 +29,12 @@ public class HomePageServlet extends HttpServlet {
             if (db.gameIdValid(gId)) {
                 db.deleteGame(gId);
             }
-
             req.getSession().setAttribute("gameId", null);
         }
 
         if (req.getParameter("logout") != null) {
             req.getSession().removeAttribute("user");
             resp.sendRedirect("../gamerepo/login");
-
             return;
         }
 
