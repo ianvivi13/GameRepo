@@ -37,11 +37,11 @@ public class HostPageExtendServlet extends HttpServlet {
 		
         try {
 	        if (game.lobbyFull()) {
-	        	switch (game.getGameCode()) {
+	        	switch (game.getGameKey()) {
 	        		case IDatabase.Key_ExplodingKittens:
 	        			resp.sendRedirect("../gamerepo/home");
 	        		case IDatabase.Key_Uno:
-	        			resp.sendRedirect("../gamerepo/home");
+	        			resp.sendRedirect("../gamerepo/uno");
 	        		case IDatabase.Key_UnoFlip:
 	        			resp.sendRedirect("../gamerepo/home");
 	        		default:
