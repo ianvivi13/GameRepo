@@ -323,8 +323,6 @@ public class DerbyDatabase implements IDatabase {
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
-<<<<<<< HEAD
-=======
 					
 					/*
 					 create game with game stuffs in it to test display
@@ -367,7 +365,6 @@ public class DerbyDatabase implements IDatabase {
 					end fake game creation
 					 */
 					
->>>>>>> refs/heads/tweaks
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);

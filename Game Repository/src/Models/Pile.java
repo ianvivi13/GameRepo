@@ -100,15 +100,35 @@ public class Pile{
 		return cardsRemoved;
 	}
 	
-	public ArrayList<Object> removeCards(Object card) {
-		if(pile.size()<1){
-			throw new IllegalArgumentException("Not Enough Cards");
-		}
-		ArrayList<Object> cardsRemoved = new ArrayList<>();
-		int size = pile.size();
-		cardsRemoved.add(pile.remove(size-1));
-		return cardsRemoved;
-	}
+    public boolean contains(Object card) {
+        for(Object s : this.getPile()) {
+            if (s.equals(card)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Object removeCard(Object card) {
+        if (pile.contains(card)) {
+            int index = pile.lastIndexOf(card);
+            pile.remove(index);
+            return card;
+        }
+        return null;
+    }
+    
+//    public Object removeCard(Object card) {
+//        if (pile.contains(card)) {
+//            pile.remove(card);
+//            return card;
+//        }
+//        return null;
+//    }
+    
+    public Object removeCard(int index) {
+        return pile.remove(index);
+    }
 	
 	public void addCards(ArrayList<Object> cardsToAdd) {
 		pile.addAll(cardsToAdd);
@@ -201,13 +221,6 @@ public class Pile{
 	
 	public void shuffle() {
 		Collections.shuffle(pile);
-	}
-	
-	public StandardCard drawCard() {
-		if(pile.isEmpty()){
-			throw new NoSuchElementException("Its Empty Hoe");
-		}
-		return (StandardCard) pile.remove(pile.size()-1);
 	}
 	
 	public ArrayList<Object> getPile() {

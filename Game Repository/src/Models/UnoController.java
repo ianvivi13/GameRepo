@@ -22,7 +22,17 @@ private static IDatabase db;
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
 		}
-		model.getAltPile().addCards(model.getMainPile().removeCards(1));
+		Pile wrong = new Pile();
+		UnoCard top = null;
+		while(top == null || top.getColor() == Color.BLACK || top.getValues() == Value.DrawTwo || top.getValues() == Value.Skip || top.getValues() == Value.Reverse  ) {
+			top = (UnoCard) model.getMainPile().removeCards(1).get(0);
+			wrong.addCard(top);
+		}
+		model.getAltPile().addCard(wrong.removeCards(1).get(0));
+		model.getMainPile().addCards(wrong.getPile());
+		model.getMainPile().shuffle();
+		System.out.println(model.getAltPile().getNumCards());
+		System.out.println(model.getMainPile().getNumCards());
 		db.updateGame(gameId, model);
 	}
 	
@@ -44,19 +54,19 @@ private static IDatabase db;
 		db.updateGame(gameId, model);
 	}
 	
-	public void drawCardOrRecycleWaste(int gameId) {
+	public static void drawCardOrRecycleWaste(int gameId, int numCards) {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		if(model.getMainPile().isEmpty()){
-			int loopLength = model.getAltPile().getNumCards();
-			for(int i=0;i<loopLength;i++){
-				model.getMainPile().addCard(model.getAltPile().removeCards(model.getAltPile().getTopCard()));
+		while(numCards > 0) {
+			if(model.getMainPile().isEmpty()){
+				model.getMainPile().addCards(model.getAltPile().removeCards(model.getAltPile().getNumCards()));
+				model.getAltPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
 				model.getMainPile().shuffle();
 			}
+			current.getPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
+			numCards--;
 		}
-		else{
-			current.getPile().addCard(model.getMainPile().drawCard());
-		}
+		model.nextTurn();
 		db.updateGame(gameId, model);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
@@ -66,44 +76,18 @@ private static IDatabase db;
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		model.nextTurn();
-		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		current.getPile().addCards(model.getMainPile().removeCards(2));
-		model.nextTurn();
 		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		drawCardOrRecycleWaste(gameId, 2);
 	}
 	
 	public static void drawFour(int gameId, String colorChoice) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
-		wildColor(gameId, colorChoice);
-		model.nextTurn();
-		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		current.getPile().addCards(model.getMainPile().removeCards(4));
+		model.setWildColor(colorChoice);
 		model.nextTurn();
 		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
-	}
-	
-	public static void wildColor(int gameId, String colorChoice) {
-		InitDatabase.init();
-		db = DatabaseProvider.getInstance();
-		Game model = db.getGameFromGameId(gameId);
-		
-		if(colorChoice.equals(Color.BLUE.getSymbol())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.BLUE.getSymbol());
-		}
-		else if(colorChoice.equals(Color.RED.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.RED.getSymbol());
-		}
-		else if(colorChoice.equals(Color.GREEN.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.GREEN.getSymbol());
-		}
-		else if(colorChoice.equals(Color.YELLOW.toString())) {
-			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.YELLOW.getSymbol());
-		}
-		db.updateGame(gameId, model);
+		drawCardOrRecycleWaste(gameId, 4);
 	}
 	
 	public static boolean checkUno(int gameId) {
@@ -111,20 +95,20 @@ private static IDatabase db;
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		db.updateGame(gameId, model);
 		if(current.getPile().getNumCards() == 1) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkWin(int gameId) {
+	public static boolean checkWin(int gameId) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		db.updateGame(gameId, model);
 		if(current.getPile().getNumCards() == 0) {
+			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
+			db.updateGame(gameId, model);
 			return true;
 		}
 		return false;
@@ -139,6 +123,9 @@ private static IDatabase db;
 			if ((selectColor == ((UnoCard) model.getAltPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getAltPile().getTopCard()).getValues())) {
 				return true;
 			}
+			else if((((UnoCard) model.getAltPile().getTopCard()).getColor() == Color.BLACK) && selectColor.toString().equals(model.getWildColor())) {
+				return true;
+			}
 			else if(selectColor == Color.BLACK) {
 				return true;
 			}
@@ -150,21 +137,47 @@ private static IDatabase db;
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		if(allowMove(gameId, selected) && selected.getValues().equals(Value.DrawTwo)) {
-			model.getAltPile().addCards(current.getPile().removeCards(selected));
-			drawTwo(gameId);
+		if(selected.getColor() == Color.BLACK) {
+			return;
 		}
-		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Skip)) {
-			model.getAltPile().addCards(current.getPile().removeCards(selected));
-			skip(gameId);
+		if(allowMove(gameId, selected)) {
+			switch (selected.getValues()) {
+				case DrawTwo:
+					model.getAltPile().addCard(current.getPile().removeCard(selected));
+					db.updateGame(gameId, model);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					if(!checkWin(gameId)) {
+						drawTwo(gameId);
+					}
+					break;
+				case Reverse:
+					model.getAltPile().addCard(current.getPile().removeCard(selected));
+					db.updateGame(gameId, model);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					if(!checkWin(gameId)) {
+						reverse(gameId);
+					}
+					break;
+				case Skip:
+					model.getAltPile().addCard(current.getPile().removeCard(selected));
+					db.updateGame(gameId, model);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					if(!checkWin(gameId)) {
+						skip(gameId);
+					}
+					break;
+				default:
+					model.getAltPile().addCard(current.getPile().removeCard(selected));
+					db.updateGame(gameId, model);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					if(!checkWin(gameId)) {
+						model = db.getGameFromGameId(gameId);
+						model.nextTurn();
+						db.updateGame(gameId, model);
+					}
+					break;
+			}
 		}
-		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Reverse)) {
-			model.getAltPile().addCards(current.getPile().removeCards(selected));
-			reverse(gameId);
-		}
-		model.getAltPile().addCards(current.getPile().removeCards(selected));
-		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
 	public static void playSpecialCard(int gameId, UnoCard selected, String color) {
@@ -172,16 +185,31 @@ private static IDatabase db;
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild_Four)) {
-			model.getAltPile().addCards(current.getPile().removeCards(selected));
-			drawFour(gameId, color);
+		if(selected.getColor() != Color.BLACK) {
+			return;
 		}
-		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild)) {
-			model.getAltPile().addCards(current.getPile().removeCards(selected));
-			wildColor(gameId, color);
+		if(allowMove(gameId, selected)) {
+			switch(selected.getValues()) {
+			case Wild_Four:
+				model.getAltPile().addCard(current.getPile().removeCard(selected));
+				db.updateGame(gameId, model);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				if(!checkWin(gameId)) {
+					drawFour(gameId, color);
+				}
+				break;
+			default:
+				model.getAltPile().addCard(current.getPile().removeCard(selected));
+				db.updateGame(gameId, model);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				if(!checkWin(gameId)) {
+					model = db.getGameFromGameId(gameId);
+					model.setWildColor(color);
+					db.updateGame(gameId, model);
+				}
+				break;
+			}
 		}
-		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 
 }

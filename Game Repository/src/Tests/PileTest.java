@@ -126,16 +126,7 @@ public class PileTest{
 		}
 	}
 	
-	@Test
-	public void testDrawCardFromEmptyPile() throws Exception {
-		// drawing a card from an empty Pile should result in NoSuchElementException
-		try {
-			pile.drawCard();
-			assertTrue("drawCard on empty Pile should throw NoSuchElementException", false);
-		} catch (NoSuchElementException e) {
-			// good
-		}
-	}
+	
 	
 	@Test
 	public void testGetIndexOfTopCard() throws Exception {
@@ -232,14 +223,6 @@ public class PileTest{
 		assertTrue(numDifferent > 0);
 	}
 	
-	@Test
-	public void testDrawCard() throws Exception {
-		Util.addAllCards(pile);
-		assertEquals(new StandardCard(Rank.KING, Suit.SPADES), pile.drawCard());
-		assertEquals(51, pile.getNumCards());
-		assertEquals(new StandardCard(Rank.QUEEN, Suit.SPADES), pile.drawCard());
-		assertEquals(50, pile.getNumCards());
-	}
 	
 	@Test
 	public void testRemoveCardsTwice() throws Exception {

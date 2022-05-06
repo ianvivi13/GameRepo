@@ -47,14 +47,11 @@ public class BlackJackController {
 		model.resetAuxInt();
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		current.getPile().addCards(model.getMainPile().removeCards(1));
-<<<<<<< HEAD
 		int userId = db.getUserBotIdFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		StatisticsBlackjack bs = db.getBlackjackStats(userId);
 		bs.Hit();
 		db.updateBlackjackStats(bs, userId);
-=======
 		model.nextTurn();
->>>>>>> refs/heads/tweaks
 		db.updateGame(gameId, model);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 		if (!checkBust(gameId)) {
@@ -76,8 +73,7 @@ public class BlackJackController {
 			}
 			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
 			db.updateGame(gameId, model);
-		}
-<<<<<<< HEAD
+
 		int userId = db.getUserBotIdFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		StatisticsBlackjack bs = db.getBlackjackStats(userId);
 		bs.Froze();
@@ -85,8 +81,7 @@ public class BlackJackController {
 		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
 		db.updateGame(gameId, model);
 	}
-=======
->>>>>>> refs/heads/tweaks
+
 	
 	private static void endGame(int gameId) {
 		InitDatabase.init();
