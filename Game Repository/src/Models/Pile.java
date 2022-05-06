@@ -146,27 +146,12 @@ public class Pile{
 	}
 	
 	public void populateExplodingKittens(int numPlayers) {
-
-		//Type[] allTypes = Type.values();
-		for(int i = 0; i < numPlayers - 1; i++) {
-			pile.add(new ExplodingKittensCard(Type.ExplodingKitten));
-		}
-		
 		for(int i = 0; i < 6; i++) {
 			pile.add(new ExplodingKittensCard(Type.SeeTheFuture));
 			pile.add(new ExplodingKittensCard(Type.AlterTheFuture));
 			pile.add(new ExplodingKittensCard(Type.Shuffle));
 			pile.add(new ExplodingKittensCard(Type.Favor));
 			pile.add(new ExplodingKittensCard(Type.FeralCat));
-		}
-		
-		for(int i = 0; i < 7; i++) {
-			pile.add(new ExplodingKittensCard(Type.BeardCat));
-			pile.add(new ExplodingKittensCard(Type.Cattermelon));
-			pile.add(new ExplodingKittensCard(Type.HairyPotatoCat));
-			pile.add(new ExplodingKittensCard(Type.RainbowRalphingCat));
-			pile.add(new ExplodingKittensCard(Type.TacoCat));
-			pile.add(new ExplodingKittensCard(Type.DrawFromBottom));
 		}
 		
 		for(int i = 0; i < 7; i++) {
@@ -187,8 +172,14 @@ public class Pile{
 			pile.add(new ExplodingKittensCard(Type.Attack));
 		}
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 10 - numPlayers; i++) {
 			pile.add(new ExplodingKittensCard(Type.Defuse));
+		}
+	}
+	
+	public void addExplodingKittens(int numPlayers) {
+		for(int i = 0; i < numPlayers - 1; i++) {
+			pile.add(new ExplodingKittensCard(Type.ExplodingKitten));
 		}
 	}
 	
