@@ -320,6 +320,42 @@ public class DerbyDatabase implements IDatabase {
 					db.createUser("Willy","Admin*69");
 					db.createUser("pjnines","Admin*69");
 					
+					Game game  = new Game(IDatabase.Key_Uno);
+					Pile pile = new Pile();
+					pile.populateUno();
+					Pile one = new Pile();
+					Pile alt = new Pile();
+					Pile two = new Pile();
+					
+					System.out.println(one.getPile());
+					one.addCards(pile.removeCards(7));
+					two.addCards(pile.removeCards(4));
+					alt.addCards(pile.removeCards(2));
+					System.out.println(one.getPile());
+					System.out.println(two.getPile());
+					System.out.println(alt.getPile());
+					
+					Player pOne = new Player(true,db.createUser("pOne","a"));
+					Player pTwo = new Player(true,db.createUser("pTwo","a"));
+					
+					System.out.println(pOne.getPile().getPile());
+					int iOne = db.createPlayer(pOne);
+					int iTwo = db.createPlayer(pTwo);
+					
+					game.addPlayer(iOne);
+					game.addPlayer(iTwo);
+					int gId = db.createGame(game);
+					System.out.println("uno game: " + gId);
+					game.setMainPile(pile);
+					game.setAltPile(alt);
+					db.updateGame(gId, game);
+					pOne.setPile(one);
+					pTwo.setPile(two);
+					db.updatePlayer(iOne, pOne);
+					db.updatePlayer(iTwo, pTwo);
+					
+					
+					
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();

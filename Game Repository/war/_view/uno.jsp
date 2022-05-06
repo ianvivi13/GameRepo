@@ -37,7 +37,7 @@
             
             <%InitDatabase.init(); %>
             <%IDatabase db = DatabaseProvider.getInstance(); %>
-            <%int gId = (int) session.getAttribute("gameId"); %>
+            <%int gId = IDatabase.Key_Uno; %>//(int) session.getAttribute("gameId"); %>
             <%Game game = db.getGameFromGameId(gId); %>
             <%String us = (String) session.getAttribute("user"); %>
             <% Integer currentPlayerId = null;%>
@@ -108,7 +108,7 @@
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerLeft.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
-	            		<button id="piliLeft" src="_view/images/UnoCards/back.png" >
+	            		<img id="piliLeft" src="_view/images/UnoCards/back.png" >
 	            		<% firstFlag = false; %>
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
@@ -122,7 +122,7 @@
         <div class="content">
         	<div id="split">
         		<div id="imgCenter">
-        			<img id="pili" src="_view/images/UnoCards/back.png" style="width: 12%;">
+        			<button id="pili" src="_view/images/UnoCards/back.png" style="width: 12%;">
         		</div>
         	</div>
         	
