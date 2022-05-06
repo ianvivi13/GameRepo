@@ -31,14 +31,12 @@ public class GameAjaxServlet extends HttpServlet {
     	InitDatabase.init();
 		IDatabase db = DatabaseProvider.getInstance();
     	int gId = (int) request.getSession().getAttribute("gameId");
-
     	int CurrentUpdate = -1;
         try {
             CurrentUpdate = db.getUpdateCountFromGameId(gId);
         } catch (Exception e) {
             CurrentUpdate = -1;
         }
-        
     	String CU = Integer.toString(CurrentUpdate);
         response.getWriter().write(CU);
         return;

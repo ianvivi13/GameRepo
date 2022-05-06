@@ -105,9 +105,11 @@ private static IDatabase db;
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
+		
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		if(current.getPile().getNumCards() == 0) {
 			model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
+			model.nextTurn();
 			db.updateGame(gameId, model);
 			return true;
 		}
@@ -205,6 +207,7 @@ private static IDatabase db;
 				if(!checkWin(gameId)) {
 					model = db.getGameFromGameId(gameId);
 					model.setWildColor(color);
+					model.nextTurn();
 					db.updateGame(gameId, model);
 				}
 				break;
