@@ -9,7 +9,7 @@ html, body {
    .top {
     height: 20%;
     width: 100%;
-    border: 5px solid red;
+    
    }
    .left {
     position:absolute;
@@ -17,7 +17,7 @@ html, body {
     left:0;
     bottom:50px;
     width: 25%;
-    border: 5px solid green;
+    
    }
    .right {
     position:absolute;
@@ -25,14 +25,14 @@ html, body {
     right:0;
     bottom:50px;
     width: 25%;
-    border: 5px solid gold;
+    
    }
    .bottom {
     position:absolute;
     bottom:0;
     width: 100%;
     height: 25%;
-    border: 5px solid blue;
+    
    }
    .content {
     position:absolute;
@@ -40,7 +40,7 @@ html, body {
     left:30%;
     right:30%;
     bottom:30%;
-    border: 5px solid lightgreen;
+    
     overflow:visible;
    }
 
@@ -53,12 +53,15 @@ html, body {
 	max-width: 20%;
 	height: auto;
     margin-left: -8%;
+    position: fixed;
+    text-align: center;
+    display:inline;
 }
 
 #piliTop {
     transform: rotate(180deg);
 	width: 20%;
-	max-width: 20%;
+	max-width: 5%;
 	height: auto;
     margin-left: -8%;
 }
@@ -68,7 +71,7 @@ html, body {
 	width: 20%;
 	max-width: 20%;
 	height: auto;
-    margin-left: -8%;
+    margin-top: 34%;
 }
 
 #piliLeft {
@@ -76,7 +79,7 @@ html, body {
 	width: 20%;
 	max-width: 20%;
 	height: auto;
-    margin-left: -8%;
+    margin-top: 38%;
 }
 
 #centers {
@@ -89,14 +92,43 @@ html, body {
     margin: auto 18% auto 18%;
 }
 
+#centersSides {
+   
+    z-index: 1;
+    text-align: center;
+    font-size: 200%; 
+    color: #ffffff; 
+    background-color: #3b3b3bb4;
+    border-radius: 150px;
+    width: 64%; 
+    margin: auto 18% auto 18%;
+    margin-top: 25%;
+}
+
 .cards {
 	margin: auto;
 	text-align: center;
 }
 
-#pili:nth-child(1), #piliLeft:nth-child(1), #piliRight:nth-child(1), #piliTop:nth-child(1) {
+#pili:nth-child(1), #piliTop:nth-child(1) {
     margin-left: 2.5%;
     align-items: center;
+}
+
+#piliLeft:nth-child(1), #piliRight:nth-child(1) {
+    align-items: center;
+    
+
+
+
+    
+}
+
+.centerDeck {
+    max-width: 50%;
+    width: 50%;
+    height: auto;
+    
 }
 
 #imgCenter {
@@ -108,11 +140,34 @@ html, body {
 }
 
 .split {
+    border: 3px solid orangered;
     height: 100%;
-    width: 50%;
+    width: 48.5%;
     
     z-index: 1;
     overflow-x: hidden;
     padding-top: 5px;
     display: inline-block;
 }
+
+img {
+    max-width: 5%;
+    height:auto;
+}
+
+[type=button] { 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  [type=button] + img {
+    cursor: pointer;
+  }
+
+  .deck {
+    width: 50%;
+	max-width: 50%;
+	height: auto;
+  }

@@ -1,5 +1,6 @@
 <!-- The 4 Uno Colors T-->
 <!-- Servlet TH--> 
+<!--Fix JSP-->
 
 
 
@@ -84,29 +85,30 @@
 	        <% } %>
     	
     	<div class="container">
-        	<div class="top">
-        		<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerTop))); %> </div>
+        	
+    	<div class="top">
+        	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerTop))); %> </div>
         		
-        		<div class="cards">
-	        		<% boolean firstFlag = true; %>
-	        		<% if (currentPlayerId == null) { firstFlag = false; } %>
-	            	<% for (Object o : playerTop.getPile().getPile()) { %>
-		            	<% if (firstFlag) { %>
-		            		<img id="piliTop" src="_view/images/UnoCards/back.png" >
-		            		<% firstFlag = true; %>
-		            	<% } else { %>
-			            	<% UnoCard c = ((UnoCard) o); %>
-			            	<% String pathTop = c.getImagePath(); %>
-			            	<img id="piliTop" src="<%out.println(pathTop);%>">
-		            	<% } %>
-	            	<% }%>
-	        	</div>
+    		<div class="cards">
+        		<% boolean firstFlag = true; %>
+        		<% if (currentPlayerId == null) { firstFlag = false; } %>
+            	<% for (Object o : playerTop.getPile().getPile()) { %>
+	            	<% if (firstFlag) { %>
+	            		<img id="piliTop" src="_view/images/UnoCards/back.png" >
+	            		<% firstFlag = true; %>
+	            	<% } else { %>
+		            	<% UnoCard c = ((UnoCard) o); %>
+		            	<% String pathTop = c.getImagePath(); %>
+		            	<img id="piliTop" src="<%out.println(pathTop);%>">
+	            	<% } %>
+            	<% }%>
         	</div>
+    	</div>
 
         <div class="left">
-        	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerLeft))); %> </div>
+        	<div id="centersSides"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerLeft))); %> </div>
+        	
         	<div class="cards">
-	    		
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerLeft.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
@@ -115,33 +117,35 @@
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
 		            	<% String pathLeft = c.getImagePath(); %>
-		            	<img id="piliLeft" src="<%out.println(pathLeft);%>">
+		            	<img id="piliLeft" src="<%out.println(pathLeft); %>">
 	            	<% } %>
 	        	<% }%>
 	    	</div>
         </div>
 
         <div class="content">
-        	<div id="split">
-        		<div id="imgCenter">
-        			<button id="pili" src="_view/images/UnoCards/back.png" style="width: 12%;">
+        	<div class="split">
+        		<div id="imgCenter" >
+        		<form method="post">
+        		<input type="button" id="pili"  type="submit" name="draw" value="draw"> <img src="_view/images/UnoCards/back.png">
+        		</form>
         		</div>
         	</div>
         	
-        	<div id="split">
-        		<div id="imgCenter">
-        			<% for (Object o : game.getAltPile().getPile()) { %>
-        			<img id="pili" src="<%out.println(game.getAltPile().getTopCard());%>" style="width: 12%;">
-        			<% } %>
+        	<div class="split">
+        		<div id="imgCenter" >
+        			
+        			<img class="deck" src="<%out.print(((UnoCard) game.getAltPile().getTopCard()).getImagePath());%>" style="width: 50%;">
+        		
 				</div>
         	</div>
         	
         </div>
         
         <div class="right">
-        	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
+        	<div id="centersSides"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
         	
-        	<div class="cards">
+        	<div >
 	    		
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerRight.getPile().getPile()) { %>
@@ -163,10 +167,12 @@
 				<% UnoCard c = ((UnoCard) o); %>
 				<% String pathBottom = c.getImagePath(); %>
 				<form method="post">
-				<% if (c.getColor() != Color.BLACK /*Checking...*/) {%>
-				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="playCard"> <!--Will Change: Need Changes in servlet-->
-				<%} else { %>
-				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="playSpecialCard"> <!--Will Change: Need changes in servlet-->
+				<% if (c.getColor() != Color.BLACK) {%>
+				
+				<input type="button" id="pili" type="submit" name="playCard" value="playCard"> <img src="<%out.println(pathBottom);%>">
+				
+				<% } else { %>
+				<input type="button" id="pili" type="submit" name="playSpecialCard" value="playSpecialCard"> <img src="<%out.println(pathBottom);%>" /> 
 				<% } %>
 				</form>
 				<% } %>
