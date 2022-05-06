@@ -1,6 +1,8 @@
 <!-- The 4 Uno Colors T-->
 <!-- Servlet TH--> 
 
+
+
 <!DOCTYPE html>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -37,7 +39,7 @@
             
             <%InitDatabase.init(); %>
             <%IDatabase db = DatabaseProvider.getInstance(); %>
-            <%int gId = IDatabase.Key_Uno; %>//(int) session.getAttribute("gameId"); %>
+            <%int gId = 1; %>//(int) session.getAttribute("gameId"); %>
             <%Game game = db.getGameFromGameId(gId); %>
             <%String us = (String) session.getAttribute("user"); %>
             <% Integer currentPlayerId = null;%>
@@ -71,7 +73,7 @@
 	        	<%playerRight = game.getIndexPlayer(3);%>
 	        	<%playerTop = game.getIndexPlayer(0);%>
 	        	<%playerLeft = game.getIndexPlayer(1);%>
-		    <% } else if (db.getUserBotIdFromPlayerId(game.getPlayerIds().get(3)) == db.getUserIDfromUsername(us)) %>
+		    <% } else if (db.getUserBotIdFromPlayerId(game.getPlayerIds().get(3)) == db.getUserIDfromUsername(us)) { %>
 		        <%playerBottom = game.getIndexPlayer(3);%>
 			    <%playerRight = game.getIndexPlayer(0);%>
 			    <%playerTop = game.getIndexPlayer(1);%>
@@ -90,8 +92,8 @@
 	        		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	            	<% for (Object o : playerTop.getPile().getPile()) { %>
 		            	<% if (firstFlag) { %>
-		            		<button id="piliTop" src="_view/images/UnoCards/back.png" >
-		            		<% firstFlag = false; %>
+		            		<img id="piliTop" src="_view/images/UnoCards/back.png" >
+		            		<% firstFlag = true; %>
 		            	<% } else { %>
 			            	<% UnoCard c = ((UnoCard) o); %>
 			            	<% String pathTop = c.getImagePath(); %>
@@ -104,12 +106,12 @@
         <div class="left">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerLeft))); %> </div>
         	<div class="cards">
-	    		<% boolean firstFlag = true; %>
+	    		
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerLeft.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
 	            		<img id="piliLeft" src="_view/images/UnoCards/back.png" >
-	            		<% firstFlag = false; %>
+	            		<% firstFlag = true; %>
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
 		            	<% String pathLeft = c.getImagePath(); %>
@@ -128,8 +130,9 @@
         	
         	<div id="split">
         		<div id="imgCenter">
-        			<% Object o : game.getWastePlile().getPile() { %> <!--Under Review-->
-        			<img id="pili" src="<%out.println(game.getWastePile().getTopCard());%>" style="width: 12%;">
+        			<% for (Object o : game.getAltPile().getPile()) { %>
+        			<img id="pili" src="<%out.println(game.getAltPile().getTopCard());%>" style="width: 12%;">
+        			<% } %>
 				</div>
         	</div>
         	
@@ -139,12 +142,12 @@
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
         	
         	<div class="cards">
-	    		<% boolean firstFlag = true; %>
+	    		
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerRight.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
-	            		<button id="piliRight" src="_view/images/UnoCards/back.png" >
-	            		<% firstFlag = false; %>
+	            		<img id="piliRight" src="_view/images/UnoCards/back.png" >
+	            		<% firstFlag = true; %>
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
 		            	<% String pathRight = c.getImagePath(); %>
@@ -160,21 +163,19 @@
 				<% UnoCard c = ((UnoCard) o); %>
 				<% String pathBottom = c.getImagePath(); %>
 				<form method="post">
-				<% if (playerBottom.getPile().getCard() != Color.Black /*Checking...*/) {%>
-				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="play"> <!--Will Change: Need Changes in servlet-->
+				<% if (c.getColor() != Color.BLACK /*Checking...*/) {%>
+				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="playCard"> <!--Will Change: Need Changes in servlet-->
 				<%} else { %>
-				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="special"> <!--Will Change: Need changes in servlet-->
+				<button id="pili" src="<%out.println(pathBottom);%>" type="submit" name="playSpecialCard"> <!--Will Change: Need changes in servlet-->
 				<% } %>
 				</form>
 				<% } %>
         </div>
     </div>        
     
-    <%if () { %>
-    	<div id="fourColors"></div>
-    <% } %>
+    	<div id="fourColors"></div
 
-    <% if (currentPlayerId == null) { %>
+    <%/* if (currentPlayerId == null) { %>
 	<% int q = game.getPlayerIds().get(0); %>
    	<% String s = db.getNameFromPlayerId(q); %>
    	<% boolean b = UnoController.checkWin(gId); %>
@@ -186,7 +187,10 @@
    		<img id = "foreground" src="_view/images/Lose.png">
    	<% } %>
    	</a>
-<% } %>
+<% } */%>
+
+<script src="_view/callAjax.js"></script>
+<script>setTimeout(callAjax, 1000, <% out.print(game.getUpdate()); %>);</script>
  
     </body>
 </html>

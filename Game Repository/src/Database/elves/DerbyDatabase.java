@@ -326,36 +326,59 @@ public class DerbyDatabase implements IDatabase {
 					Game game  = new Game(IDatabase.Key_Uno);
 					Pile pile = new Pile();
 					pile.populateUno();
+					pile.shuffle();
 					Pile one = new Pile();
 					Pile alt = new Pile();
 					Pile two = new Pile();
+					Pile three = new Pile();
+					Pile four = new Pile();
 					
 					System.out.println(one.getPile());
+					
 					one.addCards(pile.removeCards(7));
 					two.addCards(pile.removeCards(4));
+					three.addCards(pile.removeCards(5));
+					four.addCards(pile.removeCards(3));
 					alt.addCards(pile.removeCards(2));
+					
 					System.out.println(one.getPile());
 					System.out.println(two.getPile());
+					System.out.println(three.getPile());
+					System.out.println(four.getPile());
 					System.out.println(alt.getPile());
 					
 					Player pOne = new Player(true,db.createUser("pOne","a"));
 					Player pTwo = new Player(true,db.createUser("pTwo","a"));
+					Player pThree = new Player(true,db.createUser("pThree","a"));
+					Player pFour = new Player(true,db.createUser("pFour","a"));
 					
 					System.out.println(pOne.getPile().getPile());
+					
 					int iOne = db.createPlayer(pOne);
 					int iTwo = db.createPlayer(pTwo);
+					int iThree = db.createPlayer(pThree);
+					int iFour = db.createPlayer(pFour);
 					
 					game.addPlayer(iOne);
 					game.addPlayer(iTwo);
+					game.addPlayer(iThree);
+					game.addPlayer(iFour);
 					int gId = db.createGame(game);
 					System.out.println("uno game: " + gId);
 					game.setMainPile(pile);
 					game.setAltPile(alt);
 					db.updateGame(gId, game);
+					
 					pOne.setPile(one);
 					pTwo.setPile(two);
+					pThree.setPile(three);
+					pFour.setPile(four);
+					
 					db.updatePlayer(iOne, pOne);
 					db.updatePlayer(iTwo, pTwo);
+					db.updatePlayer(iThree, pThree);
+					db.updatePlayer(iFour, pFour);
+					
 					System.out.println(pOne.getPile().getPile());
 					System.out.println(pTwo.getPile().getPile());
 					
