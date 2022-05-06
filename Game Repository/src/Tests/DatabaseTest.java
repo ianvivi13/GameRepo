@@ -192,6 +192,7 @@ public class DatabaseTest{
 		boolean flag = false;
 		try {
 			int i = db.createPlayer(DupPlayer);
+			i = db.createPlayer(DupPlayer);
 			System.out.println(i);
 		} catch (Exception PlayerAlreadyExistsException) {
 			flag = true;

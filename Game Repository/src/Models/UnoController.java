@@ -1,6 +1,5 @@
 package Models;
 
-import java.util.ArrayList;
 
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
@@ -8,156 +7,181 @@ import Database.elves.InitDatabase;
 
 public class UnoController {
 	
-private IDatabase db;
+private static IDatabase db;
 	
 	
-	public int initialize(Game model) throws Exception {
+	public static void initialize(int gameId) throws Exception {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
 		
 		model.getMainPile().populateUno();
+		model.getMainPile().shuffle();
 		model.getMainPile().shuffle();
 		
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
 		}
-		int gameID = db.createGame(model);
-		db.updateGame(gameID, model);
-		return gameID;
+		model.getAltPile().addCards(model.getMainPile().removeCards(1));
+		db.updateGame(gameId, model);
 	}
 	
-	public boolean checkUno(Game model) {
+	public static void skip(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		model.nextTurn();
+		model.nextTurn();
+		db.updateGame(gameId, model);
+	}
+	
+	public static void reverse(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		model.reverseOrder();
+		model.nextTurn();
+		db.updateGame(gameId, model);
+	}
+	
+	public void drawCardOrRecycleWaste(int gameId) {
+		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(model.getMainPile().isEmpty()){
+			int loopLength = model.getAltPile().getNumCards();
+			for(int i=0;i<loopLength;i++){
+				model.getMainPile().addCard(model.getAltPile().removeCards(model.getAltPile().getTopCard()));
+				model.getMainPile().shuffle();
+			}
+		}
+		else{
+			current.getPile().addCard(model.getMainPile().drawCard());
+		}
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
+	
+	public static void drawTwo(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		model.nextTurn();
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		current.getPile().addCards(model.getMainPile().removeCards(2));
+		model.nextTurn();
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
+	
+	public static void drawFour(int gameId, String colorChoice) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		wildColor(gameId, colorChoice);
+		model.nextTurn();
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		current.getPile().addCards(model.getMainPile().removeCards(4));
+		model.nextTurn();
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
+	
+	public static void wildColor(int gameId, String colorChoice) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		
+		if(colorChoice.equals(Color.BLUE.getSymbol())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.BLUE.getSymbol());
+		}
+		else if(colorChoice.equals(Color.RED.toString())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.RED.getSymbol());
+		}
+		else if(colorChoice.equals(Color.GREEN.toString())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.GREEN.getSymbol());
+		}
+		else if(colorChoice.equals(Color.YELLOW.toString())) {
+			((UnoCard) model.getAltPile().getTopCard()).setWild(Color.YELLOW.getSymbol());
+		}
+		db.updateGame(gameId, model);
+	}
+	
+	public static boolean checkUno(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		db.updateGame(gameId, model);
 		if(current.getPile().getNumCards() == 1) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkWin(Game model) {
+	public boolean checkWin(int gameId) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		db.updateGame(gameId, model);
 		if(current.getPile().getNumCards() == 0) {
 			return true;
 		}
 		return false;
 	}
 	
-	public Selection select(Game model, Location location) {
-		ArrayList<Object> removed;
-		if (location.getLocationType() == LocationType.MAIN_DECK) {
-			Pile main = model.getMainPile();
-			if (!main.isEmpty() && location.getCardIndex() == main.getIndexOfTopCard()) {
-				removed = main.removeCards(1);
-				return new Selection(location, removed);
+	public static boolean allowMove(int gameId, UnoCard card) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		Color selectColor = card.getColor();
+		Value selectValue = card.getValues();
+			if ((selectColor == ((UnoCard) model.getAltPile().getTopCard()).getColor()) || (selectValue == ((UnoCard) model.getAltPile().getTopCard()).getValues())) {
+				return true;
 			}
-		}
-		 else if (location.getLocationType() == LocationType.HAND) {
-			Pile hand = model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile();
-			int cardIndex = location.getCardIndex();
-			if (cardIndex <= model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().getIndexOfTopCard() && cardIndex >= model.getPlayers().get(model.getTurnOrder().CurrentPlayer()).getPile().getVisibleIndex()) {
-				removed = hand.removeCards(hand.getNumCards()-cardIndex);
-				return new Selection(location, removed);
+			else if(selectColor == Color.BLACK) {
+				return true;
 			}
-		}
-		return null;
+		return false;
 	}
 	
-//	public void unselect(Game model, Selection selection) {
-//		Location originLoc=selection.getOrigin();
-//		if(originLoc.getLocationType()==LocationType.HAND){
-//			model.getTableauPile(originLoc.getPileIndex()).addCards(selection.getCards());
-//		}
-//		if(originLoc.getLocationType()==LocationType.MAIN_DECK){
-//			model.getMainDeck().addCards(selection.getCards());
-//		}
-//	}
+	public static void playCard(int gameId, UnoCard selected) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(allowMove(gameId, selected) && selected.getValues().equals(Value.DrawTwo)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			drawTwo(gameId);
+		}
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Skip)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			skip(gameId);
+		}
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Reverse)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			reverse(gameId);
+		}
+		model.getAltPile().addCards(current.getPile().removeCards(selected));
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
 	
-//	public boolean allowMove(KlondikeModel model, Selection selection, Location dest) {
-//		if (dest.getLocationType() == LocationType.FOUNDATION_PILE) {
-//			Pile found = model.getFoundationPile(dest.getPileIndex());
-//			Rank selectRank = selection.getCards().get(0).getRank();
-//			Suit selectSuit = selection.getCards().get(0).getSuit();
-//			if (selection.getNumCards() == 1) {
-//				if (found.isEmpty() && selectRank == Rank.ACE) {
-//					return true;
-//				}
-//					else if (!found.isEmpty() && selectSuit == found.getTopCard().getSuit()) {
-//						Rank[] rank = Rank.values();
-//						for (int x = 0; x < rank.length - 1; x++) {
-//							if (selectRank == rank[x + 1] && found.getTopCard().getRank() == rank[x]) {
-//								return true;
-//							}
-//						}
-//					}
-//				}
-//			}
-//		 else if (dest.getLocationType() == LocationType.TABLEAU_PILE) {
-//			Pile tab2 = model.getTableauPile(dest.getPileIndex());
-//			Rank selectRank2 = selection.getCards().get(0).getRank();
-//			Suit selectSuit2 = selection.getCards().get(0).getSuit();
-//			if (tab2.isEmpty() && selectRank2 == Rank.KING) {
-//				return true;
-//			}
-//				else if (!tab2.isEmpty() && selectSuit2.getColor() != tab2.getTopCard().getSuit().getColor()) {
-//					Rank[] rank = Rank.values();
-//					for (int x = 0; x < rank.length - 1; x++) {
-//						if (selectRank2 == rank[x] && tab2.getTopCard().getRank() == rank[x + 1]) {
-//							return true;
-//						}
-//					}
-//				}
-//			}
-//		return false;
-//	}
-	
-//	public void moveCards(KlondikeModel model, Selection selection, Location dest) {
-//		if (dest.getLocationType() == LocationType.TABLEAU_PILE) {
-//			model.getTableauPile(dest.getPileIndex()).addCards(selection.getCards());
-//			if (selection.getOrigin().getLocationType() == LocationType.MAIN_DECK) {
-//				model.getMainDeck().setExposeIndex(model.getMainDeck().getIndexOfTopCard());
-//			} else if (selection.getOrigin().getLocationType() == LocationType.TABLEAU_PILE) {
-//				Pile tab3 = model.getTableauPile(selection.getOrigin().getPileIndex());
-//				if (tab3.getExposeIndex() > tab3.getIndexOfTopCard()) {
-//					tab3.setExposeIndex(tab3.getIndexOfTopCard());
-//				}
-//			}
-//		} else if (dest.getLocationType() == LocationType.FOUNDATION_PILE) {
-//				model.getFoundationPile(dest.getPileIndex()).addCards(selection.getCards());
-//			if (selection.getOrigin().getLocationType() == LocationType.MAIN_DECK) {
-//				model.getMainDeck().setExposeIndex(model.getMainDeck().getIndexOfTopCard());
-//				}
-//			}
-//		}
-	
-//	public void drawCardOrRecycleWaste(Game model) {
-//		if(model.getMainDeck().isEmpty()){
-//			int loopLength = model.getWastePile().getNumCards();
-//			for(int i=0;i<loopLength;i++){
-//				model.getMainDeck().addCard(model.getWastePile().drawCard());
-//			}
-//			model.getMainDeck().setExposeIndex(model.getMainDeck().getNumCards()-1);
-//		}
-//		else{
-//			model.getWastePile().addCard(model.getMainDeck().drawCard());
-//			model.getMainDeck().setExposeIndex(model.getMainDeck().getExposeIndex()-1);
-//		}
-//	}
-	
-//	public boolean isWin(KlondikeModel model) {
-//		for(int i=0;i<4;i++){
-//			if(model.getFoundationPile(i).getNumCards() != 13){
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-	
-	/* Methods to Implement
-	 * drawtwo
-	 * drawfour
-	 * wild
-	 * reverse
-	 * skip
-	 */
+	public static void playSpecialCard(int gameId, UnoCard selected, String color) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild_Four)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			drawFour(gameId, color);
+		}
+		else if(allowMove(gameId, selected) && selected.getValues().equals(Value.Wild)) {
+			model.getAltPile().addCards(current.getPile().removeCards(selected));
+			wildColor(gameId, color);
+		}
+		db.updateGame(gameId, model);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
 
 }

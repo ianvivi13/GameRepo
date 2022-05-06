@@ -323,6 +323,51 @@ public class DerbyDatabase implements IDatabase {
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
+<<<<<<< HEAD
+=======
+					
+					/*
+					 create game with game stuffs in it to test display
+					 				
+					
+					// create piles
+					Pile empty = new Pile();
+					Pile main = new Pile();
+					main.populate();
+					main.shuffle();
+					Pile pileOne = new Pile();
+					Pile pileTwo = new Pile();
+					pileOne.addCards(main.removeCards(2));
+					pileTwo.addCards(main.removeCards(3));
+					
+					// create players
+					Player playOne = new Player(true, userOne);
+					Player playTwo = new Player(true, userTwo);
+					playOne.setAltPile(empty);
+					playTwo.setAltPile(empty);
+					playOne.setPile(pileOne);
+					playTwo.setPile(pileTwo);
+					
+					// initialize players in database
+					int p1 = db.createPlayer(playOne);
+					int p2 = db.createPlayer(playTwo);
+					
+					// create game
+					Game game = new Game("BLJ");
+					game.setMainPile(main);
+					game.setAltPile(empty);
+					game.addPlayer(p1);
+					game.addPlayer(p2);
+					
+					// initialize game in database
+					int g = db.createGame(game);
+					System.out.println(g);
+					
+					
+					end fake game creation
+					 */
+					
+>>>>>>> refs/heads/tweaks
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
