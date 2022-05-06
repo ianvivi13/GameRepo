@@ -7,6 +7,10 @@
 
   <!-- Servlets -->
   <servlet>
+  	<servlet-name>GameAjaxServlet</servlet-name>
+  	<servlet-class>Servlets.GameAjaxServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>LoginPageServlet</servlet-name>
     <servlet-class>Servlets.LoginPageServlet</servlet-class>
   </servlet>
@@ -56,6 +60,10 @@
   </servlet>
 
   <!-- Servlet mappings -->
+  <servlet-mapping>
+    <servlet-name>GameAjaxServlet</servlet-name>
+    <url-pattern>/GameAjaxServlet</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LoginPageServlet</servlet-name>
     <url-pattern>/login</url-pattern>

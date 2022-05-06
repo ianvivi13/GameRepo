@@ -48,10 +48,8 @@ public class HomePageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-    	System.out.println("posting");
        String chosen = req.getParameter("butt");
-       
-       System.out.println(chosen);
+
        if (chosen != null) {
     	   req.getSession().setAttribute("happy", chosen);
        }

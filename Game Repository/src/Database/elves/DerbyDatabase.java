@@ -124,7 +124,6 @@ public class DerbyDatabase implements IDatabase {
 		
 	// method to delete Dobby.db if exists and user accepts before re-creation
 	private static Boolean DeleteDobby() {
-		// check if Dobby.db exists
 		File DobbyPath = new File("Dobby.db");
 		deleteDirectory(DobbyPath);
 		return true;
@@ -320,6 +319,10 @@ public class DerbyDatabase implements IDatabase {
 					db.createUser("Willy","Admin*69");
 					db.createUser("pjnines","Admin*69");
 					
+					initializeBlackJackCards();
+					initializeExplodingKittensCards();
+					initializeUnoCards();
+					
 					Game game  = new Game(IDatabase.Key_Uno);
 					Pile pile = new Pile();
 					pile.populateUno();
@@ -353,12 +356,9 @@ public class DerbyDatabase implements IDatabase {
 					pTwo.setPile(two);
 					db.updatePlayer(iOne, pOne);
 					db.updatePlayer(iTwo, pTwo);
+					System.out.println(pOne.getPile().getPile());
+					System.out.println(pTwo.getPile().getPile());
 					
-					
-					
-					initializeBlackJackCards();
-					initializeExplodingKittensCards();
-					initializeUnoCards();
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);
@@ -467,7 +467,6 @@ public class DerbyDatabase implements IDatabase {
 	public int createPlayer(Player player) {
 
 			int i = getPlayerIdFromPlayer(player);
-			System.out.println("player id - from db: " + i);
 			if (i > 0) {
 				throw new PlayerAlreadyExistsException("Player is in database already, delete them or avoid creating them");
 			} else {
@@ -1349,9 +1348,7 @@ public class DerbyDatabase implements IDatabase {
 							+ "	FROM ExplodingKittensCards AS e "
 							+ "	WHERE e.type = ?"
 							);
-					
-					stmt.setString(1, card.getType().getSymbol());
-					
+					stmt.setString(1, card.getType().toString());
 					resultSet = stmt.executeQuery();
 					
 					if(resultSet.next()) {
@@ -1631,7 +1628,7 @@ public class DerbyDatabase implements IDatabase {
 					if(resultSet.next()) {
 						 return resultSet.getInt("updateCount");
 					}
-					return null;
+					return -1;
 					
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -2189,30 +2186,27 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				String encodedIds = encodeCardIds(pile.getPile());
-				String gameKey = "BLJ";
-				
+				String gameKey = IDatabase.Key_Blackjack;
 				if(pile.getType() == "UnoCard") {
-					gameKey = "UNO";
+					gameKey = IDatabase.Key_Uno;
 				}
-				
-				if(pile.getType() == "UnoFlipCard") {
-					gameKey = "UNF";
+				else if(pile.getType() == "UnoFlipCard") {
+					gameKey = IDatabase.Key_UnoFlip;
 				}
-				
-				if(pile.getType() == "ExplodingKittensCard") {
-					gameKey = "EXP";
+				else if(pile.getType() == "ExplodingKittensCard") {
+					gameKey = IDatabase.Key_ExplodingKittens;
 				}
 				
 				try {
 					stmt = conn.prepareStatement(
 							"UPDATE Pile"
-							+ " SET exposeIndex = ?, cards = ?, gameKey = ?"
+							+ " SET gameKey = ?, exposeIndex = ?, cards = ?"
 							+ "	WHERE pile_id = ?"
 							);
 					
-					stmt.setInt(1, pile.getVisibleIndex());
-					stmt.setString(2, encodedIds);
-					stmt.setString(3, gameKey);
+					stmt.setString(1, gameKey);
+					stmt.setInt(2, pile.getVisibleIndex());
+					stmt.setString(3, encodedIds);
 					stmt.setInt(4, pile_id);
 					stmt.executeUpdate();
 					stmt.close();

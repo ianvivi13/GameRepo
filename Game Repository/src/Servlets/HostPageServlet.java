@@ -40,28 +40,21 @@ public class HostPageServlet extends HttpServlet {
         String m = (String) req.getSession().getAttribute("happy"); 
         Game model;
         int players = Integer.parseInt((String) req.getParameter("MaxP"));
-        System.out.println(players);
-        
         if (m != null) {
 	        switch (m) {
 	        	case "expoldingkittens": 
 	        		model = new Game(IDatabase.Key_ExplodingKittens);
-	        		System.out.println(model.getGameKey());
 	        		break;
 	        	case "uno":
 	        		model = new Game(IDatabase.Key_Uno);
-	        		System.out.println(model.getGameKey());
 	        		break;
 	        	case "unoflip":
 	        		model = new Game(IDatabase.Key_UnoFlip);
-	        		System.out.println(model.getGameKey());
 	        		break;
 	        	default:
 	        		model = new Game(IDatabase.Key_Blackjack);
-	        		System.out.println(model.getGameKey());
 	        }
 	        model.setMaxPlayers(players);
-	        System.out.println(model.getGameKey());
 	        String user = (String) req.getSession().getAttribute("user");
 	        int i = db.getUserIDfromUsername(user);
 	        int created;

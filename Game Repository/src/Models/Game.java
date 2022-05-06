@@ -197,6 +197,7 @@ public class Game {
 		tko.RemovePlayer(playerId);
 		playerIds.remove(playerId);
 		players.remove(db.getPlayerFromPlayerId(playerId));
+		playerIds.remove(playerId);
 	}
 	
 	public String generateGameCode() {

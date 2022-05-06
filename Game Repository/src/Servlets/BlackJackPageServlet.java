@@ -2,6 +2,7 @@ package Servlets;
 
 import java.io.IOException;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -24,8 +25,11 @@ public class BlackJackPageServlet extends HttpServlet {
 		}
 
 		System.out.println("BlackJack Servlet: doGet: " + user);
-		
-		req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+		try {
+			req.getRequestDispatcher("_view/blackjack.jsp").forward(req, resp);
+		} catch (Exception e) {
+			System.out.println("uh oh: " + e);
+		}
 	}
 	
 	@Override

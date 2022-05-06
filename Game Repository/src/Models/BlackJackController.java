@@ -5,6 +5,7 @@ import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
 
 public class BlackJackController {
+	
 
 	private static IDatabase db;
 	
@@ -54,7 +55,7 @@ public class BlackJackController {
 			db.updateGame(gameId, model);
 			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 		}
-	} 
+	}
 	
 	// for stay/freeze we want to skip a players turn until the other player calls stay
 	public static void freeze(int gameId) {
@@ -69,16 +70,6 @@ public class BlackJackController {
 		model.removePlayerFromTurn(model.getTurnOrder().CurrentPlayer());
 		db.updateGame(gameId, model);
 	}
-	
-	private static void endGame(int gameId) {
-		InitDatabase.init();
-		db = DatabaseProvider.getInstance();
-		Game model = db.getGameFromGameId(gameId);
-		TurnOrder o = new TurnOrder();
-		model.setTurnOrder(o);
-		db.updateGame(gameId, model);
-	}
-	
 	
 	public static boolean checkWin(int gameId) {
 		Game model = db.getGameFromGameId(gameId);
@@ -99,14 +90,23 @@ public class BlackJackController {
 	}
 	
 	public static boolean checkBust(int gameId) {
-		Game model = db.getGameFromGameId(gameId);
-		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		
-		if(current.getPile().getValueStandard() >  21) {
-			endGame(gameId);
-			return true;
-		}
-		return false;
-	}
+        Game model = db.getGameFromGameId(gameId);
+        Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+
+        if(current.getPile().getValueStandard() >  21) {
+            endGame(gameId);
+            return true;
+        }
+        return false;
+    }
+	
+	private static void endGame(int gameId) {
+        InitDatabase.init();
+        db = DatabaseProvider.getInstance();
+        Game model = db.getGameFromGameId(gameId);
+        TurnOrder o = new TurnOrder();
+        model.setTurnOrder(o);
+        db.updateGame(gameId, model);
+    }
 
 }
