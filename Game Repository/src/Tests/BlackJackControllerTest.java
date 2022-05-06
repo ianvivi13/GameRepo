@@ -92,6 +92,4 @@ public class BlackJackControllerTest{
 		System.out.println(model.getPlayers().get(0).getPile().getValueStandard());
 		System.out.println(model.getPlayers().get(1).getPile().getValueStandard());
 	}
-
-	
 }

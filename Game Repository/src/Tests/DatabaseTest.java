@@ -155,14 +155,14 @@ public class DatabaseTest{
 		blackjackStat.SetGamesWon(2);
 		blackjackStat.SetGamesLost(3);
 		blackjackStat.SetBlackjacks(1);
-		blackjackStat.SetSplits(1);
-		blackjackStat.SetFiveCardWins(1);
+		blackjackStat.SetHits(1);
+		blackjackStat.SetFroze(1);
 		
 		unoStat.SetGamesPlayed(7);
 		unoStat.SetGamesWon(3);
 		unoStat.SetGamesLost(4);
 		unoStat.SetPlusFours(6);
-		unoStat.SetSwaps(1);
+		unoStat.SetReverses(1);
 		unoStat.SetWildCards(10);
 		
 		flipStat.SetGamesPlayed(20);
@@ -192,6 +192,7 @@ public class DatabaseTest{
 		boolean flag = false;
 		try {
 			int i = db.createPlayer(DupPlayer);
+			i = db.createPlayer(DupPlayer);
 			System.out.println(i);
 		} catch (Exception PlayerAlreadyExistsException) {
 			flag = true;
@@ -228,8 +229,8 @@ public class DatabaseTest{
 		assertTrue(blackjackStat.GetGamesWon() == db.getBlackjackStats("FunnyUser69").GetGamesWon());
 		assertTrue(blackjackStat.GetGamesLost() == db.getBlackjackStats("FunnyUser69").GetGamesLost());
 		assertTrue(blackjackStat.GetBlackjacks() == db.getBlackjackStats("FunnyUser69").GetBlackjacks());
-		assertTrue(blackjackStat.GetSplits() == db.getBlackjackStats("FunnyUser69").GetSplits());
-		assertTrue(blackjackStat.GetFiveCardWins() == db.getBlackjackStats("FunnyUser69").GetFiveCardWins());
+		assertTrue(blackjackStat.GetHits() == db.getBlackjackStats("FunnyUser69").GetHits());
+		assertTrue(blackjackStat.GetFroze() == db.getBlackjackStats("FunnyUser69").GetFroze());
 	}
 	
 	@Test
@@ -239,7 +240,7 @@ public class DatabaseTest{
 		assertTrue(unoStat.GetGamesWon() == db.getUnoStats("FunnyUser69").GetGamesWon());
 		assertTrue(unoStat.GetGamesLost() == db.getUnoStats("FunnyUser69").GetGamesLost());
 		assertTrue(unoStat.GetPlusFours() == db.getUnoStats("FunnyUser69").GetPlusFours());
-		assertTrue(unoStat.GetSwaps() == db.getUnoStats("FunnyUser69").GetSwaps());
+		assertTrue(unoStat.GetReverses() == db.getUnoStats("FunnyUser69").GetReverses());
 		assertTrue(unoStat.GetWildCards() == db.getUnoStats("FunnyUser69").GetWildCards());
 	}
 	

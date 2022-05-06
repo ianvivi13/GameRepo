@@ -1005,7 +1005,7 @@ public class DerbyDatabase implements IDatabase {
 						stat.SetGamesLost(loses);
 						stat.SetWildCards(sOne);
 						stat.SetPlusFours(sTwo);
-						stat.SetSwaps(sThree);
+						stat.SetReverses(sThree);
 						return stat;
 					}
 					throw new UserDoesNotExistException("User does not exist");
@@ -1096,8 +1096,8 @@ public class DerbyDatabase implements IDatabase {
 						stat.SetGamesWon(wins);
 						stat.SetGamesLost(loses);
 						stat.SetBlackjacks(sOne);
-						stat.SetSplits(sTwo);
-						stat.SetFiveCardWins(sThree);
+						stat.SetHits(sTwo);
+						stat.SetFroze(sThree);
 						return stat;
 					}
 					throw new UserDoesNotExistException("User does not exist");
@@ -1986,7 +1986,7 @@ public class DerbyDatabase implements IDatabase {
 					int losses = stat.GetGamesLost();
 					int sOne = stat.GetWildCards();
 					int sTwo = stat.GetPlusFours();
-					int sThree = stat.GetSwaps();
+					int sThree = stat.GetReverses();
 				
 					stmt = conn.prepareStatement(
 							"UPDATE Stats" +
@@ -2079,8 +2079,8 @@ public class DerbyDatabase implements IDatabase {
 					int wins = stat.GetGamesWon();
 					int losses = stat.GetGamesLost();
 					int sOne = stat.GetBlackjacks();
-					int sTwo = stat.GetSplits();
-					int sThree = stat.GetFiveCardWins();
+					int sTwo = stat.GetHits();
+					int sThree = stat.GetFroze();
 				
 					stmt = conn.prepareStatement(
 							"UPDATE Stats" +

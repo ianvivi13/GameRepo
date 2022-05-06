@@ -1,8 +1,6 @@
 package Models;
 
 import java.util.*;
-import Database.elves.IDatabase;
-import Models.StandardCard;
 
 public class Pile{
 	
@@ -102,6 +100,36 @@ public class Pile{
 		return cardsRemoved;
 	}
 	
+    public boolean contains(Object card) {
+        for(Object s : this.getPile()) {
+            if (s.equals(card)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Object removeCard(Object card) {
+        if (pile.contains(card)) {
+            int index = pile.lastIndexOf(card);
+            pile.remove(index);
+            return card;
+        }
+        return null;
+    }
+    
+//    public Object removeCard(Object card) {
+//        if (pile.contains(card)) {
+//            pile.remove(card);
+//            return card;
+//        }
+//        return null;
+//    }
+    
+    public Object removeCard(int index) {
+        return pile.remove(index);
+    }
+	
 	public void addCards(ArrayList<Object> cardsToAdd) {
 		pile.addAll(cardsToAdd);
 	}
@@ -118,7 +146,6 @@ public class Pile{
 	}
 	
 	public void populateExplodingKittens(int numPlayers) {
-		
 		for(int i = 0; i < 6; i++) {
 			pile.add(new ExplodingKittensCard(Type.SeeTheFuture));
 			pile.add(new ExplodingKittensCard(Type.AlterTheFuture));
@@ -187,13 +214,6 @@ public class Pile{
 		Collections.shuffle(pile);
 	}
 	
-	public StandardCard drawCard() {
-		if(pile.isEmpty()){
-			throw new NoSuchElementException("Its Empty Hoe");
-		}
-		return (StandardCard) pile.remove(pile.size()-1);
-	}
-	
 	public ArrayList<Object> getPile() {
         return pile;
     }
@@ -236,25 +256,5 @@ public class Pile{
     	
     	return true;
     }
-    
-    public boolean contains(Object card) {
-    	for(Object s : this.getPile()) {
-    		if (s.equals(card)) {
-    			return true;
-    		}
-    	}
-    	return false;
-    }
-    
-    public Object removeCard(Object card) {
-    	if (pile.contains(card)) {
-    		pile.remove(card);
-    		return card;
-    	}
-    	return null;
-    }
-    
-    public Object removeCard(int index) {
-    	return pile.remove(index);
-    }
+	
 }
