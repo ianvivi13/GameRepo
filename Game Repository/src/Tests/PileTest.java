@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import Models.UnoCard;
 import Models.StandardCard;
+import Models.ExplodingKittensCard;
 import Models.Pile;
 import Models.Rank;
 import Models.Suit;
@@ -21,6 +22,7 @@ public class PileTest{
 	private Pile fullPile;
 	private Pile unoPile;
 	private Pile fullUnoPile;
+	private Pile fullExpPile;
 	private Pile duplicatePile;
 	
 	@Before
@@ -32,9 +34,12 @@ public class PileTest{
 		// pile which starts out full
 		fullPile = new Pile();
 		fullUnoPile = new Pile();
+		fullExpPile = new Pile();
 		
 		fullPile.populate();
 		fullUnoPile.populateUno();
+		fullExpPile.populateExplodingKittens(2);
+		fullExpPile.addExplodingKittens(2);
 		
 		duplicatePile = new Pile();
 		duplicatePile.populate();
@@ -296,9 +301,9 @@ public class PileTest{
 	
 	@Test
 	public void Temporary() {
-		ArrayList<Object> arr = fullUnoPile.getPile();
+		ArrayList<Object> arr = fullExpPile.getPile();
 		for(Object c : arr) {
-			UnoCard t = ((UnoCard) c);
+			ExplodingKittensCard t = ((ExplodingKittensCard) c);
 			System.out.println(t.getImagePath());
 		}
 	}
