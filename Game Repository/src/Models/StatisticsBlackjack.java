@@ -2,13 +2,13 @@ package Models;
 
 public class StatisticsBlackjack extends StatisticsParent{
 	private int Blackjacks;
-	private int Splits;
-	private int FiveCardWins;
+	private int Hits;
+	private int Froze;
 	
 	public StatisticsBlackjack() {
 		this.Blackjacks = 0;
-		this.Splits = 0;
-		this.FiveCardWins = 0;
+		this.Hits = 0;
+		this.Froze = 0;
 	}
 	
 	// Setters
@@ -16,12 +16,12 @@ public class StatisticsBlackjack extends StatisticsParent{
 		this.Blackjacks = Blackjacks;
 	}
 	
-	public void SetSplits(int Splits) {
-		this.Splits = Splits;
+	public void SetHits(int Hits) {
+		this.Hits = Hits;
 	}
 	
-	public void SetFiveCardWins(int FiveCardWins) {
-		this.FiveCardWins = FiveCardWins;
+	public void SetFroze(int Froze) {
+		this.Froze = Froze;
 	}
 	
 	// Getters
@@ -29,12 +29,12 @@ public class StatisticsBlackjack extends StatisticsParent{
 		return Blackjacks;
 	}
 	
-	public int GetSplits() {
-		return Splits;
+	public int GetHits() {
+		return Hits;
 	}
 	
-	public int GetFiveCardWins() {
-		return FiveCardWins;
+	public int GetFroze() {
+		return Froze;
 	}
 	
 	// Setters - called when a stat should be updated
@@ -42,12 +42,12 @@ public class StatisticsBlackjack extends StatisticsParent{
 		Blackjacks ++;
 	}
 	
-	public void Split() {
-		Splits ++;
+	public void Hit() {
+		Hits ++;
 	}
 	
-	public void FiveCardWin() {
-		FiveCardWins ++;
+	public void Froze() {
+		Froze ++;
 	}
 	
 }
