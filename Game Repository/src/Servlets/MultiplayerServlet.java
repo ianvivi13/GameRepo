@@ -22,10 +22,6 @@ public class MultiplayerServlet extends HttpServlet {
 			return;
 		}
 		
-		String button = (String) req.getSession().getAttribute("happy");
-		
-		System.out.println(button);
-		
 		System.out.println("Multiplayer Servlet: doGet: " + user);
 		
 		req.getRequestDispatcher("_view/multiplayer.jsp").forward(req, resp);

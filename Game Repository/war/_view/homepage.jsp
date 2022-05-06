@@ -39,7 +39,7 @@
         
         <form method="post">
 			<div class = "buttons">
-	            <button class="ButtonStyle" name="mode" value="singleplayer" type="submit">Singleplayer</button>
+	            <button class="ButtonStyle" name="mode" value="singleplayer" type="submit" disabled>Singleplayer</button>
 			</div>
 			<div class = "buttons">
 	            <button class="ButtonStyle" name="mode" value="multiplayer" type="submit">Multiplayer</button>
