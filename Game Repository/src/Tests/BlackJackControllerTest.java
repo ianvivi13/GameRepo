@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import Models.BlackJackController;
@@ -21,12 +22,17 @@ import Database.elves.DerbyDatabase;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
 import Database.elves.PlayerAlreadyExistsException;
+import org.junit.runners.MethodSorters;
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class BlackJackControllerTest{
 	
 	private static Game model;
 	private static Player one;
 	private static Player two;
+	private static Pile playerOne;
+	private static Pile playerTwo;
+	private static Pile main;
 	private static IDatabase db;
 	private static String[] dumb;
 	private static int modelId;
@@ -49,47 +55,83 @@ public class BlackJackControllerTest{
 		} catch(PlayerAlreadyExistsException e) {
 			
 		}
+		playerOne = new Pile();
+		playerTwo = new Pile();
+		main = new Pile();
+		
+		main.addCard(new StandardCard(Rank.EIGHT, Suit.DIAMONDS));
+		main.addCard(new StandardCard(Rank.SIX, Suit.HEARTS));
+		main.addCard(new StandardCard(Rank.JACK, Suit.SPADES));
+		main.addCard(new StandardCard(Rank.ACE, Suit.DIAMONDS));
+		main.addCard(new StandardCard(Rank.THREE, Suit.CLUBS));
+		main.addCard(new StandardCard(Rank.TWO, Suit.HEARTS));
+		main.addCard(new StandardCard(Rank.KING, Suit.SPADES));
+		main.addCard(new StandardCard(Rank.FOUR, Suit.CLUBS));
+		main.addCard(new StandardCard(Rank.JACK, Suit.HEARTS));
+		main.addCard(new StandardCard(Rank.THREE, Suit.SPADES));
+		
+		playerOne.addCard(new StandardCard(Rank.TEN, Suit.CLUBS));
+		playerOne.addCard(new StandardCard(Rank.ACE, Suit.SPADES));
+		
+		playerTwo.addCard(new StandardCard(Rank.TWO, Suit.CLUBS));
+		playerTwo.addCard(new StandardCard(Rank.FIVE, Suit.SPADES));
+		
+		model.setMainPile(main);
+		model.getPlayers().get(0).setPile(playerOne);
+		model.getPlayers().get(1).setPile(playerTwo);
+		
 		modelId = db.createGame(model);
-		try {
-			BlackJackController.initialize(modelId);
-		} catch (Exception e) {
-		}
+		db.updateGame(modelId, model);
+		
 		
 	}
 	
 	@Test
-	public void testGameSim() throws Exception {
+	public void aTestInit() throws Exception {
 		
 		//Test if initialize method works
 		model = db.getGameFromGameId(modelId);
 		// main deck should have 48 cards
-		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(10, model.getMainPile().getNumCards());
 		assertEquals(2, model.getPlayers().get(0).getPile().getNumCards());
 		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
-		
+	}
+	
+	@Test
+	public void bTestHold() throws Exception {
 		//Test if hold method works
 		BlackJackController.hold(modelId);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(model.getTurnOrder().CurrentPlayer(), db.getPlayerIdFromPlayer(two));
-		
+	}
+	
+	@Test
+	public void cTestHit() throws Exception {
 		//Test if hit method work
-		assertEquals(48, model.getMainPile().getNumCards());
+		assertEquals(10, model.getMainPile().getNumCards());
 		assertEquals(2, model.getPlayers().get(1).getPile().getNumCards());
 		BlackJackController.hit(modelId);
 		model = db.getGameFromGameId(modelId);
 		
-		assertEquals(47, model.getMainPile().getNumCards());
+		assertEquals(9, model.getMainPile().getNumCards());
 		assertEquals(3, model.getPlayers().get(1).getPile().getNumCards());
-		assertTrue(BlackJackController.checkBust(modelId));
-		
+		model = db.getGameFromGameId(modelId);
+		assertFalse(BlackJackController.checkBust(modelId));
+	}
+	
+	@Test
+	public void dTestFreeze() throws Exception {
 		//Test if freeze method works
 		BlackJackController.freeze(modelId);
 		model = db.getGameFromGameId(modelId);
 		assertEquals(1, model.getTurnOrder().getTurnList().size());
-		
-		model = db.getGameFromGameId(modelId);
-		assertFalse(BlackJackController.checkWin(modelId));
-		System.out.println(model.getPlayers().get(0).getPile().getValueStandard());
-		System.out.println(model.getPlayers().get(1).getPile().getValueStandard());
 	}
+	
+	@Test
+	public void eTestChecWin() throws Exception {
+		//Test if checkWin method works
+		model = db.getGameFromGameId(modelId);
+		assertTrue(BlackJackController.checkWin(modelId));
+	}
+	
 }
