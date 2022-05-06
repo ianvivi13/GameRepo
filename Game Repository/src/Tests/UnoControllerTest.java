@@ -50,6 +50,7 @@ public class UnoControllerTest {
 		} catch (IOException e){
 		}
 		model = new Game(IDatabase.Key_Uno);
+		modelTwo = new Game(IDatabase.Key_Uno); 
 		three = new Player(true, db.createUser("booboo", "b"));
 		four = new Player(true, db.createUser("doodoo", "d"));
 		five = new Player(true, db.createUser("coocoo", "c"));
@@ -72,7 +73,6 @@ public class UnoControllerTest {
 		modelIdTwo = db.createGame(modelTwo);
 		try {
 			UnoController.initialize(modelId);
-			UnoController.initialize(modelIdTwo);
 		} catch (Exception e) {
 		}
 		
@@ -316,8 +316,6 @@ public class UnoControllerTest {
 		UnoController.playSpecialCard(modelId, wild, color);
 		Game model3 = db.getGameFromGameId(modelId);
 		assertTrue(model3.getAltPile().getTopCard().equals(wild));
-		model.nextTurn();
-		assertEquals(currentId, model3.getTurnOrder().CurrentPlayer());
 		current = db.getPlayerFromPlayerId(currentId);
 		assertEquals(numCards-1, current.getPile().getNumCards());
 		assertEquals(numCards2+1, model3.getAltPile().getNumCards());
@@ -326,13 +324,70 @@ public class UnoControllerTest {
 	
 	@Test
 	public void jTestGameSim() throws Exception{
-		int playerOneId;
-		int playerTwoId;
-		int playerThreeId;
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		modelTwo.getMainPile().addCard(new UnoCard(Color.BLUE, Value.Eight));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.GREEN, Value.Two));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.RED, Value.One));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.YELLOW, Value.Five));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.BLACK, Value.Wild));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.BLUE, Value.Seven));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.GREEN, Value.Seven));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.RED, Value.Seven));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.YELLOW, Value.Nine));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.BLUE, Value.Zero));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.GREEN, Value.Reverse));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.RED, Value.DrawTwo));
+		modelTwo.getMainPile().addCard(new UnoCard(Color.YELLOW, Value.Skip));
+		modelTwo.getAltPile().addCard(new UnoCard(Color.GREEN, Value.Four));
+		modelTwo.getPlayers().get(0).getPile().addCard(new UnoCard(Color.BLACK, Value.Wild_Four));
+		modelTwo.getPlayers().get(0).getPile().addCard(new UnoCard(Color.BLUE, Value.Two));
+		modelTwo.getPlayers().get(1).getPile().addCard(new UnoCard(Color.BLACK, Value.Wild));
+		modelTwo.getPlayers().get(1).getPile().addCard(new UnoCard(Color.GREEN, Value.Reverse));
+		modelTwo.getPlayers().get(2).getPile().addCard(new UnoCard(Color.RED, Value.Skip));
+		modelTwo.getPlayers().get(2).getPile().addCard(new UnoCard(Color.BLUE, Value.DrawTwo));
+		db.updateGame(modelIdTwo, modelTwo);
+		db.updatePlayer(modelTwo.getPlayerIds().get(0), modelTwo.getPlayers().get(0));
+		db.updatePlayer(modelTwo.getPlayerIds().get(1), modelTwo.getPlayers().get(1));
+		db.updatePlayer(modelTwo.getPlayerIds().get(2), modelTwo.getPlayers().get(2));
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		int playerOneId = modelTwo.getPlayerIds().get(0);
+		int playerTwoId = modelTwo.getPlayerIds().get(1);
+		int playerThreeId = modelTwo.getPlayerIds().get(2);
+		assertEquals(modelTwo.getMainPile().getNumCards(), 13);
+		assertEquals(modelTwo.getAltPile().getNumCards(), 1);
+		assertEquals(modelTwo.getPlayers().get(0).getPile().getNumCards(), 2);
+		assertEquals(modelTwo.getPlayers().get(1).getPile().getNumCards(), 2);
+		assertEquals(modelTwo.getPlayers().get(2).getPile().getNumCards(), 2);
+		assertEquals(modelTwo.getTurnOrder().CurrentPlayer(), playerOneId);
 		
-		int playerOneCards;
-		int playerTwoCards;
-		int playerThreeCards;
+		UnoController.playCard(modelIdTwo, new UnoCard(Color.BLUE, Value.Two));
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		assertEquals(modelTwo.getPlayers().get(0).getPile().getNumCards(), 2);
+		UnoController.playSpecialCard(modelIdTwo, new UnoCard(Color.BLACK, Value.Wild_Four), Color.BLUE.toString());
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		assertEquals(modelTwo.getMainPile().getNumCards(), 9);
+		assertEquals(modelTwo.getAltPile().getNumCards(), 2);
+		assertEquals(modelTwo.getPlayers().get(0).getPile().getNumCards(), 1);
+		assertEquals(modelTwo.getPlayers().get(1).getPile().getNumCards(), 6);
+		assertEquals(modelTwo.getTurnOrder().CurrentPlayer(), playerThreeId);
+		UnoController.playCard(modelIdTwo, new UnoCard(Color.BLUE, Value.DrawTwo));
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		assertEquals(modelTwo.getMainPile().getNumCards(), 7);
+		assertEquals(modelTwo.getAltPile().getNumCards(), 3);
+		assertEquals(modelTwo.getPlayers().get(2).getPile().getNumCards(), 1);
+		assertEquals(modelTwo.getPlayers().get(0).getPile().getNumCards(), 3);
+		assertEquals(modelTwo.getTurnOrder().CurrentPlayer(), playerTwoId);
+		UnoController.playSpecialCard(modelIdTwo, new UnoCard(Color.BLACK, Value.Wild), Color.RED.toString());
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		assertEquals(modelTwo.getMainPile().getNumCards(), 7);
+		assertEquals(modelTwo.getAltPile().getNumCards(), 4);
+		assertEquals(modelTwo.getPlayers().get(1).getPile().getNumCards(), 5);
+		assertEquals(modelTwo.getTurnOrder().CurrentPlayer(), playerThreeId);
+		UnoController.playCard(modelIdTwo, new UnoCard(Color.RED, Value.Skip));
+		modelTwo = db.getGameFromGameId(modelIdTwo);
+		assertEquals(modelTwo.getPlayers().get(2).getPile().getNumCards(), 0);
+		assertEquals(modelTwo.getAltPile().getNumCards(), 5);
+		assertEquals(modelTwo.getTurnOrder().getTurnList().size(), 2);
 	}
 	
 	
