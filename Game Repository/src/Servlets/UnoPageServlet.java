@@ -39,16 +39,11 @@ public class UnoPageServlet extends HttpServlet {
 		System.out.println("doPost");
 		try {
             if (req.getParameter("playCard") != null) {
-            	System.out.println("You got played");
-            	
-            	
-            } else if (req.getParameter("playSpecialCard") != null) {
-            	System.out.println("You played special");
-            	
-            	
+            	System.out.println("You played a card: " + req.getParameter("playCard"));
             } else if (req.getParameter("Draw") != null) {
             	System.out.println("Draw");
-            	
+            } else if ((req.getParameter("card") != null) && (req.getParameter("color") != null)) {
+            	System.out.println("You played special: " + req.getParameter("card") + " : " + req.getParameter("color"));
             }
             
         } catch (Exception e) {

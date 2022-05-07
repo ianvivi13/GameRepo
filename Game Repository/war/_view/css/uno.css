@@ -1,19 +1,22 @@
 html, body {
     height:98%;
    }
-   .container {
+
+.container {
     position:relative;
     width: 99%;
     height: 96%;
     border: 2px solid palegreen;
-   }
-   .top {
+}
+
+.top {
     height: 20%;
     width: 100%;
     border: 2px solid rebeccapurple;
     
-   }
-   .left {
+}
+
+.left {
     position:absolute;
     top:50px;
     left:0;
@@ -21,25 +24,26 @@ html, body {
     width: 25%;
     border: 2px solid hotpink;
     
-   }
-   .right {
+}
+
+.right {
     position:absolute;
     top:50px;
     right:0;
     bottom:50px;
     width: 25%;
     border: 2px solid blue;
-    
-   }
-   .bottom {
+}
+
+.bottom {
     position:absolute;
     bottom:0;
     width: 100%;
     height: 25%;
     border: 2px solid red;
     
-   }
-   .content {
+}
+.content {
     position:absolute;
     top:30%;
     left:30%;
@@ -48,15 +52,13 @@ html, body {
     border: 2px solid yellow;
     
     overflow:visible;
-   }
+}
 
-   #imgCenter {
+#imgCenter {
     width: 100%;
     height: 100%;
     text-align: center;
 }
-
-
 
 #pili {
 	width: 30%;
@@ -72,15 +74,18 @@ html, body {
 	width: 20%;
 	max-width: 5%;
 	height: auto;
+    text-align: center;
     margin-left: -8%;
 }
 
 #piliRight {
-    transform: rotate(-90deg);
+    transform: rotate(270deg);
 	width: 20%;
 	max-width: 20%;
 	height: auto;
-    margin-top: 34%;
+    text-align: center;
+    margin-bottom:-16%;
+    
 }
 
 #piliLeft {
@@ -88,7 +93,9 @@ html, body {
 	width: 20%;
 	max-width: 20%;
 	height: auto;
-    margin-top: 38%;
+    margin-bottom:-16%;
+   
+    
 }
 
 #centers {
@@ -102,7 +109,6 @@ html, body {
 }
 
 #centersSides {
-   
     z-index: 1;
     text-align: center;
     font-size: 200%; 
@@ -124,24 +130,14 @@ html, body {
     align-items: center;
 }
 
-#piliLeft:nth-child(1), #piliRight:nth-child(1) {
-    align-items: center;
-    
-}
-
 .centerDeck {
     max-width: 50%;
     width: 50%;
     height: auto;
-    
 }
 
 #imgCenter {
     text-align: center;
-}
-
-#fourColors {
-
 }
 
 .split {
@@ -155,21 +151,27 @@ html, body {
     display: inline-block;
 }
 
+.splitHeight {
+    border: 3px solid orangered;
+    height: 25%;
+    width: auto;
+    
+    z-index: 1;
+    overflow-x: hidden;
+    display: inline-block;
+}
+
 img {
-    max-width: 20%;
     height:auto;
+    object-fit: cover; 
+    max-width: 100%;    
 }
 
-[type=button] { 
-   
-}
-
-[type=button] + img {
+[type=submit] + img {
     cursor: pointer;
 }
 
 .deck {
-
     width: 50%;
     max-width: 50%;
     height: auto;
@@ -186,8 +188,114 @@ img {
 }
 
 .IFHY {
-    padding: 0;
+    /*padding: 0;
     border: 0;
     background: transparent;
-    background-color: #00000000;
+    background-color: #00000000;*/
+    width:fit-content;
+    height: fit-content;
+    cursor: pointer;
 }
+
+#blue {
+    height: 50%;
+    width: 99%;
+    
+    z-index: 2;
+    background-color: blue;
+}
+
+#green {
+    height: 50%;
+    width: 99%;
+    z-index: 2;
+    background-color: green;
+}
+
+#red {
+    height: 50%;
+    width: 99%;
+    z-index: 2;
+    background: red;
+}
+
+#yellow {
+    height: 50%;
+    width: 99%;
+    z-index: 2;
+    background-color: yellow;
+}
+
+.dotRed {
+    width: 7%;
+    padding-top: 7%;
+    background-color: #ff0000;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 74%;
+  }
+  
+  .dotBlue {
+    width: 7%;
+    padding-top: 7%;
+    background-color: #0000ff;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 74%;
+  }
+  
+  .dotYellow {
+    width: 7%;
+    padding-top: 7%;
+    background-color: #ffff00;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 74%;
+  }
+  
+  .dotGreen {
+    width: 7%;
+    padding-top: 7%;
+    background-color: #00ff00;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 74%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body,
+  form {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: 0 0 absolute;
+
+  }
+  .box {
+    width: 50%;
+    height: 50%;
+    border: 1px solid black;
+    float: left;
+  }
+  
+  .box:last-child::after {
+    display: table;
+    content: '';
+    clear: both;
+  }

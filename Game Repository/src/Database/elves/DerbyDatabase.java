@@ -365,15 +365,18 @@ public class DerbyDatabase implements IDatabase {
 					game.addPlayer(iFour);
 					int gId = db.createGame(game);
 					System.out.println("uno game: " + gId);
+					alt.addCard(new UnoCard(Color.BLACK, Value.Wild_Four));
+					game.setWildColor(Color.BLUE.toString());
 					game.setMainPile(pile);
 					game.setAltPile(alt);
 					db.updateGame(gId, game);
 					
+					one.addCard(new UnoCard(Color.BLACK, Value.Wild_Four));
+					one.addCard(new UnoCard(Color.RED, Value.Reverse));
 					pOne.setPile(one);
 					pTwo.setPile(two);
 					pThree.setPile(three);
 					pFour.setPile(four);
-					//pOne.getAltPile().addCard(new UnoCard(Color.BLACK, Value.Wild_Four));
 					
 					db.updatePlayer(iOne, pOne);
 					db.updatePlayer(iTwo, pTwo);

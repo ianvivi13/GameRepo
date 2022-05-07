@@ -33,7 +33,7 @@
         </title>
         
     </head>
-    <body class="Uno">
+    <body class="Uno" style="overflow: hidden; height: 98%; box-shadow: inset 0 0 0 50vw rgba(0,0,0,0.3);">
         <script>
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
             document.body.style.color = "black";
@@ -48,9 +48,10 @@
             <% try { 
             	currentPlayerId = game.getTurnOrder().CurrentPlayer();
              } catch (Exception e) {} %>
+             
         	
         </script>
-        <div id="left"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button>  <!--fdstgsrth-->
+        <div id="left" style="margin-bottom: -3%"><a href="../gamerepo/home"><button class="ButtonStyle" type="submit">Exit</button>
         </a>
     	</div>
     	
@@ -112,7 +113,7 @@
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerLeft.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
-	            		<img id="piliLeft" src="_view/images/UnoCards/back.png" >
+	            		<img id="piliLeft" src="_view/images/UnoCards/back.png" style="margin-bottom: -25%;"></br>
 	            		<% firstFlag = true; %>
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
@@ -128,7 +129,7 @@
         		<div id="imgCenter" >
         		<form method="post">
   
-        		<button type="submit" class="pili IFHY" name="Draw" value="Draw" > <img src="_view/images/UnoCards/back.png"></button>
+        		<button type="submit" class="pili IFHY" name="Draw" value="Draw" style="width: 56%;" > <img src="_view/images/UnoCards/back.png"></button>
         		
         		</div>
         	</div>
@@ -136,7 +137,27 @@
         	
         	<div class="split">
         		<div id="imgCenter" >
-        			
+        			<%  
+        			if (((UnoCard) game.getAltPile().getTopCard()).getColor() == Color.BLACK) {
+        				switch (game.getWildColor()) {
+	        				case "R":
+	        					%><span class="dotRed"></span><%
+	        					break;
+	        				case "B":
+	        					%><span class="dotBlue"></span><%
+	        					break;
+	        				case "G":
+	        					%><span class="dotGreen"></span><%
+	        					break;
+	        				case "Y":
+	        					%><span class="dotYellow"></span><%
+	        					break;
+	        				default:
+	        					break;
+        				}
+        				
+        			}
+        			%>
         			<img class="deck" src="<%out.print(((UnoCard) game.getAltPile().getTopCard()).getImagePath());%>" style="width: 50%;">
         		
 				</div>
@@ -152,7 +173,7 @@
 	    		<% if (currentPlayerId == null) { firstFlag = false; } %>
 	        	<% for (Object o : playerRight.getPile().getPile()) { %>
 	            	<% if (firstFlag) { %>
-	            		<img id="piliRight" src="_view/images/UnoCards/back.png" >
+	            		<img id="piliRight" src="_view/images/UnoCards/back.png" style="margin-bottom: -25%; margin-left: 40%;"></br>
 	            		<% firstFlag = true; %>
 	            	<% } else { %>
 		            	<% UnoCard c = ((UnoCard) o); %>
@@ -166,29 +187,95 @@
         <div class="bottom">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerBottom))); %> </div>
         	
-        	<div class="cards">
+        	<div class="cards" style="max-width: 100%; border: 2px solid red;">
+        	<%int cNum = 0; %>
+        	
+        	<form method="post" name="plc">
         	<% for (Object o : playerBottom.getPile().getPile()) { %>
 				<% UnoCard c = ((UnoCard) o); %>
 				<% String pathBottom = c.getImagePath(); %>
-				<form method="post">
+				
 				<% if (c.getColor() != Color.BLACK) {%>
-				
-				<button type="submit" id="pili" name="playCard" value="playCard" style="width: 120%; height:100%; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
-				
+					<button type="submit" id="pili" name="playCard" value="<% out.print(c); %>" style="margin-left: -3%; width: 8%; height:auto; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
 				<% } else { %>
-				<button type="submit" id="pili" name="playSpecialCard" value="playSpecialCard" style="width: 120%; height:100%; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
+					<button type="button" id="pili" onclick="colorFunction('<% out.print(c); %>')" name="playSpecialCard" value="<% out.print(c); %>" style="margin-left: -3%; width: 8%; height:auto; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
+				<% } %>
+				<% cNum ++; %>
+			<% } %>
+				<script>
+					function colorFunction(s) {
+						//alert("boob");
 
-				<% } %>
-				
-				<% } %>
-				
+						// Create a form dynamically
+					    var form = document.createElement("form");
+					    form.setAttribute("method", "post");
+					    form.setAttribute("action", "../gamerepo/uno");
+					    
+					    var h = document.createElement("input");
+					    h.setAttribute("type", "hidden");
+					    h.setAttribute("name", "card");
+					    h.setAttribute("value", s);
+					    
+		                // create a submit button
+		                var b = document.createElement("button");
+		                b.setAttribute("type", "submit");
+		                b.setAttribute("value", '<% out.print(Color.BLUE); %>');
+		                b.setAttribute("name", "color");
+		                b.setAttribute("style", "background-color: #0000ffd3; width: 50%; height: 50%; border-width: 0; position: absolute; top: 0; right: 0;");
+		                
+		                // create a submit button
+		                var r = document.createElement("button");
+		                r.setAttribute("type", "submit");
+		                r.setAttribute("value", '<% out.print(Color.RED); %>');
+		                r.setAttribute("name", "color");
+		                r.setAttribute("style", "background-color: #ff0000d3; width: 50%; height: 50%; border-width: 0; position: absolute; top: 0; left: 0;");
+		                
+		                // create a submit button
+		                var y = document.createElement("button");
+		                y.setAttribute("type", "submit");
+		                y.setAttribute("value", '<% out.print(Color.YELLOW); %>');
+		                y.setAttribute("name", "color");
+		                y.setAttribute("style", "background-color: #fff200ea; width: 50%; height: 50%; border-width: 0; position: absolute; bottom: 0; left: 0;");
+		                
+		                // create a submit button
+		                var g = document.createElement("button");
+		                g.setAttribute("type", "submit");
+		                g.setAttribute("value", '<% out.print(Color.GREEN); %>');
+		                g.setAttribute("name", "color");
+		                g.setAttribute("style", "background-color: #00ff00e3; width: 50%; height: 50%; border-width: 0; position: absolute; bottom: 0; right: 0;");
+		               
+		                 
+		                // Append the submit button to the form
+		                form.appendChild(r);
+		                form.appendChild(b);
+		                form.appendChild(y);
+		                form.appendChild(g);
+		                form.appendChild(h);
+		 
+		                document.getElementsByTagName("body")[0].appendChild(form);
+						
+						
+						setTimeout(submitForm, 5000, form);
+					}
+					
+					function submitForm(form) {
+						choice = ['<% out.print(Color.RED); %>', '<% out.print(Color.BLUE); %>', '<% out.print(Color.GREEN); %>', '<% out.print(Color.YELLOW); %>'];
+						c = choice[Math.floor(Math.random() * choice.length)];
+						
+						var h = document.createElement("input");
+					    h.setAttribute("type", "hidden");
+					    h.setAttribute("name", "color");
+					    h.setAttribute("value", c);
+					    form.appendChild(h);
+					    
+						form.submit();
+					}
+				</script>
 				</form>
 				</div>
         </div>
     </div>        
     
-    	<div id="fourColors"></div
-
     <%/* if (currentPlayerId == null) { %>
 	<% int q = game.getPlayerIds().get(0); %>
    	<% String s = db.getNameFromPlayerId(q); %>
@@ -203,8 +290,6 @@
    	</a>
 <% } */%>
 
-<script src="_view/callAjax.js"></script>
-<script>setTimeout(callAjax, 1000, <% out.print(game.getUpdate()); %>);</script>
  
     </body>
 </html>
