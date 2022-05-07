@@ -34,18 +34,26 @@ public class UnoPageServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int gId = (int) req.getSession().getAttribute("gameId");
+		//int gId = (int) req.getSession().getAttribute("gameId");
 		
-		/*try {
-            if (req.getParameter("play") != null) {
-            	//UnoController.play(gId);
-            } else if (req.getParameter("special") != null) {
-            	//UnoController.special(gId);
+		System.out.println("doPost");
+		try {
+            if (req.getParameter("playCard") != null) {
+            	System.out.println("You got played");
+            	
+            	
+            } else if (req.getParameter("playSpecialCard") != null) {
+            	System.out.println("You played special");
+            	
+            	
+            } else if (req.getParameter("Draw") != null) {
+            	System.out.println("Draw");
+            	
             }
             
         } catch (Exception e) {
             System.out.println("There is an error with: " + e);
-        }*/
+        }
 
 		resp.sendRedirect("../gamerepo/uno");
 	}

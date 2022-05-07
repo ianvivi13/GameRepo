@@ -5,10 +5,12 @@ html, body {
     position:relative;
     width: 99%;
     height: 96%;
+    border: 2px solid palegreen;
    }
    .top {
     height: 20%;
     width: 100%;
+    border: 2px solid rebeccapurple;
     
    }
    .left {
@@ -17,6 +19,7 @@ html, body {
     left:0;
     bottom:50px;
     width: 25%;
+    border: 2px solid hotpink;
     
    }
    .right {
@@ -25,6 +28,7 @@ html, body {
     right:0;
     bottom:50px;
     width: 25%;
+    border: 2px solid blue;
     
    }
    .bottom {
@@ -32,6 +36,7 @@ html, body {
     bottom:0;
     width: 100%;
     height: 25%;
+    border: 2px solid red;
     
    }
    .content {
@@ -40,20 +45,24 @@ html, body {
     left:30%;
     right:30%;
     bottom:30%;
+    border: 2px solid yellow;
     
     overflow:visible;
    }
 
    #imgCenter {
+    width: 100%;
+    height: 100%;
     text-align: center;
 }
 
+
+
 #pili {
-	width: 20%;
-	max-width: 20%;
+	width: 30%;
+	max-width: 30%;
 	height: auto;
-    margin-left: -8%;
-    position: fixed;
+    margin-left: -26%;
     text-align: center;
     display:inline;
 }
@@ -118,10 +127,6 @@ html, body {
 #piliLeft:nth-child(1), #piliRight:nth-child(1) {
     align-items: center;
     
-
-
-
-    
 }
 
 .centerDeck {
@@ -151,23 +156,38 @@ html, body {
 }
 
 img {
-    max-width: 5%;
+    max-width: 20%;
     height:auto;
 }
 
 [type=button] { 
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+   
+}
 
-  [type=button] + img {
+[type=button] + img {
     cursor: pointer;
-  }
+}
 
-  .deck {
+.deck {
+
     width: 50%;
-	max-width: 50%;
-	height: auto;
-  }
+    max-width: 50%;
+    height: auto;
+}
+
+.decks img{
+    width: auto;
+
+    height:400%;
+    /*height: auto;
+    text-align:center;
+    background: none; 
+    border: none;*/
+}
+
+.IFHY {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    background-color: #00000000;
+}

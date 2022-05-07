@@ -127,10 +127,12 @@
         	<div class="split">
         		<div id="imgCenter" >
         		<form method="post">
-        		<input type="button" id="pili"  type="submit" name="draw" value="draw"> <img src="_view/images/UnoCards/back.png">
-        		</form>
+  
+        		<button type="submit" class="pili IFHY" name="Draw" value="Draw" > <img src="_view/images/UnoCards/back.png"></button>
+        		
         		</div>
         	</div>
+        	</form>
         	
         	<div class="split">
         		<div id="imgCenter" >
@@ -163,19 +165,25 @@
         
         <div class="bottom">
         	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerBottom))); %> </div>
+        	
+        	<div class="cards">
         	<% for (Object o : playerBottom.getPile().getPile()) { %>
 				<% UnoCard c = ((UnoCard) o); %>
 				<% String pathBottom = c.getImagePath(); %>
 				<form method="post">
 				<% if (c.getColor() != Color.BLACK) {%>
 				
-				<input type="button" id="pili" type="submit" name="playCard" value="playCard"> <img src="<%out.println(pathBottom);%>">
+				<button type="submit" id="pili" name="playCard" value="playCard" style="width: 120%; height:100%; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
 				
 				<% } else { %>
-				<input type="button" id="pili" type="submit" name="playSpecialCard" value="playSpecialCard"> <img src="<%out.println(pathBottom);%>" /> 
+				<button type="submit" id="pili" name="playSpecialCard" value="playSpecialCard" style="width: 120%; height:100%; background: none; border: none;"> <img src="<%out.println(pathBottom);%>"></button>
+
 				<% } %>
+				
+				<% } %>
+				
 				</form>
-				<% } %>
+				</div>
         </div>
     </div>        
     

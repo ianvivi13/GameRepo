@@ -74,7 +74,7 @@
 }
 
 /* create a standard for button inputs */
-button.ButtonStyle {
+button.ButtonStyle:not(.decks) {
     width: 200px;
     padding: 12px 10px;
     font-size: 18px;

@@ -373,6 +373,7 @@ public class DerbyDatabase implements IDatabase {
 					pTwo.setPile(two);
 					pThree.setPile(three);
 					pFour.setPile(four);
+					//pOne.getAltPile().addCard(new UnoCard(Color.BLACK, Value.Wild_Four));
 					
 					db.updatePlayer(iOne, pOne);
 					db.updatePlayer(iTwo, pTwo);
