@@ -50,6 +50,7 @@ public class UnoControllerTest {
 		} catch (IOException e){
 		}
 		model = new Game(IDatabase.Key_Uno);
+		modelTwo = new Game(IDatabase.Key_Uno);
 		three = new Player(true, db.createUser("booboo", "b"));
 		four = new Player(true, db.createUser("doodoo", "d"));
 		five = new Player(true, db.createUser("coocoo", "c"));
@@ -180,6 +181,7 @@ public class UnoControllerTest {
 		model = db.getGameFromGameId(modelId);
 		assertEquals(num + 4,  db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
 		assertEquals(c, model.getWildColor());
+		System.out.println(Color.RED.toString());
 	}
 	
 	@Test
