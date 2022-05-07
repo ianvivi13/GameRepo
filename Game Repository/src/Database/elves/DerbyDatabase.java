@@ -1311,6 +1311,7 @@ public class DerbyDatabase implements IDatabase {
 							+ "	FROM ExplodingKittensCards AS e "
 							+ "	WHERE e.type = ?"
 							);
+					
 					stmt.setString(1, card.getType().toString());
 					resultSet = stmt.executeQuery();
 					

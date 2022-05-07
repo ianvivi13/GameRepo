@@ -120,6 +120,9 @@ public class ExplodingKittensController {
 	}
 	
 	public static boolean fiveCardRule(ArrayList<Object> selection) {
+		if(selection.size() != 5) {
+			return false;
+		}
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 5; j++) {
 				if(selection.get(i).equals(selection.get(j)) && i != j) {
@@ -316,7 +319,7 @@ public class ExplodingKittensController {
 		
 	}
 	
-	public void playCard(int gameId, ArrayList<Object> selection) {
+	public static void playCard(int gameId, ArrayList<Object> selection) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -376,12 +379,12 @@ public class ExplodingKittensController {
 					db.updateGame(gameId, game);
 					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 					break;
-				}
+				} 
 			}
 		}
 	}
 	
-	public void playFavorCard(int gameId, ArrayList<Object> selection, Player target, int index) {
+	public static void playFavorCard(int gameId, ArrayList<Object> selection, Player target, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -397,7 +400,7 @@ public class ExplodingKittensController {
 		}
 	}
 	
-	public void playAlterFutureCard(int gameId, ArrayList<Object> selection, ArrayList<Integer> order) {
+	public static void playAlterFutureCard(int gameId, ArrayList<Object> selection, ArrayList<Integer> order) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -413,19 +416,18 @@ public class ExplodingKittensController {
 				game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
 				db.updateGame(gameId, game);
 				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
-				game = db.getGameFromGameId(gameId);
 				seeFuture(gameId);
-				game = db.getGameFromGameId(gameId);
 				alterFuture(gameId, order);
 			}
 		}
 	}
 	
-	public void playTargetedAttackCard(int gameId, ArrayList<Object> selection, Player target) {
+	public static void playTargetedAttackCard(int gameId, ArrayList<Object> selection, Player target) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		int currentId = db.getPlayerIdFromPlayer(current);
 		if(selection.size() == 1 && !((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.TargetedAttack))) {
 			return;
 		}
@@ -438,13 +440,22 @@ public class ExplodingKittensController {
 				db.updateGame(gameId, game);
 				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 				game = db.getGameFromGameId(gameId);
-				game.getTurnOrder().AddTurn(db.getPlayerIdFromPlayer(target), game.getTurnOrder().RemoveAllTurns(db.getPlayerIdFromPlayer(current)));
+				if(game.getTurnOrder().GetTurns(currentId) <= 1) {
+					game.getTurnOrder().AddTurn(db.getPlayerIdFromPlayer(target), game.getTurnOrder().GetTurns(currentId));
+					game.getTurnOrder().RemoveAllTurns(currentId);
+					game.getTurnOrder().SetTurn(db.getPlayerIdFromPlayer(target));
+				}
+				else {
+					game.getTurnOrder().AddTurn(db.getPlayerIdFromPlayer(target), game.getTurnOrder().GetTurns(currentId) + 1);
+					game.getTurnOrder().RemoveAllTurns(currentId);
+					game.getTurnOrder().SetTurn(db.getPlayerIdFromPlayer(target));
+				}
 				db.updateGame(gameId, game);
 			}
 		}
 	}
 	
-	public void playTwoCardRule(int gameId, ArrayList<Object> selection, Player target) {
+	public static void playTwoCardRule(int gameId, ArrayList<Object> selection, Player target) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -463,7 +474,7 @@ public class ExplodingKittensController {
 		}
 	}
 	
-	public void playThreeCardRule(int gameId, ArrayList<Object> selection, Player target, int index) {
+	public static void playThreeCardRule(int gameId, ArrayList<Object> selection, Player target, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -482,7 +493,7 @@ public class ExplodingKittensController {
 		}
 	}
 	
-	public void playFiveCardRule(int gameId, ArrayList<Object> selection, int index) {
+	public static void playFiveCardRule(int gameId, ArrayList<Object> selection, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);

@@ -66,6 +66,14 @@ public class TurnOrderTest {
 		turns.Reverse();							// reverse order
 		turns.NextTurn();							// next turn
 		assertEquals(turns.CurrentPlayer(),3);	// current player 3
+		turns.AddTurn(1, 3);						// add 3 turns to player 1
+		turns.SetTurn(1);							// set current player to 1
+		assertEquals(turns.CurrentPlayer(),1);	// current player 1
+		turns.NextTurn();							// next turn
+		assertEquals(turns.CurrentPlayer(),1);	// current player 1
+		turns.NextTurn();							// next turn
+		assertEquals(turns.CurrentPlayer(),1);	// current player 1
+		turns.SetTurn(3);							// set current player to 3
 		turns.RemovePlayer(2);					// remove player 2
 		assertEquals(turns.CurrentPlayer(),3);	// current player 3
 		turns.AddTurn(3, 1);						// add 1 turn to player 3

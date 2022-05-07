@@ -19,6 +19,7 @@ import Models.Game;
 import Models.Pile;
 import Models.Player;
 import Models.Type;
+import Models.UnoController;
 
 public class ExplodingKittensTest{
 	
@@ -266,5 +267,224 @@ public class ExplodingKittensTest{
 		assertTrue(game.getAltPile().getNumCards() + 1 == discardNumCards);
 		assertTrue(current.getPile().getNumCards() - 1 == currentNumCards);
 		assertTrue(current.getPile().contains(d));
+	}
+	
+	@Test
+	public void testPlayFavorCard() {
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensCard f = new ExplodingKittensCard(Type.Favor);
+		ExplodingKittensCard c = new ExplodingKittensCard(Type.Cattermelon);
+		ExplodingKittensCard a = new ExplodingKittensCard(Type.Attack);
+		int currentId = game.getTurnOrder().CurrentPlayer();
+		Player current = db.getPlayerFromPlayerId(currentId);
+		game.nextTurn();
+		int nextId = game.getTurnOrder().CurrentPlayer();
+		Player next = db.getPlayerFromPlayerId(nextId);
+		game.reverseTurnOrder();
+		game.nextTurn();
+		game.reverseTurnOrder();
+		ArrayList<Object> selection = new ArrayList<>();
+		selection.add(a);
+		current.getPile().addCard(f);
+		current.getPile().addCard(c);
+		current.getPile().addCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		int numCards = current.getPile().getNumCards();
+		int numCards2 = next.getPile().getNumCards();
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensController.playFavorCard(gameId, selection, next, 0);
+		selection.remove(0);
+		selection.add(c);
+		ExplodingKittensController.playFavorCard(gameId, selection, next, 0);
+		Game game2 = db.getGameFromGameId(gameId);
+		assertTrue(game.equals(game2));
+		selection.remove(0);
+		selection.add(f);
+		ExplodingKittensController.playFavorCard(gameId, selection, next, 0);
+		Game game3 = db.getGameFromGameId(gameId);
+		assertEquals(game.getTurnOrder().CurrentPlayer(), game3.getTurnOrder().CurrentPlayer());
+		assertEquals(currentId, game3.getTurnOrder().CurrentPlayer());
+		assertEquals(numCards, current.getPile().getNumCards());
+		assertEquals(numCards2 - 1, next.getPile().getNumCards());
+		current.getPile().removeCard(c);
+		current.getPile().removeCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+	}
+	
+	@Test
+	public void testPlayAlterFutureCard() {
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensCard af = new ExplodingKittensCard(Type.AlterTheFuture);
+		ExplodingKittensCard c = new ExplodingKittensCard(Type.Cattermelon);
+		ExplodingKittensCard a = new ExplodingKittensCard(Type.Attack);
+		int currentId = game.getTurnOrder().CurrentPlayer();
+		Player current = db.getPlayerFromPlayerId(currentId);
+		ArrayList<Object> selection = new ArrayList<>();
+		ArrayList<Integer> order = new ArrayList<>();
+		order.add(2);
+		order.add(0);
+		order.add(1);
+		selection.add(a);
+		current.getPile().addCard(af);
+		current.getPile().addCard(c);
+		current.getPile().addCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		int pileCards = game.getMainPile().getNumCards();
+		int numCards = current.getPile().getNumCards();
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensController.playAlterFutureCard(gameId, selection, order);
+		selection.remove(0);
+		selection.add(c);
+		ExplodingKittensController.playAlterFutureCard(gameId, selection, order);
+		Game game2 = db.getGameFromGameId(gameId);
+		assertTrue(game.equals(game2));
+		selection.remove(0);
+		selection.add(af);
+		ExplodingKittensController.playAlterFutureCard(gameId, selection, order);
+		Game game3 = db.getGameFromGameId(gameId);
+		assertEquals(game.getTurnOrder().CurrentPlayer(), game3.getTurnOrder().CurrentPlayer());
+		assertEquals(currentId, game3.getTurnOrder().CurrentPlayer());
+		assertEquals(numCards - 1, db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
+		assertEquals(pileCards, game.getMainPile().getNumCards());
+		current.getPile().removeCard(c);
+		current.getPile().removeCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+	}
+	
+	@Test
+	public void testPlayTargetedAttackCard() {
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensCard ta = new ExplodingKittensCard(Type.TargetedAttack);
+		ExplodingKittensCard c = new ExplodingKittensCard(Type.Cattermelon);
+		ExplodingKittensCard a = new ExplodingKittensCard(Type.Attack);
+		int currentId = game.getTurnOrder().CurrentPlayer();
+		Player current = db.getPlayerFromPlayerId(currentId);
+		game.nextTurn();
+		int nextId = game.getTurnOrder().CurrentPlayer();
+		Player next = db.getPlayerFromPlayerId(nextId);
+		game.reverseTurnOrder();
+		game.nextTurn();
+		game.reverseTurnOrder();
+		ArrayList<Object> selection = new ArrayList<>();
+		selection.add(a);
+		current.getPile().addCard(ta);
+		current.getPile().addCard(c);
+		current.getPile().addCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		int numCards = current.getPile().getNumCards();
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensController.playTargetedAttackCard(gameId, selection, next);
+		selection.remove(0);
+		selection.add(c);
+		ExplodingKittensController.playTargetedAttackCard(gameId, selection, next);
+		Game game2 = db.getGameFromGameId(gameId);
+		assertTrue(game.equals(game2));
+		selection.remove(0);
+		selection.add(ta);
+		ExplodingKittensController.playTargetedAttackCard(gameId, selection, next);
+		Game game3 = db.getGameFromGameId(gameId);
+		assertNotEquals(currentId, game3.getTurnOrder().CurrentPlayer());
+		assertEquals(2, game3.getTurnOrder().GetTurns(nextId));
+		assertEquals(numCards - 1, db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
+		current.getPile().removeCard(c);
+		current.getPile().removeCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		
+		next.getPile().addCard(ta);
+		game = game3;
+		db.updateGame(gameId, game);
+		db.updatePlayer(nextId, next);
+		ExplodingKittensController.playTargetedAttackCard(gameId, selection, current);
+		game3 = db.getGameFromGameId(gameId);
+		assertEquals(4, game3.getTurnOrder().GetTurns(currentId));
+		
+	}
+	
+	@Test
+	public void testPlayTwoCardRule() {
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensCard ta = new ExplodingKittensCard(Type.TargetedAttack);
+		ExplodingKittensCard c = new ExplodingKittensCard(Type.Cattermelon);
+		ExplodingKittensCard a = new ExplodingKittensCard(Type.Attack);
+		int currentId = game.getTurnOrder().CurrentPlayer();
+		Player current = db.getPlayerFromPlayerId(currentId);
+		game.nextTurn();
+		int nextId = game.getTurnOrder().CurrentPlayer();
+		Player next = db.getPlayerFromPlayerId(nextId);
+		game.reverseTurnOrder();
+		game.nextTurn();
+		game.reverseTurnOrder();
+		ArrayList<Object> selection = new ArrayList<>();
+		selection.add(a);
+		selection.add(c);
+		current.getPile().addCard(ta);
+		current.getPile().addCard(c);
+		current.getPile().addCard(c);
+		current.getPile().addCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		int numCards = current.getPile().getNumCards();
+		int nextNumCards = current.getPile().getNumCards();
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensController.playTwoCardRule(gameId, selection, next);
+		Game game2 = db.getGameFromGameId(gameId);
+		assertTrue(game.equals(game2));
+		selection.remove(0);
+		selection.add(c);
+		//NullPointerException Here
+		ExplodingKittensController.playTwoCardRule(gameId, selection, next);
+		game = db.getGameFromGameId(gameId);
+		assertEquals(numCards - 1, db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
+		assertEquals(nextNumCards + 1, db.getPlayerFromPlayerId(nextId).getPile().getNumCards());
+	}
+	
+	@Test
+	public void testPlayThreeCardRule() {
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensCard ta = new ExplodingKittensCard(Type.TargetedAttack);
+		ExplodingKittensCard c = new ExplodingKittensCard(Type.Cattermelon);
+		ExplodingKittensCard a = new ExplodingKittensCard(Type.Attack);
+		int currentId = game.getTurnOrder().CurrentPlayer();
+		Player current = db.getPlayerFromPlayerId(currentId);
+		int index = 0;
+		game.nextTurn();
+		int nextId = game.getTurnOrder().CurrentPlayer();
+		Player next = db.getPlayerFromPlayerId(nextId);
+		//IndexOutOfBoundsException for some reason?
+		ExplodingKittensCard card = (ExplodingKittensCard)next.getAltPile().getPile().get(index);
+		game.reverseTurnOrder();
+		game.nextTurn();
+		game.reverseTurnOrder();
+		ArrayList<Object> selection = new ArrayList<>();
+		selection.add(a);
+		selection.add(c);
+		current.getPile().addCard(ta);
+		current.getPile().addCard(c);
+		current.getPile().addCard(c);
+		current.getPile().addCard(c);
+		current.getPile().addCard(a);
+		db.updateGame(gameId, game);
+		db.updatePlayer(currentId, current);
+		int numCards = current.getPile().getNumCards();
+		int nextNumCards = current.getPile().getNumCards();
+		game = db.getGameFromGameId(gameId);
+		ExplodingKittensController.playTwoCardRule(gameId, selection, next);
+		selection.remove(0);
+		selection.add(c);
+		ExplodingKittensController.playTwoCardRule(gameId, selection, next);
+		Game game2 = db.getGameFromGameId(gameId);
+		assertTrue(game.equals(game2));
+		selection.add(c);
+		ExplodingKittensController.playTwoCardRule(gameId, selection, next);
+		game = db.getGameFromGameId(gameId);
+		assertEquals(numCards - 2, db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
+		assertEquals(nextNumCards + 1, db.getPlayerFromPlayerId(nextId).getAltPile().getNumCards());
+		assertTrue(current.getAltPile().getPile().get(current.getPile().getNumCards() - 1).equals(card));
 	}
 }
