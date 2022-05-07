@@ -260,7 +260,7 @@ public class ExplodingKittensTest{
 		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
 		int currentNumCards = current.getPile().getNumCards();
 		int discardNumCards = game.getAltPile().getNumCards();
-		ExplodingKittensController.chooseCard(gameId, index);
+		ExplodingKittensController.chooseCardAlt(gameId, index);
 		game = db.getGameFromGameId(gameId);
 		current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
 		assertTrue(game.getAltPile().getNumCards() + 1 == discardNumCards);

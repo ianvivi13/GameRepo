@@ -313,7 +313,7 @@ public class UnoControllerTest {
 		
 		Game model2 = db.getGameFromGameId(modelId);
 		assertTrue(model.equals(model2));
-		UnoController.playSpecialCard(modelId, wild, color);
+		UnoController.playSpecialCard(modelId, wild, color); 
 		Game model3 = db.getGameFromGameId(modelId);
 		assertTrue(model3.getAltPile().getTopCard().equals(wild));
 		current = db.getPlayerFromPlayerId(currentId);
@@ -388,7 +388,5 @@ public class UnoControllerTest {
 		assertEquals(modelTwo.getPlayers().get(2).getPile().getNumCards(), 0);
 		assertEquals(modelTwo.getAltPile().getNumCards(), 5);
 		assertEquals(modelTwo.getTurnOrder().getTurnList().size(), 2);
-	}
-	
-	
+	}	
 }

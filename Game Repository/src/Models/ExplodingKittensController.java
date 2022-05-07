@@ -177,7 +177,7 @@ public class ExplodingKittensController {
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
 	}
 	
-	public static void chooseCard(int gameId, int index) {
+	public static void chooseCardAlt(int gameId, int index) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game game = db.getGameFromGameId(gameId);
@@ -185,6 +185,17 @@ public class ExplodingKittensController {
 		current.getPile().addCard(game.getAltPile().removeCard(index));
 		db.updateGame(gameId, game);
 		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+	}
+	
+	public static void chooseCardPlayer(int gameId, Player target, int index) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		current.getPile().addCard(target.getPile().removeCard(index));
+		db.updateGame(gameId, game);
+		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		db.updatePlayer(db.getPlayerIdFromPlayer(target), target);
 	}
 	
 	public static void skip(int gameId) {
@@ -303,6 +314,191 @@ public class ExplodingKittensController {
 		
 		return false;
 		
+	}
+	
+	public void playCard(int gameId, ArrayList<Object> selection) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(selection.size() == 1 && (((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.Nope)) || ((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.ExplodingKitten)) || ((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.Favor)) || ((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.TargetedAttack)) || ((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.AlterTheFuture)))) {
+			return;
+		}
+		else if(twoCardRule(selection) || threeCardRule(selection) || fiveCardRule(selection)) {
+			return;
+		}
+		else if(allowMove(gameId, selection, current)) {
+			if(selection.size() == 1) {
+				switch(((ExplodingKittensCard)selection.get(0)).getType()) {
+				case Attack:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					game.nextTurn();
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					game = db.getGameFromGameId(gameId);
+					int next = game.getTurnOrder().CurrentPlayer();
+					game.getTurnOrder().AddTurn(next, game.getTurnOrder().RemoveAllTurns(db.getPlayerIdFromPlayer(current)));
+					db.updateGame(gameId, game);
+					break;
+				case DrawFromBottom:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					game = db.getGameFromGameId(gameId);
+					drawFromBottom(gameId);
+					break;
+				case SeeTheFuture:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					game = db.getGameFromGameId(gameId);
+					seeFuture(gameId);
+					game = db.getGameFromGameId(gameId);
+					seeFutureExit(gameId);
+					break;
+				case Shuffle:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					game = db.getGameFromGameId(gameId);
+					game.getMainPile().shuffle();
+					db.updateGame(gameId, game);
+					break;
+				case Skip:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					game = db.getGameFromGameId(gameId);
+					skip(gameId);
+					break;
+				default:
+					game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+					db.updateGame(gameId, game);
+					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+					break;
+				}
+			}
+		}
+	}
+	
+	public void playFavorCard(int gameId, ArrayList<Object> selection, Player target, int index) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(selection.size() > 1 || (selection.size() == 1 && !((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.Favor)))) {
+			return;
+		}
+		else {
+			game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+			db.updateGame(gameId, game);
+			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+			favor(gameId, target, index);
+		}
+	}
+	
+	public void playAlterFutureCard(int gameId, ArrayList<Object> selection, ArrayList<Integer> order) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(selection.size() == 1 && !((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.AlterTheFuture))) {
+			return;
+		}
+		else if(twoCardRule(selection) || threeCardRule(selection) || fiveCardRule(selection)) {
+			return;
+		}
+		else if(allowMove(gameId, selection, current)) {
+			if(selection.size() == 1) {
+				game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+				db.updateGame(gameId, game);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				game = db.getGameFromGameId(gameId);
+				seeFuture(gameId);
+				game = db.getGameFromGameId(gameId);
+				alterFuture(gameId, order);
+			}
+		}
+	}
+	
+	public void playTargetedAttackCard(int gameId, ArrayList<Object> selection, Player target) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(selection.size() == 1 && !((ExplodingKittensCard)selection.get(0)).equals(new ExplodingKittensCard(Type.TargetedAttack))) {
+			return;
+		}
+		else if(twoCardRule(selection) || threeCardRule(selection) || fiveCardRule(selection)) {
+			return;
+		}
+		else if(allowMove(gameId, selection, current)) {
+			if(selection.size() == 1) {
+				game.getAltPile().addCard(current.getPile().removeCard(selection.get(0)));
+				db.updateGame(gameId, game);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				game = db.getGameFromGameId(gameId);
+				game.getTurnOrder().AddTurn(db.getPlayerIdFromPlayer(target), game.getTurnOrder().RemoveAllTurns(db.getPlayerIdFromPlayer(current)));
+				db.updateGame(gameId, game);
+			}
+		}
+	}
+	
+	public void playTwoCardRule(int gameId, ArrayList<Object> selection, Player target) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(twoCardRule(selection)) {
+			for(Object card : selection) {
+				game.getAltPile().addCard(current.getPile().removeCard(card));
+				db.updateGame(gameId, game);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				game = db.getGameFromGameId(gameId);
+			}
+			stealCard(gameId, target);
+		}
+		else {
+			return;
+		}
+	}
+	
+	public void playThreeCardRule(int gameId, ArrayList<Object> selection, Player target, int index) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(threeCardRule(selection)) {
+			for(Object card : selection) {
+				game.getAltPile().addCard(current.getPile().removeCard(card));
+				db.updateGame(gameId, game);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				game = db.getGameFromGameId(gameId);
+			}
+			chooseCardPlayer(gameId, target, index);
+		}
+		else {
+			return;
+		}
+	}
+	
+	public void playFiveCardRule(int gameId, ArrayList<Object> selection, int index) {
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game game = db.getGameFromGameId(gameId);
+		Player current = db.getPlayerFromPlayerId(game.getTurnOrder().CurrentPlayer());
+		if(fiveCardRule(selection)) {
+			for(Object card : selection) {
+				game.getAltPile().addCard(current.getPile().removeCard(card));
+				db.updateGame(gameId, game);
+				db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+				game = db.getGameFromGameId(gameId);
+			}
+			chooseCardAlt(gameId, index);
+		}
+		else {
+			return;
+		}
 	}
 	
 }
