@@ -326,16 +326,6 @@ public class UnoControllerTest {
 		assertEquals(Color.GREEN.toString(), model3.getWildColor());
 	}
 	
-	@Test
-	public void jTestGameSim() throws Exception{
-		int playerOneId;
-		int playerTwoId;
-		int playerThreeId;
-		
-		int playerOneCards;
-		int playerTwoCards;
-		int playerThreeCards;
-	}
 	
 	
 }
