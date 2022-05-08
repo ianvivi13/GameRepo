@@ -15,6 +15,7 @@ public class BlackJackController {
 		
 		Game model = db.getGameFromGameId(gameId);
 		
+		
 		model.getMainPile().populate();
 		model.getMainPile().shuffle();
 		model.getMainPile().shuffle();

@@ -13,10 +13,11 @@
 }
 
 #stats{
-    float: right;
+    border: 3px;
+    border-color: red;
     margin-top: 5%;
     margin-right: 5%;
-    width: 45%;
+    width: 50%;
     height: 600px;
     text-align: left;
     font-size: 50px;

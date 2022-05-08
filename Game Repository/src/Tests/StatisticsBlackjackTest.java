@@ -23,7 +23,7 @@ public class StatisticsBlackjackTest {
 			stats.GamePlayed();
 		}
 		for (int x = 0 ; x < 4 ; x++) {
-			stats.Blackjack();
+			stats.Hold();
 		}
 		for (int x = 0 ; x < 12 ; x++) {
 			stats.Hit();
@@ -52,7 +52,7 @@ public class StatisticsBlackjackTest {
 	// Testing the blackjack statistics
 	@Test
 	public void testCheckBlackjacks() {
-		assertEquals(stats.GetBlackjacks(),4);
+		assertEquals(stats.GetHolds(),4);
 	}
 	
 	@Test

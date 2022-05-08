@@ -13,9 +13,6 @@ public class StatisticsGlobal extends StatisticsParent{
 	}
 	
 	// Getters
-	public double GetRatio() {
-		return GetGamesWon()/GetGamesLost();
-	}
 	
 	public int GetRank() {
 		return Rank;
