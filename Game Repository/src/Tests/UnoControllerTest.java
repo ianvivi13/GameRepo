@@ -152,7 +152,7 @@ public class UnoControllerTest {
 		db.updateGame(modelId, model);
 		int alt = model.getAltPile().getNumCards();
 		UnoCard card = (UnoCard) model.getAltPile().getTopCard();
-		UnoController.drawCardOrRecycleWaste(modelId, 1);
+		UnoController.drawCardOrRecycleWaste(modelId, 1, false);
 		model = db.getGameFromGameId(modelId);
 		model.reverseOrder();
 		model.nextTurn();
