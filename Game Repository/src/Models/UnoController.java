@@ -57,14 +57,19 @@ private static IDatabase db;
 	public static void drawCardOrRecycleWaste(int gameId, int numCards) {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		while(numCards > 0) {
-			if(model.getMainPile().isEmpty()){
+		int numLeft = numCards;
+		while(numLeft > 0) {
+			if(model.getMainPile().isEmpty() && model.getAltPile().getNumCards() != 1){
 				model.getMainPile().addCards(model.getAltPile().removeCards(model.getAltPile().getNumCards()));
 				model.getAltPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
 				model.getMainPile().shuffle();
 			}
+			else if(model.getMainPile().isEmpty() && model.getAltPile().getNumCards() == 1) {
+				model.getMainPile().populateUno();
+				model.getMainPile().shuffle();
+			}
 			current.getPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
-			numCards--;
+			numLeft--;
 		}
 		model.nextTurn();
 		db.updateGame(gameId, model);
