@@ -9,7 +9,9 @@ import javax.servlet.http.*;
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Models.UnoController;
+import Models.Color;
 import Models.Game;
+import Models.UnoCard;
 
 public class UnoPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,22 +30,26 @@ public class UnoPageServlet extends HttpServlet {
 		}
 
 		System.out.println("Uno Servlet: doGet: " + user);
-		
-		req.getRequestDispatcher("_view/uno.jsp").forward(req, resp);
+		try {
+			req.getRequestDispatcher("_view/uno.jsp").forward(req, resp);
+		} catch (Exception e) {
+			System.out.println("uh oh: " + e);
+		}
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//int gId = (int) req.getSession().getAttribute("gameId");
-		
-		System.out.println("doPost");
+		int gId = (int) req.getSession().getAttribute("gameId");
+
 		try {
             if (req.getParameter("playCard") != null) {
-            	System.out.println("You played a card: " + req.getParameter("playCard"));
+            	UnoCard card = UnoCard.fromString((String) req.getParameter("playCard"));
+            	UnoController.playCard(gId, card);
             } else if (req.getParameter("Draw") != null) {
-            	System.out.println("Draw");
+            	UnoController.drawCardOrRecycleWaste(gId, 1);
             } else if ((req.getParameter("card") != null) && (req.getParameter("color") != null)) {
-            	System.out.println("You played special: " + req.getParameter("card") + " : " + req.getParameter("color"));
+            	UnoCard card = UnoCard.fromString((String) req.getParameter("card"));
+            	UnoController.playSpecialCard(gId, card, req.getParameter("color"));
             }
             
         } catch (Exception e) {

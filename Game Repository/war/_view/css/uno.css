@@ -6,13 +6,11 @@ html, body {
     position:relative;
     width: 99%;
     height: 96%;
-    border: 2px solid palegreen;
 }
 
 .top {
     height: 20%;
     width: 100%;
-    border: 2px solid rebeccapurple;
     
 }
 
@@ -22,7 +20,6 @@ html, body {
     left:0;
     bottom:50px;
     width: 25%;
-    border: 2px solid hotpink;
     
 }
 
@@ -32,7 +29,6 @@ html, body {
     right:0;
     bottom:50px;
     width: 25%;
-    border: 2px solid blue;
 }
 
 .bottom {
@@ -40,7 +36,6 @@ html, body {
     bottom:0;
     width: 100%;
     height: 25%;
-    border: 2px solid red;
     
 }
 .content {
@@ -49,7 +44,6 @@ html, body {
     left:30%;
     right:30%;
     bottom:30%;
-    border: 2px solid yellow;
     
     overflow:visible;
 }
@@ -121,7 +115,7 @@ html, body {
 }
 
 .cards {
-	margin: auto;
+	/*margin: auto;*/
 	text-align: center;
 }
 
@@ -141,7 +135,6 @@ html, body {
 }
 
 .split {
-    border: 3px solid orangered;
     height: 100%;
     width: 48.5%;
     
@@ -290,7 +283,6 @@ img {
   .box {
     width: 50%;
     height: 50%;
-    border: 1px solid black;
     float: left;
   }
   

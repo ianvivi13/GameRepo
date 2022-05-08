@@ -9,6 +9,7 @@ import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Models.BlackJackController;
 import Models.Game;
+import Models.UnoController;
 
 
 public class HostPageExtendServlet extends HttpServlet {
@@ -35,13 +36,16 @@ public class HostPageExtendServlet extends HttpServlet {
 	        			resp.sendRedirect("../gamerepo/home");
 	        			return;
 	        		case IDatabase.Key_Uno:
-	        			resp.sendRedirect("../gamerepo/home");
+	        			if (db.getNameFromPlayerId(game.getPlayerIds().get(0)).equals(user)) {
+	        				UnoController.initialize(gId);
+	        			}
+	        			resp.sendRedirect("../gamerepo/uno");
 	        			return;
 	        		case IDatabase.Key_UnoFlip:
 	        			resp.sendRedirect("../gamerepo/home");
 	        			return;
 	        		default:
-	        			if (db.getNameFromPlayerId(game.getPlayerIds().get(0)).contentEquals(user)) {
+	        			if (db.getNameFromPlayerId(game.getPlayerIds().get(0)).equals(user)) {
 	        				BlackJackController.initialize(gId);
 	        			}
 	        			resp.sendRedirect("../gamerepo/blackjack");

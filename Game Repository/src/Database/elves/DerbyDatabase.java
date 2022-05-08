@@ -322,7 +322,7 @@ public class DerbyDatabase implements IDatabase {
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
 					initializeUnoCards();
-					
+					/*
 					Game game  = new Game(IDatabase.Key_Uno);
 					Pile pile = new Pile();
 					pile.populateUno();
@@ -385,7 +385,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					System.out.println(pOne.getPile().getPile());
 					System.out.println(pTwo.getPile().getPile());
-					
+					*/
 					return true;
 				} catch (UserExistsException e) {
 					System.out.println(e);

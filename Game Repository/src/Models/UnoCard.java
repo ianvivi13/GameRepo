@@ -14,6 +14,13 @@ public class UnoCard implements Comparable<UnoCard>{
 		this.color =  Color.fromString(color);	
 	}
 	
+	public static UnoCard fromString(String card) {
+		String v = card.substring(0,1);
+		String c = card.substring(1,2);
+		return new UnoCard(Color.fromString(c), Value.fromString(v));
+		
+	}
+	
 	public Color getColor() {
 		return color;
 	}

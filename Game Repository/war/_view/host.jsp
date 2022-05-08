@@ -73,13 +73,14 @@
 	          		<select name="MaxP" style="text-align: center; font-size: 180%; border-radius: 13px; width: 30%; background-color: #3b3b3b; color: #ffffff; border-color: #000000;">
 	          			<%
 	          			int t = 2;
+	          			int j = 2;
 	          			switch ((String) session.getAttribute("happy")) {
-	          				case ("uno"): t = 4; break;
-	          				case ("unoflip"): t = 4; break;
-	          				case ("expoldingkittens"): t = 6; break;
+	          				case ("uno"): t = 4; j = 3; break;
+	          				case ("unoflip"): t = 4; j = 3; break;
+	          				case ("expoldingkittens"): t = 6; j = 4; break;
 	          			}
 	          			%>
-	          			<% for (int i = 2 ; i <= t ; i ++) { %>
+	          			<% for (int i = j ; i <= t ; i ++) { %>
 							<option name="MaxP" value = <% out.print(i); %>> <% out.print(i); %> </option>  
 						<% } %> 
 					</select> 
