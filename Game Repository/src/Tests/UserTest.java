@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Models.User;
+import Models.UsernameGenerator;
 
 public class UserTest {
 	private User user;
@@ -24,5 +25,6 @@ public class UserTest {
 	public void testCheckPassword() {
 		assertEquals(user.checkPassword("Password"), true);
 	}
+	
 
 }
