@@ -204,7 +204,7 @@
         	<% if (db.getNameFromPlayerId(currentPlayerId).equals(bottomName)) { %>
         		<div id="centers" style="background-color: #00ff00; color: #000000;"> <% out.print(bottomName); %> </div>
         	<% } else { %>
-        		<div id="centers"> <% out.print(bottomName); out.print(game.getMainPile().getNumCards()); %> </div>
+        		<div id="centers"> <% out.print(bottomName); %> </div>
         	<% } %>
         	<div class="cards" style="max-width: 100%; bottom: 0; height: 50%;"> 
 	        	<form method="post" name="plc">

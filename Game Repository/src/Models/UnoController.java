@@ -54,9 +54,10 @@ private static IDatabase db;
 		db.updateGame(gameId, model);
 	}
 	
-	public static void drawCardOrRecycleWaste(int gameId, int numCards) {
+	public static void drawCardOrRecycleWaste(int gameId, int numCards, boolean AutoPlay) {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
+		UnoCard drawn = null;
 		int numLeft = numCards;
 		while(numLeft > 0) {
 			if(model.getMainPile().isEmpty() && model.getAltPile().getNumCards() != 1){
@@ -68,12 +69,23 @@ private static IDatabase db;
 				model.getMainPile().populateUno();
 				model.getMainPile().shuffle();
 			}
-			current.getPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
+			drawn = (UnoCard) model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1);
+			current.getPile().addCard(drawn);
 			numLeft--;
 		}
-		model.nextTurn();
-		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		if ((AutoPlay) & (drawn != null)) {
+			db.updateGame(gameId, model);
+			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+			if (!playCard(gameId, drawn)) {
+				model = db.getGameFromGameId(gameId);
+				model.nextTurn();
+				db.updateGame(gameId, model);
+			}
+		} else {
+			model.nextTurn();
+			db.updateGame(gameId, model);
+			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		}
 	}
 	
 	public static void drawTwo(int gameId) {
@@ -82,7 +94,7 @@ private static IDatabase db;
 		Game model = db.getGameFromGameId(gameId);
 		model.nextTurn();
 		db.updateGame(gameId, model);
-		drawCardOrRecycleWaste(gameId, 2);
+		drawCardOrRecycleWaste(gameId, 2, false);
 	}
 	
 	public static void drawFour(int gameId, String colorChoice) {
@@ -92,7 +104,7 @@ private static IDatabase db;
 		model.setWildColor(colorChoice);
 		model.nextTurn();
 		db.updateGame(gameId, model);
-		drawCardOrRecycleWaste(gameId, 4);
+		drawCardOrRecycleWaste(gameId, 4, false);
 	}
 	
 	public static boolean checkUno(int gameId) {
@@ -139,13 +151,13 @@ private static IDatabase db;
 		return false;
 	}
 	
-	public static void playCard(int gameId, UnoCard selected) {
+	public static boolean playCard(int gameId, UnoCard selected) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		if(selected.getColor() == Color.BLACK) {
-			return;
+			return false;
 		}
 		if(allowMove(gameId, selected)) {
 			switch (selected.getValues()) {
@@ -184,7 +196,9 @@ private static IDatabase db;
 					}
 					break;
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	public static void playSpecialCard(int gameId, UnoCard selected, String color) {
