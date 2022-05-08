@@ -152,13 +152,11 @@ private static IDatabase db;
 		}
 		
 		landfill.shuffle();
-
+		int NumPlayers = subjects.size();
 		int size = landfill.getNumCards();
-		int extraCards = size %  subjects.size();
+		int extraCards = size % NumPlayers;
 		Pile garbage = new Pile();
 		garbage.addCards(landfill.removeCards(extraCards));
-		
-		int NumPlayers = model.getMaxPlayers();
 		
 		// spread out the left overs
 		for (Object o : garbage.getPile()) {
