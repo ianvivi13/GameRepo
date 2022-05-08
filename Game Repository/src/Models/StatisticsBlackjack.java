@@ -1,19 +1,19 @@
 package Models;
 
 public class StatisticsBlackjack extends StatisticsParent{
-	private int Blackjacks;
+	private int Holds;
 	private int Hits;
 	private int Froze;
 	
 	public StatisticsBlackjack() {
-		this.Blackjacks = 0;
+		this.Holds = 0;
 		this.Hits = 0;
 		this.Froze = 0;
 	}
 	
 	// Setters
-	public void SetBlackjacks(int Blackjacks) {
-		this.Blackjacks = Blackjacks;
+	public void SetBlackjacks(int Holds) {
+		this.Holds = Holds;
 	}
 	
 	public void SetHits(int Hits) {
@@ -25,8 +25,8 @@ public class StatisticsBlackjack extends StatisticsParent{
 	}
 	
 	// Getters
-	public int GetBlackjacks() {
-		return Blackjacks;
+	public int GetHolds() {
+		return Holds;
 	}
 	
 	public int GetHits() {
@@ -38,8 +38,8 @@ public class StatisticsBlackjack extends StatisticsParent{
 	}
 	
 	// Setters - called when a stat should be updated
-	public void Blackjack() {
-		Blackjacks ++;
+	public void Hold() {
+		Holds ++;
 	}
 	
 	public void Hit() {

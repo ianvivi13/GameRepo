@@ -9,7 +9,6 @@ public class UnoController {
 	
 private static IDatabase db;
 	
-	
 	public static void initialize(int gameId) throws Exception {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();

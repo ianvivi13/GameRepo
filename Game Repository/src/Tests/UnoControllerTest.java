@@ -180,6 +180,7 @@ public class UnoControllerTest {
 		model = db.getGameFromGameId(modelId);
 		assertEquals(num + 4,  db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer()).getPile().getNumCards());
 		assertEquals(c, model.getWildColor());
+		System.out.println(Color.RED.toString());
 	}
 	
 	@Test

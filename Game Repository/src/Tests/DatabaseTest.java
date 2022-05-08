@@ -228,7 +228,7 @@ public class DatabaseTest{
 		assertTrue(blackjackStat.GetGamesPlayed() == db.getBlackjackStats("FunnyUser69").GetGamesPlayed());
 		assertTrue(blackjackStat.GetGamesWon() == db.getBlackjackStats("FunnyUser69").GetGamesWon());
 		assertTrue(blackjackStat.GetGamesLost() == db.getBlackjackStats("FunnyUser69").GetGamesLost());
-		assertTrue(blackjackStat.GetBlackjacks() == db.getBlackjackStats("FunnyUser69").GetBlackjacks());
+		assertTrue(blackjackStat.GetHolds() == db.getBlackjackStats("FunnyUser69").GetHolds());
 		assertTrue(blackjackStat.GetHits() == db.getBlackjackStats("FunnyUser69").GetHits());
 		assertTrue(blackjackStat.GetFroze() == db.getBlackjackStats("FunnyUser69").GetFroze());
 	}

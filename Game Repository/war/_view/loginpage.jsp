@@ -18,18 +18,21 @@
 			<div class="title">Login</div>
 			<div class="FormStyle">
 				<form class="form" action="${pageContext.servletContext.contextPath}/login" method="post">
+
 					<div class="InputStyle">
 						<input id="uword" type="text" name="Username" placeholder="Username" value="${username}" required>
 					</div>
+
 					<div class="InputStyle">
 						<input id="pword" type="password" name="Password" placeholder="Password" value="${password}" required>
 					</div>
 		
-						<button class="ButtonStyle" type="submit">Sign In</button>
 					
 					<a href="../gamerepo/new">
 						<button class="ButtonStyle" form="false">Create New Account</button>
 					</a>
+
+					<button class="ButtonStyle" type="submit">Sign In</button>
 					
 				</form>
 			</div>

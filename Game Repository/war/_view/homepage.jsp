@@ -33,13 +33,13 @@
         
         <div class = "buttons">
 			<a href="../gamerepo/stats">
-        		<button class="ButtonStyle">Stats</button>
+        		<button class="ButtonStyle" disabled>Stats</button><img src="_view/images/UnderContruct.png" style = "position: absolute; margin-top: -1%;">
         	</a>
         </div>
-        
+
         <form method="post">
 			<div class = "buttons">
-	            <button class="ButtonStyle" name="mode" value="singleplayer" type="submit" disabled>Singleplayer</button>
+	            <button class="ButtonStyle" name="mode" value="singleplayer" type="submit" disabled>Singleplayer</button><img src="_view/images/UnderContruct.png" style = "position: absolute; margin-top: -1%;">
 			</div>
 			<div class = "buttons">
 	            <button class="ButtonStyle" name="mode" value="multiplayer" type="submit">Multiplayer</button>

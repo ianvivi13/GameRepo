@@ -37,6 +37,13 @@ public class StatisticsParent {
 		return GamesPlayed;
 	}
 	
+	public double GetRatio() {
+		if(GetGamesLost() == 0) {
+			return 0;
+		}
+		return GetGamesWon()/GetGamesLost();
+	}
+	
 	// Setters - called when game won, played, or lost
 	public void GameWon() {
 		GamesWon ++;

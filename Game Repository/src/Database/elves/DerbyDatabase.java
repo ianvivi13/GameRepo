@@ -314,10 +314,11 @@ public class DerbyDatabase implements IDatabase {
 				IDatabase db = DatabaseProvider.getInstance();
 				try {
 					// create the creators
-					db.createUser("UnicycleUnicorn","Admin*69");
-					db.createUser("SixIVs","Admin*69");
-					db.createUser("Willy","Admin*69");
-					db.createUser("pjnines","Admin*69");
+					
+					db.createAllStats(db.createUser("UnicycleUnicorn","Admin*69"));
+					db.createAllStats(db.createUser("SixIVs","Admin*69"));
+					db.createAllStats(db.createUser("Willy","Admin*69"));
+					db.createAllStats(db.createUser("pjnines","Admin*69"));
 					
 					initializeBlackJackCards();
 					initializeExplodingKittensCards();
@@ -2082,7 +2083,7 @@ public class DerbyDatabase implements IDatabase {
 					int plays = stat.GetGamesPlayed();
 					int wins = stat.GetGamesWon();
 					int losses = stat.GetGamesLost();
-					int sOne = stat.GetBlackjacks();
+					int sOne = stat.GetHolds();
 					int sTwo = stat.GetHits();
 					int sThree = stat.GetFroze();
 				
