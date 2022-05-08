@@ -39,7 +39,8 @@ public class HostPageExtendServlet extends HttpServlet {
 	        			if (db.getNameFromPlayerId(game.getPlayerIds().get(0)).equals(user)) {
 	        				UnoController.initialize(gId);
 	        			}
-	        			resp.sendRedirect("../gamerepo/uno");
+	        			resp.setHeader("Refresh", "1; URL=../gamerepo/uno");
+	        			//resp.sendRedirect("../gamerepo/uno");
 	        			return;
 	        		case IDatabase.Key_UnoFlip:
 	        			resp.sendRedirect("../gamerepo/home");
