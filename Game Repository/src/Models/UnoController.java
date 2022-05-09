@@ -24,6 +24,7 @@ private static IDatabase db;
 		
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
+			players.getPile().sortUno();
 		}
 		Pile wrong = new Pile();
 		UnoCard top = null;
@@ -76,6 +77,7 @@ private static IDatabase db;
 			current.getPile().addCard(drawn);
 			numLeft--;
 		}
+		current.getPile().sortUno();
 		if ((AutoPlay) & (drawn != null)) {
 			db.updateGame(gameId, model);
 			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
@@ -170,6 +172,7 @@ private static IDatabase db;
 		for (Player p : subjects) {
 			ArrayList<Object> cardsToAdd = landfill.removeCards(numCards);
 			p.getPile().addCards(cardsToAdd);
+			p.getPile().sortUno();
 		}
 
 		model.setPlayers(subjects);

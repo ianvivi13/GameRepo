@@ -195,7 +195,7 @@ public class Pile{
 		//populates all number cards, skips, reverses, and draw 2s
 		for(int x = 0; x < 2; x++) {
 			for (int j = 0; j < allColors.length-1; j++) {
-				for (int i = 0; i < allValues.length-4; i++) {
+				for (int i = 1; i < allValues.length-3; i++) {
 					// use allSuits[j] and allRanks[i] to create a Card
 					pile.add(new UnoCard(allColors[j],allValues[i]));
 				}
@@ -255,6 +255,12 @@ public class Pile{
     	}
     	
     	return true;
+    }
+    
+    public void sortUno() {
+    	ArrayList<UnoCard> t = (ArrayList)pile;
+    	Collections.sort(t);
+    	pile = (ArrayList)t;
     }
 	
 }

@@ -220,51 +220,59 @@ img {
 }
 
 .dotRed {
-    width: 7%;
-    padding-top: 7%;
+    width: 12%;
+    padding-top: 12%;
     background-color: #ff0000;
     border-width: 2px;
     border-color: #000000;
     border-radius: 50%;
+    /*
     display: inline-block;
     position: absolute;
     top: 74%;
+    */
   }
   
   .dotBlue {
-    width: 7%;
-    padding-top: 7%;
+    width: 12%;
+    padding-top: 12%;
     background-color: #0000ff;
     border-width: 2px;
     border-color: #000000;
     border-radius: 50%;
+    /*
     display: inline-block;
     position: absolute;
     top: 74%;
+    */
   }
   
   .dotYellow {
-    width: 7%;
-    padding-top: 7%;
+    width: 12%;
+    padding-top: 12%;
     background-color: #ffff00;
     border-width: 2px;
     border-color: #000000;
     border-radius: 50%;
+    /*
     display: inline-block;
     position: absolute;
     top: 74%;
+    */
   }
   
   .dotGreen {
-    width: 7%;
-    padding-top: 7%;
+    width: 12%;
+    padding-top: 12%;
     background-color: #00ff00;
     border-width: 2px;
     border-color: #000000;
     border-radius: 50%;
+    /*
     display: inline-block;
     position: absolute;
     top: 74%;
+    */
   }
 
   * {
