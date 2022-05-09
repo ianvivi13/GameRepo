@@ -46,7 +46,7 @@ public class UnoPageServlet extends HttpServlet {
             	UnoCard card = UnoCard.fromString((String) req.getParameter("playCard"));
             	UnoController.playCard(gId, card);
             } else if (req.getParameter("Draw") != null) {
-            	UnoController.drawCardOrRecycleWaste(gId, 1);
+            	UnoController.drawCardOrRecycleWaste(gId, 1, true);
             } else if ((req.getParameter("card") != null) && (req.getParameter("color") != null)) {
             	UnoCard card = UnoCard.fromString((String) req.getParameter("card"));
             	UnoController.playSpecialCard(gId, card, req.getParameter("color"));

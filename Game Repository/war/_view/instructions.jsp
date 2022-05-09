@@ -53,8 +53,12 @@
                 <li>Skip cards skip the next player</li>
                 <li>+2 cards forces the next player to draw two extra cards</li>
                 <li>+4 Wild cards allow the player to change the color and forces the next player to draw four extra cards</li>
-                <li>If the player has one card remaining, they must say "Uno" or they must draw 2 cards if an opponent says it first</li>
-                <li>If a player loses all cards, the game ends</li>`
+                <li>If the player has one card remaining, the program will say "Uno" for the player</li>
+                <li>If a player loses all cards, the game ends</li>
+                <li><u>6-9 Gamemode:</u></li>
+                <li>If numeric cards '6' and '9' are played sequencially, every player's hand will be shuffled and distributed between players</li>
+                <li><u>0 Gamemode:</u></li>
+                <li>If a player plays a 0 card onto the waste pile, players will swap hands in the direction of play</li>`
                 break;
 
             case 'unoflip':
@@ -77,7 +81,7 @@
                 <li>Skip Everyone cards skips allow the current player to take another turn</li>
                 <li>+5 cards forces the next player to draw five card</li>
                 <li>Wild draw color forces the next player to draw cards until the color matches the one chosen</li>
-                <li>If the player has one card remaining, they must say "Uno" or they must draw 2 cards if an opponent says it first</li>
+                <li>If the player has one card remaining, the program will say "Uno" for the player</li>
                 <li>If a player loses all cards, the game ends</li>`
                 break;
 

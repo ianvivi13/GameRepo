@@ -74,7 +74,8 @@
 	          			<%
 	          			int t = 2;
 	          			int j = 2;
-	          			switch ((String) session.getAttribute("happy")) {
+	          			String gme = (String) session.getAttribute("happy");
+	          			switch (gme) {
 	          				case ("uno"): t = 4; j = 3; break;
 	          				case ("unoflip"): t = 4; j = 3; break;
 	          				case ("expoldingkittens"): t = 6; j = 4; break;
@@ -82,9 +83,23 @@
 	          			%>
 	          			<% for (int i = j ; i <= t ; i ++) { %>
 							<option name="MaxP" value = <% out.print(i); %>> <% out.print(i); %> </option>  
-						<% } %> 
-					</select> 
-					<br><br>
+						<% } %>
+					</select>
+					<br>
+					<%
+					if (gme.equals("uno")) {
+						%>
+						<div style="background-color: #000000aa; width:20%; left: 40%; position: absolute; border-radius: 10px;">
+							<input type="checkbox" name="communism" id="communism" style="color: #0f0f0f;">
+							<label for="communism" style="color: #ffffff; font-size: 120%;">69 Rule</label>
+							<br>
+							<input type="checkbox" name="utilitarianism" id="utilitarianism" style="color: #0f0f0f;">
+							<label for="utilitarianism" style="color: #ffffff; font-size: 120%;">0 Rule</label>
+						</div>
+						<%
+					}
+					%>
+					<br><br><br>
 			    	<div id=""><button class="ButtonStyle" name="play" value="play" type="submit">Host Lobby</button> </div>
 			    </form> 
           	</div>

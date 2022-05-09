@@ -1,6 +1,7 @@
 package Models;
 
 public enum Value {
+	Zero("0"),
 	One("1"),
 	Two("2"),
 	Three("3"),
@@ -10,10 +11,9 @@ public enum Value {
 	Seven("7"),
 	Eight("8"),
 	Nine("9"),
-	DrawTwo("T"),
 	Skip("S"),
 	Reverse("R"),
-	Zero("0"),
+	DrawTwo("T"),
 	Wild("W"),
 	Wild_Four("F"),
 	SwapHands("H");

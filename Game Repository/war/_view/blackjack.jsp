@@ -66,7 +66,14 @@
     
     <div id="players">
         <div class="split" id="player1">
-        	<div id="centers">${user}</div>
+        	<% try { %>
+	        	<% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+	        		<div id="centers" style="background-color: #00ff00; color: #000000;">${user}</div>
+	        	<% } else { %>
+	        		<div id="centers">${user}</div>
+	        	<% } %>
+        	<% } catch (Exception e) { %><div id="centers">${user}</div><% } %>
+        	
                 <div class="cards">  
 	                <% for (Object o : playerLeft.getPile().getPile()) { %>
 	                <% StandardCard c = ((StandardCard) o); %>
@@ -88,9 +95,13 @@
             
         </div>
         <div class="split" id="player2">
-        	
-        	<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
-        	
+        <% try { %>
+        	<% if (currentPlayerId == db.getPlayerIdFromPlayer(playerLeft)) { %>
+        		<div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
+        	<% } else { %>
+        		<div id="centers" style="background-color: #00ff00; color: #000000;"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div>
+        	<% } %>
+        <% } catch (Exception e) { %><div id="centers"> <% out.print(db.getNameFromPlayerId(db.getPlayerIdFromPlayer(playerRight))); %> </div><% } %>
 	        	<div class="cards">
 	        		<% boolean firstFlag = true; %>
 	        		<% if (currentPlayerId == null) { firstFlag = false; } %>

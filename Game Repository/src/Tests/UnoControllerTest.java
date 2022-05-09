@@ -18,6 +18,7 @@ import Database.elves.InitDatabase;
 import Database.elves.PlayerAlreadyExistsException;
 import Models.Color;
 import Models.Game;
+import Models.Pile;
 import Models.Player;
 import Models.UnoCard;
 import Models.UnoController;
@@ -152,7 +153,7 @@ public class UnoControllerTest {
 		db.updateGame(modelId, model);
 		int alt = model.getAltPile().getNumCards();
 		UnoCard card = (UnoCard) model.getAltPile().getTopCard();
-		UnoController.drawCardOrRecycleWaste(modelId, 1);
+		UnoController.drawCardOrRecycleWaste(modelId, 1, false);
 		model = db.getGameFromGameId(modelId);
 		model.reverseOrder();
 		model.nextTurn();
@@ -389,6 +390,79 @@ public class UnoControllerTest {
 		assertEquals(modelTwo.getPlayers().get(2).getPile().getNumCards(), 0);
 		assertEquals(modelTwo.getAltPile().getNumCards(), 5);
 		assertEquals(modelTwo.getTurnOrder().getTurnList().size(), 2);
+	}
+	
+	@Test
+	public void kTestCommunism() {
+		model = db.getGameFromGameId(modelId);
+		Pile pilePlayerOne = model.getPlayers().get(0).getPile();
+		Pile pilePlayerTwo = model.getPlayers().get(1).getPile();
+		Pile pilePlayerThree = model.getPlayers().get(2).getPile();
+		Pile pilePlayerFour = model.getPlayers().get(3).getPile();
+		Pile totalPileOne = new Pile();
+		totalPileOne.addCards(pilePlayerOne.getPile());
+		totalPileOne.addCards(pilePlayerTwo.getPile());
+		totalPileOne.addCards(pilePlayerThree.getPile());
+		totalPileOne.addCards(pilePlayerFour.getPile());
+		UnoController.communism(modelId);
+		model = db.getGameFromGameId(modelId);
+		Pile pilePlayerOne2 = model.getPlayers().get(0).getPile();
+		Pile pilePlayerTwo2 = model.getPlayers().get(1).getPile();
+		Pile pilePlayerThree2 = model.getPlayers().get(2).getPile();
+		Pile pilePlayerFour2 = model.getPlayers().get(3).getPile();
+		Pile totalPileOne2 = new Pile();
+		totalPileOne2.addCards(pilePlayerOne2.getPile());
+		totalPileOne2.addCards(pilePlayerTwo2.getPile());
+		totalPileOne2.addCards(pilePlayerThree2.getPile());
+		totalPileOne2.addCards(pilePlayerFour2.getPile());
+		assertEquals(totalPileOne2.getNumCards(), totalPileOne.getNumCards());
+	}
+	
+	@Test
+	public void lTestUtilitarianism() {
+		model = db.getGameFromGameId(modelId);
+		Pile pilePlayerOne = model.getPlayers().get(0).getPile();
+		Pile pilePlayerTwo = model.getPlayers().get(1).getPile();
+		Pile pilePlayerThree = model.getPlayers().get(2).getPile();
+		Pile pilePlayerFour = model.getPlayers().get(3).getPile();
+		UnoController.utilitarianism(modelId);
+		model = db.getGameFromGameId(modelId);
+		assertTrue(model.getPlayers().get(3).getPile().equals(pilePlayerOne));
+		assertTrue(model.getPlayers().get(0).getPile().equals(pilePlayerTwo));
+		assertTrue(model.getPlayers().get(1).getPile().equals(pilePlayerThree));
+		assertTrue(model.getPlayers().get(2).getPile().equals(pilePlayerFour));
+	}
+	
+	@Test
+	public void mTestAutoPlay() {
+		model = db.getGameFromGameId(modelId);
+		UnoCard top = (UnoCard)model.getMainPile().getTopCard();
+		int currentId = model.getTurnOrder().CurrentPlayer();
+		model.getAltPile().addCard(top);
+		db.updateGame(modelId, model);
+		model = db.getGameFromGameId(modelId);
+		int mainCards = model.getMainPile().getNumCards();
+		int altCards = model.getAltPile().getNumCards();
+		int playerCards = db.getPlayerFromPlayerId(currentId).getPile().getNumCards();
+		UnoController.drawCardOrRecycleWaste(modelId, 1, true);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(mainCards - 1, model.getMainPile().getNumCards());
+		assertEquals(altCards + 1, model.getAltPile().getNumCards());
+		assertEquals(playerCards, db.getPlayerFromPlayerId(currentId).getPile().getNumCards());
+	}
+	
+	@Test
+	public void nTestRefilMainPile() {
+		model = db.getGameFromGameId(modelId);
+		model.getMainPile().removeCards(model.getMainPile().getNumCards());
+		model.getAltPile().removeCards(model.getAltPile().getNumCards() - 1);
+		assertEquals(0, model.getMainPile().getNumCards());
+		assertEquals(1, model.getAltPile().getNumCards());
+		db.updateGame(modelId, model);
+		UnoController.drawCardOrRecycleWaste(modelId, 1, false);
+		model = db.getGameFromGameId(modelId);
+		assertEquals(107, model.getMainPile().getNumCards());
+		assertEquals(1, model.getAltPile().getNumCards());
 	}
 	
 	

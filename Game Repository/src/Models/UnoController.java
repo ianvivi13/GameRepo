@@ -1,6 +1,9 @@
 package Models;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import Database.elves.DatabaseProvider;
 import Database.elves.IDatabase;
 import Database.elves.InitDatabase;
@@ -20,6 +23,7 @@ private static IDatabase db;
 		
 		for(Player players : model.getPlayers()) {
 			players.getPile().addCards(model.getMainPile().removeCards(7));
+			players.getPile().sortUno();
 		}
 		Pile wrong = new Pile();
 		UnoCard top = null;
@@ -53,21 +57,39 @@ private static IDatabase db;
 		db.updateGame(gameId, model);
 	}
 	
-	public static void drawCardOrRecycleWaste(int gameId, int numCards) {
+	public static void drawCardOrRecycleWaste(int gameId, int numCards, boolean AutoPlay) {
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
-		while(numCards > 0) {
-			if(model.getMainPile().isEmpty()){
+		UnoCard drawn = null;
+		int numLeft = numCards;
+		while(numLeft > 0) {
+			if(model.getMainPile().isEmpty() && model.getAltPile().getNumCards() != 1){
 				model.getMainPile().addCards(model.getAltPile().removeCards(model.getAltPile().getNumCards()));
 				model.getAltPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
 				model.getMainPile().shuffle();
 			}
-			current.getPile().addCard(model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1));
-			numCards--;
+			else if(model.getMainPile().isEmpty() && model.getAltPile().getNumCards() == 1) {
+				model.getMainPile().populateUno();
+				model.getMainPile().shuffle();
+			}
+			drawn = (UnoCard) model.getMainPile().removeCard(model.getMainPile().getNumCards() - 1);
+			current.getPile().addCard(drawn);
+			numLeft--;
 		}
-		model.nextTurn();
-		db.updateGame(gameId, model);
-		db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		current.getPile().sortUno();
+		if ((AutoPlay) & (drawn != null)) {
+			db.updateGame(gameId, model);
+			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+			if (!playCard(gameId, drawn)) {
+				model = db.getGameFromGameId(gameId);
+				model.nextTurn();
+				db.updateGame(gameId, model);
+			}
+		} else {
+			model.nextTurn();
+			db.updateGame(gameId, model);
+			db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
+		}
 	}
 	
 	public static void drawTwo(int gameId) {
@@ -76,7 +98,7 @@ private static IDatabase db;
 		Game model = db.getGameFromGameId(gameId);
 		model.nextTurn();
 		db.updateGame(gameId, model);
-		drawCardOrRecycleWaste(gameId, 2);
+		drawCardOrRecycleWaste(gameId, 2, false);
 	}
 	
 	public static void drawFour(int gameId, String colorChoice) {
@@ -86,7 +108,7 @@ private static IDatabase db;
 		model.setWildColor(colorChoice);
 		model.nextTurn();
 		db.updateGame(gameId, model);
-		drawCardOrRecycleWaste(gameId, 4);
+		drawCardOrRecycleWaste(gameId, 4, false);
 	}
 	
 	public static boolean checkUno(int gameId) {
@@ -115,6 +137,74 @@ private static IDatabase db;
 		return false;
 	}
 	
+	private static int getRandomInt(int max) {
+		return (int)(max * Math.random());
+	}
+	
+	public static void communism(int gameId) { // 69 rule
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		ArrayList<Player> subjects = model.getPlayers();
+		
+		Pile landfill = new Pile();
+		for (Player p : subjects) {
+			landfill.addCards(p.getPile().removeCards(p.getPile().getNumCards()));
+		}
+		
+		landfill.shuffle();
+		int NumPlayers = subjects.size();
+		int size = landfill.getNumCards();
+		int extraCards = size % NumPlayers;
+		Pile garbage = new Pile();
+		garbage.addCards(landfill.removeCards(extraCards));
+		
+		// spread out the left overs
+		for (Object o : garbage.getPile()) {
+			subjects.get(getRandomInt(NumPlayers)).getPile().addCard(o);
+		}
+
+		// spread out the main
+		int landfillSize = landfill.getNumCards();
+		int numCards = landfillSize / NumPlayers;
+		
+		for (Player p : subjects) {
+			ArrayList<Object> cardsToAdd = landfill.removeCards(numCards);
+			p.getPile().addCards(cardsToAdd);
+			p.getPile().sortUno();
+		}
+
+		model.setPlayers(subjects);
+		db.updateGame(gameId, model);
+	}
+	
+	public static void utilitarianism(int gameId) { // 0 rule
+		InitDatabase.init();
+		db = DatabaseProvider.getInstance();
+		Game model = db.getGameFromGameId(gameId);
+		ArrayList<Player> subjects = model.getPlayers();
+		ArrayList<Pile> landfill = new ArrayList<>();
+		
+		for (Player p : subjects) {
+			landfill.add(p.getPile());
+		}
+		
+		
+		if (model.getTurnOrder().getAdder() > 0) {
+			Collections.rotate(landfill, 1);
+		} else {
+			Collections.rotate(landfill, -1);
+		}
+
+		for (Player p : subjects) {
+			p.setPile(landfill.get(0));
+			landfill.remove(0);
+		}
+		
+		model.setPlayers(subjects);
+		db.updateGame(gameId, model);
+	}
+	
 	public static boolean allowMove(int gameId, UnoCard card) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
@@ -133,13 +223,13 @@ private static IDatabase db;
 		return false;
 	}
 	
-	public static void playCard(int gameId, UnoCard selected) {
+	public static boolean playCard(int gameId, UnoCard selected) {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		Game model = db.getGameFromGameId(gameId);
 		Player current = db.getPlayerFromPlayerId(model.getTurnOrder().CurrentPlayer());
 		if(selected.getColor() == Color.BLACK) {
-			return;
+			return false;
 		}
 		if(allowMove(gameId, selected)) {
 			switch (selected.getValues()) {
@@ -168,6 +258,7 @@ private static IDatabase db;
 					}
 					break;
 				default:
+					UnoCard currentTop = (UnoCard) model.getAltPile().getTopCard();
 					model.getAltPile().addCard(current.getPile().removeCard(selected));
 					db.updateGame(gameId, model);
 					db.updatePlayer(db.getPlayerIdFromPlayer(current), current);
@@ -175,10 +266,21 @@ private static IDatabase db;
 						model = db.getGameFromGameId(gameId);
 						model.nextTurn();
 						db.updateGame(gameId, model);
+						// special game rules
+						int spec = model.getAuxInt();
+						boolean zero = (spec == 3 || spec == 2);
+						boolean sixNine = (spec == 3 || spec == 1);
+						if ((zero) && (selected.getValues() == Value.Zero)) { // put 0 rule here
+							utilitarianism(gameId);
+						} else if ((sixNine) && (selected.getValues() == Value.Nine) && (currentTop.getValues() == Value.Six)) { // call 69 rule
+							communism(gameId);
+						}
 					}
 					break;
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	public static void playSpecialCard(int gameId, UnoCard selected, String color) {

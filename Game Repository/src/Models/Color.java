@@ -1,10 +1,10 @@
 package Models;
 
 public enum Color {
-	RED("R"), 
-	BLUE("B"), 
+	RED("R"),
+	YELLOW("Y"),
 	GREEN("G"), 
-	YELLOW("Y"), 
+	BLUE("B"),
 	BLACK("W");
 	
 private final String symbol;

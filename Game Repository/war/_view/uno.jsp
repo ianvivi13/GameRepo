@@ -28,6 +28,11 @@
         
     </head>
     <body class="Uno" style="overflow: hidden; height: 98%; box-shadow: inset 0 0 0 50vw rgba(0,0,0,0.3);">
+    	<audio id="audioplayer" loop="false" autoplay="true" preload="auto" src="_view/background.mp3"></audio>
+    
+    	<script src="_view/audio.js"></script>
+    
+    
         <script>
             document.body.style.backgroundImage = "url('_view/images/Uno_Back.jpg')";
             document.body.style.color = "black";
@@ -149,30 +154,29 @@
         		<img src="_view/images/left_arrow.png" style="position: absolute; width: 20%; margin-left: -10%; bottom: -8%;">
         	<% } %>
 
+			<%  // display little color circle
+       			if (((UnoCard) game.getAltPile().getTopCard()).getColor() == Color.BLACK) {
+       				switch (game.getWildColor()) {
+        				case "R":
+        					%><span class="dotRed" style="position: absolute; top: 30%; margin-left: -5%;"></span><%
+        					break;
+        				case "B":
+        					%><span class="dotBlue" style="position: absolute; top: 30%; margin-left: -5%;"></span><%
+        					break;
+        				case "G":
+        					%><span class="dotGreen" style="position: absolute; top: 30%; margin-left: -5%;"></span><%
+        					break;
+        				case "Y":
+        					%><span class="dotYellow" style="position: absolute; top: 30%; margin-left: -5%;"></span><%
+        					break;
+        				default:
+        					break;
+       				}
+       			}
+        	%>
         	<div class="split">
         		<div id="imgCenter" >
-        			<%  // display little color circle
-        			if (((UnoCard) game.getAltPile().getTopCard()).getColor() == Color.BLACK) {
-        				switch (game.getWildColor()) {
-	        				case "R":
-	        					%><span class="dotRed"></span><%
-	        					break;
-	        				case "B":
-	        					%><span class="dotBlue"></span><%
-	        					break;
-	        				case "G":
-	        					%><span class="dotGreen"></span><%
-	        					break;
-	        				case "Y":
-	        					%><span class="dotYellow"></span><%
-	        					break;
-	        				default:
-	        					break;
-        				}
-        			}
-        			%>
         			<img class="deck" src="<%out.print(((UnoCard) game.getAltPile().getTopCard()).getImagePath());%>" style="width: 50%;">
-        		
 				</div>
         	</div>
         	
@@ -230,6 +234,7 @@
 					}
 					%>
 					<script>
+
 					function colorFunction(s) {
 						// Create a form dynamically
 					    var form = document.createElement("form");
@@ -247,28 +252,28 @@
 		                b.setAttribute("type", "submit");
 		                b.setAttribute("value", '<% out.print(Color.BLUE); %>');
 		                b.setAttribute("name", "color");
-		                b.setAttribute("style", "background-color: #0000ffd3; width: 50%; height: 50%; border-width: 0; position: absolute; top: 0; right: 0;");
+		                b.setAttribute("style", "background-color: #0000ffd3; width: 50%; height: 50%; border: 5px solid #000000; position: absolute; top: 0; right: 0;");
 		                
 		                // create a submit button
 		                var r = document.createElement("button");
 		                r.setAttribute("type", "submit");
 		                r.setAttribute("value", '<% out.print(Color.RED); %>');
 		                r.setAttribute("name", "color");
-		                r.setAttribute("style", "background-color: #ff0000d3; width: 50%; height: 50%; border-width: 0; position: absolute; top: 0; left: 0;");
+		                r.setAttribute("style", "background-color: #ff0000d3; width: 50%; height: 50%; border: 5px solid #000000; position: absolute; top: 0; left: 0;");
 		                
 		                // create a submit button
 		                var y = document.createElement("button");
 		                y.setAttribute("type", "submit");
 		                y.setAttribute("value", '<% out.print(Color.YELLOW); %>');
 		                y.setAttribute("name", "color");
-		                y.setAttribute("style", "background-color: #fff200ea; width: 50%; height: 50%; border-width: 0; position: absolute; bottom: 0; left: 0;");
+		                y.setAttribute("style", "background-color: #fff200ea; width: 50%; height: 50%; border: 5px solid #000000; position: absolute; bottom: 0; left: 0;");
 		                
 		                // create a submit button
 		                var g = document.createElement("button");
 		                g.setAttribute("type", "submit");
 		                g.setAttribute("value", '<% out.print(Color.GREEN); %>');
 		                g.setAttribute("name", "color");
-		                g.setAttribute("style", "background-color: #00ff00e3; width: 50%; height: 50%; border-width: 0; position: absolute; bottom: 0; right: 0;");
+		                g.setAttribute("style", "background-color: #00ff00e3; width: 50%; height: 50%; border: 5px solid #000000; position: absolute; bottom: 0; right: 0;");
 		               
 		                 
 		                // Append the submit button to the form

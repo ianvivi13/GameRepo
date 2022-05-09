@@ -36,10 +36,11 @@ public class HostPageServlet extends HttpServlet {
     	
     	IDatabase db;
     	db = DatabaseProvider.getInstance();
-	       
-        String m = (String) req.getSession().getAttribute("happy"); 
+	    
+        String m = (String) req.getSession().getAttribute("happy");
         Game model;
         int players = Integer.parseInt((String) req.getParameter("MaxP"));
+        
         if (m != null) {
 	        switch (m) {
 	        	case "expoldingkittens": 
@@ -47,6 +48,25 @@ public class HostPageServlet extends HttpServlet {
 	        		break;
 	        	case "uno":
 	        		model = new Game(IDatabase.Key_Uno);
+	        		String com = (String) req.getParameter("communism");
+	        	    String uti = (String) req.getParameter("utilitarianism");
+	        	    
+	        		// not special: 0
+	        	    // communism only: 1
+	        	    // uti only : 2
+	        	    // both : 3
+	        	    int aux = 0;
+	        	    if (com != null) {
+		        	    if (com.equals("on")) {
+		        			aux += 1;
+		        		}
+	        	    }
+	        	    if (uti != null) {
+						if (uti.equals("on")) {
+							aux += 2;  			
+						}
+	        	    }
+					model.setAuxInt(aux);
 	        		break;
 	        	case "unoflip":
 	        		model = new Game(IDatabase.Key_UnoFlip);
