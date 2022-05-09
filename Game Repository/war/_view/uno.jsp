@@ -287,7 +287,7 @@
 		                document.getElementsByTagName("body")[0].appendChild(form);
 						
 						// prep to auto submit form if user doesn't provide input
-						setTimeout(submitForm, 5000, form);
+						setTimeout(submitForm, 10000, form);
 					}
 					
 					// auto submit form with random color choice

@@ -33,7 +33,7 @@
             <div class="title">Create Account</div>
             <form class="FormStyle" action="${pageContext.servletContext.contextPath}/new" method="post">
                 <div class="InputStyle">
-                  <input type="text" id="autoFill" name="Username" placeholder="Username" maxlength=20 pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" title="USERNAME: Alpanumeric characters & symbols: -._ (not first or last character) & 5-20 characters" required>
+                  <input type="text" id="autoFill" name="Username" placeholder="Username" maxlength=20 pattern="^[a-zA-Z0-9]([./_-](?![./_-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" title="USERNAME: Alpanumeric characters & symbols: -./_ (not first or last character) & 5-20 characters" required>
                 </div>
                 <div class="InputStyle">
                   <input type="password" name="Password" id="pass" placeholder="Password" maxlength=32 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" title="PASSWORD: Must contain at least one number & one uppercase & lowercase letter & one special character & 8-32 characters" required>
@@ -41,10 +41,11 @@
                 <div class="InputStyle">
                   <input type="password" name="PassConfirm" id="passconfirm" placeholder="Re-enter Password" maxlength=32 required>
                 </div>
-                <%UsernameGenerator u = new UsernameGenerator(); %>
-                <button class="ButtonStyle" onclick="document.getElementById('autoFill').value='<% out.print(u.GenerateName()); %>';">Generate Username</button>
                 <button class="ButtonStyle" type="submit" onclick="validate()" >Create Account</button>
             </form>
+            <p>
+            <%UsernameGenerator u = new UsernameGenerator(); %>
+            <button class="ButtonStyle" onclick="document.getElementById('autoFill').value='<% out.print(u.GenerateName()); %>';">Generate Username</button>
         </div>
     </body>
 </html>

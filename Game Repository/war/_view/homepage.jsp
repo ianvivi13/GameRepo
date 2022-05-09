@@ -32,9 +32,9 @@
         </div>
         
         <div class = "buttons">
-			<a href="../gamerepo/stats">
+			
         		<button class="ButtonStyle" disabled>Stats</button><img src="_view/images/UnderContruct.png" style = "position: absolute; margin-top: -1%;">
-        	</a>
+        	
         </div>
 
         <form method="post">
